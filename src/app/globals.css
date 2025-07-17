@@ -1,26 +1,105 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #000000;
+  --foreground: #ffffff;
+  --primary-green: #00ff41;
+  --secondary-green: #00cc33;
+  --dark-green: #00aa2b;
+  --light-green: #39ff14;
+  --card-bg: #111111;
+  --accent-gray: #1a1a1a;
+  --border-gray: #333333;
+  --text-muted: #cccccc;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --font-sans: 'TikTok Sans', Arial, Helvetica, sans-serif;
+  --font-mono: 'TikTok Sans', 'Courier New', monospace;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: 'TikTok Sans', Arial, Helvetica, sans-serif;
+}
+
+/* Coding-themed background animations */
+@keyframes float {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-20px) rotate(180deg); }
+}
+
+@keyframes floatReverse {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(20px) rotate(-180deg); }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes spinReverse {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(-360deg); }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 0.8; }
+}
+
+.coding-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.coding-symbol {
+  position: absolute;
+  color: rgba(0, 255, 65, 0.1);
+  font-family: 'TikTok Sans', 'Courier New', monospace;
+  font-weight: bold;
+  animation: float 6s ease-in-out infinite;
+}
+
+.coding-symbol:nth-child(2n) {
+  animation: floatReverse 8s ease-in-out infinite;
+  animation-delay: -2s;
+}
+
+.coding-symbol:nth-child(3n) {
+  animation: pulse 4s ease-in-out infinite;
+  animation-delay: -1s;
+}
+
+.gear {
+  position: absolute;
+  color: rgba(0, 255, 65, 0.08);
+  font-size: 2rem;
+  animation: spin 15s linear infinite;
+}
+
+.gear:nth-child(2n) {
+  animation: spinReverse 20s linear infinite;
+  animation-delay: -5s;
+}
+
+.binary {
+  position: absolute;
+  color: rgba(0, 255, 65, 0.05);
+  font-family: 'TikTok Sans', 'Courier New', monospace;
+  font-size: 0.8rem;
+  animation: float 10s ease-in-out infinite;
+}
+
+.binary:nth-child(2n) {
+  animation-delay: -3s;
 }

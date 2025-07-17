@@ -1,103 +1,140 @@
+import Link from "next/link";
 import Image from "next/image";
+import logo from "@/assets/Genius-Lab-Logo-Main-Green-600.png";
+import jsLogo from "@/assets/javascript.png";
+import pythonLogo from "@/assets/python.png";
+import cppLogo from "@/assets/c++.png";
+import CodingBackground from "@/components/CodingBackground";
 
 export default function Home() {
   return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
-
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+    <div className="bg-black">
+      <section className="bg-gradient-to-br from-black to-gray-900 text-white py-24 relative overflow-hidden h-fit">
+        <CodingBackground />
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center">
+            <div className="-mt-12">
+              <Image
+                src={logo}
+                alt="GeniusLabs Logo"
+                width={300}
+                height={300}
+                className="mx-auto mb-8 drop-shadow-2xl"
+              />
+            </div>
+            <h1 className="text-4xl md:text-6xl font-bold mb-8 leading-tight">
+              Learn to Code with
+              <span className="block text-green-400 mt-2">GeniusLabs</span>
+            </h1>
+            <p className="text-lg md:text-xl mb-12 max-w-3xl mx-auto text-gray-300">
+              Master programming and radical social entrepreneurship through interactive lessons, hands-on projects, and personalized learning paths
+            </p>
+            <div className="flex flex-col sm:flex-row gap-6 justify-center">
+              <Link
+                href="/modules"
+                className="bg-green-500/50 border border-green-500 ext-white px-10 py-4 rounded-xl font-semibold hover:bg-green-500/60 transition-all duration-200 shadow-lg hover:shadow-xl transform "
+              >
+                Start Learning
+              </Link>
+              <Link
+                href="/signup"
+                className="border-1 border-green-500 text-green-500 px-10 py-4 rounded-xl font-semibold hover:bg-green-500/50 hover:text-white transition-all duration-200 shadow-lg hover:shadow-xl transform "
+              >
+                Sign Up Free
+              </Link>
+            </div>
+          </div>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+      </section>
+
+      <section className="py-20 bg-[#141414]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="text-4xl font-bold text-center mb-16 text-white">
+            Why Choose GeniusLabs?
+          </h2>
+          <div className="grid md:grid-cols-3 gap-10">
+            <div className="text-center p-8 bg-[#222222] border-1 border-gray-700  rounded-2xl  transition-all duration-300 transform hover:-translate-y-2  ">
+              <div className="bg-green-500 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6">
+                <span className="text-3xl text-white">💻</span>
+              </div>
+              <h3 className="text-2xl font-semibold mb-4 text-white">Interactive Learning</h3>
+              <p className="text-gray-400 leading-relaxed">
+                Practice coding in real-time with our interactive code editor and instant feedback
+              </p>
+            </div>
+            <div className="text-center p-8 bg-[#222222] border-1 border-gray-700  rounded-2xl  transition-all duration-300 transform hover:-translate-y-2  ">
+              <div className="bg-black w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6">
+                <span className="text-3xl text-white">🎯</span>
+              </div>
+              <h3 className="text-2xl font-semibold mb-4 text-white">Structured Curriculum</h3>
+              <p className="text-gray-400 leading-relaxed">
+                Follow our carefully designed learning path from beginner to advanced levels
+              </p>
+            </div>
+            <div className="text-center p-8 bg-[#222222] border-1 border-gray-700  rounded-2xl  transition-all duration-300 transform hover:-translate-y-2  ">
+              <div className="bg-green-500 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6">
+                <span className="text-3xl text-white">🏆</span>
+              </div>
+              <h3 className="text-2xl font-semibold mb-4 text-white">Track Progress</h3>
+              <p className="text-gray-400 leading-relaxed">
+                Monitor your learning journey with detailed progress tracking and achievements
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="bg-[#141414] py-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="text-4xl font-bold text-center mb-16 text-white">
+            Popular Programming Languages
+          </h2>
+          <div className="grid md:grid-cols-4 gap-8">
+            {[
+              { name: 'JavaScript', logo: jsLogo, available: true },
+              { name: 'Python', logo: pythonLogo, available: true },
+              { name: 'C++', logo: cppLogo, available: false },
+              { name: 'Java', logo: null, available: false }
+            ].map((language) => (
+              <div key={language.name} className="bg-[#222222] border border-gray-700 p-8 rounded-2xl transition-all duration-300 transform hover:-translate-y-2 hover:border-green-500">
+                <div className="flex items-center justify-center mb-6">
+                  {language.logo ? (
+                    <Image
+                      src={language.logo}
+                      alt={`${language.name} Logo`}
+                      width={64}
+                      height={64}
+                      className="w-16 h-16"
+                    />
+                  ) : (
+                    <div className="w-16 h-16 bg-gradient-to-br from-gray-600 to-gray-700 rounded-full flex items-center justify-center">
+                      <span className="text-2xl font-bold text-white">
+                        {language.name.substring(0, 2)}
+                      </span>
+                    </div>
+                  )}
+                </div>
+                <h3 className="text-2xl font-semibold mb-4 text-white text-center">{language.name}</h3>
+                <p className="text-gray-400 mb-6 leading-relaxed text-center">
+                  Learn {language.name} from basics to advanced concepts
+                </p>
+                <div className="text-center">
+                  {language.available ? (
+                    <Link
+                      href="/modules"
+                      className="inline-flex items-center text-green-500 hover:text-green-600 font-semibold transition-colors"
+                    >
+                      Start Learning →
+                    </Link>
+                  ) : (
+                    <span className="text-gray-500 font-semibold">Coming Soon</span>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
     </div>
   );
 }
