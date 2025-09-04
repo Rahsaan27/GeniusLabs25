@@ -66,29 +66,29 @@ export default function ActivityPage() {
           <p className="text-xl mb-6 text-gray-300">
             Track your coding journey and see your achievements
           </p>
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-            <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4">
+          <div className="flex gap-4 justify-center p-8 -mb-16">
+            <div className="bg-white/10 backdrop-blur-sm rounded-full h-24 w-24 flex justify-center items-center p-15">
               <div className="text-center">
                 <div className="text-3xl font-bold text-green-400">{completedLessons}</div>
                 <div className="text-sm opacity-80">Completed</div>
               </div>
             </div>
-            <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4">
+            <div className="bg-white/10 backdrop-blur-sm rounded-full h-24 w-24 flex justify-center items-center p-15">
               <div className="text-center">
                 <div className="text-3xl font-bold text-blue-400">{lessons.length}</div>
-                <div className="text-sm opacity-80">Total Lessons</div>
+                <div className="text-sm opacity-80">Lessons</div>
               </div>
             </div>
-            <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4">
+            <div className="bg-white/10 backdrop-blur-sm rounded-full h-24 w-24 flex justify-center items-center p-15">
               <div className="text-center">
                 <div className="text-3xl font-bold text-purple-400">{overallProgress.percentage}%</div>
                 <div className="text-sm opacity-80">Progress</div>
               </div>
             </div>
-            <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4">
+            <div className="bg-white/10 backdrop-blur-sm rounded-full h-24 w-24 flex justify-center items-center p-15">
               <div className="text-center">
                 <div className="text-3xl font-bold text-yellow-400">{totalScore}</div>
-                <div className="text-sm opacity-80">Total Score</div>
+                <div className="text-sm opacity-80">Score</div>
               </div>
             </div>
           </div>

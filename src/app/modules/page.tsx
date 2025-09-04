@@ -56,6 +56,11 @@ export default function ModulesPage() {
       default: return 'bg-gray-400/20 text-gray-400 border-gray-400/40';
     }
   };
+
+  function showProgress(){ 
+    console.log("Showing progress"); 
+  }
+
   return (
     <div className="bg-black min-h-screen">
       <div className="bg-gradient-to-r from-black to-gray-900 text-white py-12">
@@ -71,10 +76,17 @@ export default function ModulesPage() {
             
             </div>
             
-            
+          
+
             {/* Compact Learning Roadmap */}
             <div className="mt-6 lg:mt-0 lg:w-80">
-              <h2 className="text-lg font-semibold text-white mb-3">Your Progress</h2>
+              {/* display progress button */}
+              <div className="">
+                <button onClick={showProgress} className = 'border rounded-md p-3 text-lg font-bold mb-4'>Your Progress</button>
+              </div>
+
+
+              {/* <h2 className="text-lg font-semibold text-white mb-3">Your Progress</h2> */}
               <div className="space-y-3">
                 {modules.map((module) => {
                   const progress = moduleProgress[module.id] || { completed: 0, total: module.lessons.length, percentage: 0 };

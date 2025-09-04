@@ -1,7 +1,9 @@
 import { Lesson, Module } from '@/types/lesson';
 import { modernJavascriptLessons, modernPythonLessons } from './modernCurriculum';
+import { shortFormLessons, shortFormModules } from './shortFormLessons';
 
 export const lessons: Lesson[] = [
+  ...shortFormLessons, // New short-form technical lessons
   ...modernJavascriptLessons,
   ...modernPythonLessons,
   // Keep the old lessons for now but they'll be replaced
@@ -641,6 +643,9 @@ Create a business model canvas for your social venture:
 
 
 export const modules: Module[] = [
+  // Short-form Advanced Lessons
+  ...shortFormModules,
+  
   // Technology Creation
   {
     id: 'javascript-basics',

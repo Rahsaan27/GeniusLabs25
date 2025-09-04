@@ -2,7 +2,9 @@
 
 import { useParams, useRouter } from 'next/navigation';
 import { lessons } from '@/data/lessons';
+import { shortFormLessons } from '@/data/shortFormLessons';
 import LessonView from '@/components/LessonView';
+import ShortFormLesson from '@/components/ShortFormLesson';
 
 export default function LessonPage() {
   const params = useParams();
@@ -31,6 +33,13 @@ export default function LessonPage() {
   const handleComplete = () => {
     router.push('/modules');
   };
+
+  // Check if this is a short-form lesson
+  const isShortFormLesson = shortFormLessons.some(shortLesson => shortLesson.id === lesson.id);
+  
+  if (isShortFormLesson) {
+    return <ShortFormLesson lesson={lesson} onComplete={handleComplete} />;
+  }
   
   return <LessonView lesson={lesson} onComplete={handleComplete} />;
 }

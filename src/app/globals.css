@@ -103,3 +103,46 @@ body {
 .binary:nth-child(2n) {
   animation-delay: -3s;
 }
+
+/* Short Form Lesson Animations */
+@keyframes spin-slow {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-10px); }
+  75% { transform: translateX(10px); }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-spin-slow {
+  animation: spin-slow 20s linear infinite;
+}
+
+.animate-shake {
+  animation: shake 0.5s ease;
+}
+
+.animate-slideUp {
+  animation: slideUp 0.5s forwards;
+}
+
+.bg-gradient-conic {
+  background: conic-gradient(from 180deg at 50% 50%, #10b981, #3b82f6, #8b5cf6, #10b981);
+}
