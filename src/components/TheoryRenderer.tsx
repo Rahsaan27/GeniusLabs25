@@ -7,7 +7,7 @@ interface TheoryRendererProps {
 const TheoryRenderer: React.FC<TheoryRendererProps> = ({ theory }) => {
   const parseTheory = (text: string) => {
     const lines = text.trim().split('\n').filter(line => line.trim() !== '');
-    const elements: JSX.Element[] = [];
+    const elements: React.ReactElement[] = [];
     let currentCodeBlock = '';
     let inCodeBlock = false;
     let currentList: string[] = [];

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import Navigation from "@/components/Navigation";
+import { AuthProviderWrapper } from "@/components/AmplifyProvider";
 
 export const metadata: Metadata = {
   title: "GeniusLabs - Learn to Code",
@@ -20,10 +21,12 @@ export default function RootLayout({
         <link href="https://fonts.googleapis.com/css2?family=TikTok+Sans:opsz,wght@12..36,300..900&display=swap" rel="stylesheet" />
       </head>
       <body className="antialiased bg-black text-white">
-        <Navigation />
-        <main className="min-h-screen">
-          {children}
-        </main>
+        <AuthProviderWrapper>
+          <Navigation />
+          <main className="min-h-screen">
+            {children}
+          </main>
+        </AuthProviderWrapper>
       </body>
     </html>
   );

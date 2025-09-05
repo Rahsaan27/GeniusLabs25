@@ -7,7 +7,10 @@ import { Lesson } from '@/types/lesson';
 import { getUserProgress, updateUserProgress, markLessonComplete, startLesson, saveCurrentCode } from '@/utils/progress';
 import TheoryRenderer from '@/components/TheoryRenderer';
 import QuizComponent from '@/components/QuizComponent';
-import SyntaxHighlighter from '@/components/SyntaxHighlighter';
+import CodeConsole from '@/components/CodeConsole';
+import OutputPanel from '@/components/OutputPanel';
+import VideoPlaceholder from '@/components/VideoPlaceholder';
+import LessonTypeIcon from '@/components/LessonTypeIcon';
 import jsLogo from '@/assets/javascript.png';
 import pythonLogo from '@/assets/python.png';
 
@@ -20,6 +23,7 @@ export default function LessonView({ lesson, onComplete }: LessonViewProps) {
   const [currentCode, setCurrentCode] = useState(lesson.content.starterCode);
   const [output, setOutput] = useState('');
   const [isRunning, setIsRunning] = useState(false);
+  const [hasError, setHasError] = useState(false);
   const [showSolution, setShowSolution] = useState(false);
   const [showQuiz, setShowQuiz] = useState(false);
   const [quizCompleted, setQuizCompleted] = useState(false);
@@ -36,16 +40,11 @@ export default function LessonView({ lesson, onComplete }: LessonViewProps) {
     startLesson(lesson.id);
   }, [lesson.id]);
 
-  const handleCodeChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    const newCode = e.target.value;
-    setCurrentCode(newCode);
-    // Save code automatically
-    saveCurrentCode(lesson.id, newCode);
-  };
 
-  const runCode = () => {
+  const runCode = (code: string) => {
     setIsRunning(true);
     setOutput('');
+    setHasError(false);
     
     // Simple code execution simulation
     setTimeout(() => {
@@ -54,22 +53,26 @@ export default function LessonView({ lesson, onComplete }: LessonViewProps) {
         if (lesson.language === 'javascript') {
           const logs: string[] = [];
           const mockConsole = {
-            log: (...args: any[]) => {
+            log: (...args: unknown[]) => {
               logs.push(args.map(arg => String(arg)).join(' '));
             }
           };
           
           // Simple evaluation (in a real app, use a proper sandbox)
-          const func = new Function('console', currentCode);
+          const func = new Function('console', code);
           func(mockConsole);
           
           setOutput(logs.join('\n') || 'Code executed successfully!');
+          setHasError(false);
         } else if (lesson.language === 'python') {
           // For Python, we'd use a proper Python interpreter
           setOutput('Python execution not implemented in this demo');
+          setHasError(false);
         }
       } catch (error) {
-        setOutput(`Error: ${error instanceof Error ? error.message : 'Unknown error'}`);
+        const errorMessage = `Error: ${error instanceof Error ? error.message : 'Unknown error'}`;
+        setOutput(errorMessage);
+        setHasError(true);
       } finally {
         setIsRunning(false);
       }
@@ -169,71 +172,83 @@ export default function LessonView({ lesson, onComplete }: LessonViewProps) {
           </div>
         </div>
 
-        <div className="grid lg:grid-cols-2 gap-6 p-6">
-          {/* Theory Section */}
-          <div className="space-y-6">
-            <TheoryRenderer theory={lesson.content.theory} />
-            
-            <div className="bg-gradient-to-br from-green-400/10 to-green-500/10 p-6 rounded-xl border border-green-400/30 shadow-lg">
-              <div className="flex items-center mb-4">
-                <div className="bg-green-500 w-8 h-8 rounded-full flex items-center justify-center mr-3">
-                  <span className="text-white text-sm font-bold">📝</span>
-                </div>
-                <h3 className="text-xl font-bold text-green-400">Task Instructions</h3>
-              </div>
-              <div className="text-green-200 leading-relaxed space-y-2">
-                {lesson.content.instructions.split('\n').map((line, index) => (
-                  <div key={index} className="flex items-start font-bold">
-                    <span>{line}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          {/* Code Editor Section */}
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <h3 className="text-lg font-semibold text-white">Code Editor</h3>
-              <button
-                onClick={toggleSolution}
-                className="bg-green-500/10 border border-green-500/30 text-green-400 hover:bg-green-500/20 hover:text-green-300 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200"
-              >
-                {showSolution ? 'Hide' : 'Show'} Solution
-              </button>
-            </div>
-            
-            <textarea
-              value={currentCode}
-              onChange={handleCodeChange}
-              className="w-full h-64 p-4 border border-gray-500 rounded-lg font-mono text-sm focus:outline-none focus:ring-2 focus:ring-green-500 bg-gray-900 text-white placeholder-gray-400"
-              placeholder="Write your code here..."
-            />
-            
-            <div className="flex gap-2">
-              <button
-                onClick={runCode}
-                disabled={isRunning}
-                className="bg-green-400 text-black px-4 py-2 rounded-lg hover:bg-green-300 disabled:opacity-50 transition-colors"
-              >
-                {isRunning ? 'Running...' : 'Run Code'}
-              </button>
-              <button
-                onClick={checkSolution}
-                className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors"
-              >
-                {lesson.quiz && !quizCompleted ? 'Complete Lesson' : 'Check Solution'}
-              </button>
-            </div>
-            
-            {/* Output */}
-            <div className="bg-black text-green-400 p-4 rounded-lg font-mono text-sm min-h-[100px] border border-green-400/20">
-              <div className="text-gray-500 mb-2">Output:</div>
-              {output ? (
-                <pre className="whitespace-pre-wrap">{output}</pre>
-              ) : (
-                <div className="text-gray-600 italic">Run your code to see the output here...</div>
+        <div className="p-6 space-y-8">
+          {/* Lesson Content Grid */}
+          <div className="grid lg:grid-cols-2 gap-8">
+            {/* Theory Section */}
+            <div className="space-y-6">
+              {/* Video Placeholder - Show for video lessons */}
+              {lesson.language !== 'theory' && (
+                <VideoPlaceholder 
+                  title={`${lesson.title} - Introduction`}
+                  description="Watch this introduction video before starting the coding exercise"
+                  duration="3:25"
+                />
               )}
+              
+              <TheoryRenderer theory={lesson.content.theory} />
+              
+              <div className="bg-gradient-to-br from-green-400/10 to-green-500/10 p-6 rounded-xl border border-green-400/30 shadow-lg">
+                <div className="flex items-center mb-4">
+                  <LessonTypeIcon 
+                    type={lesson.language === 'theory' ? 'theory' : 'coding'} 
+                    size="md" 
+                  />
+                  <h3 className="text-xl font-bold text-green-400 ml-3">Task Instructions</h3>
+                </div>
+                <div className="text-green-200 leading-relaxed space-y-2">
+                  {lesson.content.instructions.split('\n').map((line, index) => (
+                    <div key={index} className="flex items-start font-medium">
+                      <span>{line}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Interactive Section */}
+            <div className="space-y-6">
+              {/* Solution Toggle */}
+              <div className="flex items-center justify-between">
+                <h3 className="text-lg font-semibold text-white flex items-center gap-3">
+                  <LessonTypeIcon type="coding" size="sm" />
+                  Interactive Console
+                </h3>
+                <button
+                  onClick={toggleSolution}
+                  className="bg-green-500/10 border border-green-500/30 text-green-400 hover:bg-green-500/20 hover:text-green-300 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200"
+                >
+                  {showSolution ? 'Hide' : 'Show'} Solution
+                </button>
+              </div>
+              
+              {/* Code Console */}
+              <CodeConsole
+                language={lesson.language as 'javascript' | 'python' | 'html'}
+                initialCode={currentCode}
+                onCodeChange={setCurrentCode}
+                onRun={runCode}
+                isRunning={isRunning}
+                className="shadow-2xl"
+              />
+              
+              {/* Output Panel */}
+              <OutputPanel
+                output={output}
+                isRunning={isRunning}
+                hasError={hasError}
+                className="shadow-2xl"
+              />
+              
+              {/* Action Buttons */}
+              <div className="flex gap-3">
+                <button
+                  onClick={checkSolution}
+                  className="flex-1 bg-green-400 text-black px-6 py-3 rounded-xl hover:bg-green-300 transition-all duration-200 text-center font-bold shadow-lg hover:shadow-xl transform hover:scale-105"
+                >
+                  {lesson.quiz && !quizCompleted ? 'Complete Lesson' : 'Check Solution'}
+                </button>
+              </div>
             </div>
           </div>
         </div>
