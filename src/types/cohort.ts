@@ -15,6 +15,7 @@ export interface Cohort {
   members: string[];
   createdAt: Date;
   isActive: boolean;
+  password: string;
 }
 
 export interface CohortLocation {

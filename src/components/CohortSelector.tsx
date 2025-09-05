@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { cohortLocations } from '@/data/cohorts';
-import { cohortStyles } from '@/data/cohortStyles';
 import { Cohort } from '@/types/cohort';
 
 interface CohortSelectorProps {
@@ -10,86 +9,189 @@ interface CohortSelectorProps {
 
 export default function CohortSelector({ onCohortSelect, onClose }: CohortSelectorProps) {
   const [selectedLocation, setSelectedLocation] = useState<string>('');
+  const [selectedCohort, setSelectedCohort] = useState<Cohort | null>(null);
+  const [passwordInput, setPasswordInput] = useState('');
+  const [passwordError, setPasswordError] = useState('');
+  const [step, setStep] = useState<'location' | 'cohort' | 'password'>('location');
 
-  const handleCohortJoin = (cohort: Cohort) => {
-    // Save to localStorage
-    localStorage.setItem('userCohort', JSON.stringify(cohort));
-    onCohortSelect(cohort);
-    onClose();
+  const activeLocations = cohortLocations.filter(loc => loc.cohortCount > 0);
+
+  const handleLocationSelect = (locationId: string) => {
+    setSelectedLocation(locationId);
+    setStep('cohort');
   };
 
+  const handleCohortSelect = (cohort: Cohort) => {
+    setSelectedCohort(cohort);
+    setStep('password');
+  };
+
+  const handlePasswordSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!selectedCohort) return;
+
+    if (passwordInput === selectedCohort.password) {
+      localStorage.setItem('userCohort', JSON.stringify(selectedCohort));
+      onCohortSelect(selectedCohort);
+      onClose();
+    } else {
+      setPasswordError('Incorrect password. Please try again.');
+      setPasswordInput('');
+    }
+  };
+
+  const handleBack = () => {
+    if (step === 'password') {
+      setStep('cohort');
+      setPasswordError('');
+      setPasswordInput('');
+    } else if (step === 'cohort') {
+      setStep('location');
+      setSelectedLocation('');
+    }
+  };
+
+  const selectedLocationData = cohortLocations.find(loc => loc.id === selectedLocation);
+
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm">
-      <div className="bg-white rounded-2xl p-8 mx-4 max-w-4xl w-full max-h-[80vh] overflow-y-auto">
-        <div className="flex justify-between items-center mb-6">
-          <h2 className="text-3xl font-bold text-black">Join Your Cohort</h2>
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm">
+      <div className="bg-gray-900 rounded-2xl border border-green-400/20 shadow-2xl mx-4 max-w-2xl w-full max-h-[80vh] overflow-hidden">
+        {/* Header */}
+        <div className="flex items-center justify-between p-6 border-b border-gray-700">
+          <div className="flex items-center space-x-3">
+            {step !== 'location' && (
+              <button
+                onClick={handleBack}
+                className="text-gray-400 hover:text-white p-1 rounded transition-colors"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                </svg>
+              </button>
+            )}
+            <h2 className="text-2xl font-bold text-white">
+              {step === 'location' && 'Select Your Site'}
+              {step === 'cohort' && `${selectedLocationData?.fullName} Cohorts`}
+              {step === 'password' && 'Enter Cohort Password'}
+            </h2>
+          </div>
           <button
             onClick={onClose}
-            className="text-gray-500 hover:text-gray-700 text-2xl"
+            className="text-gray-400 hover:text-white p-2 rounded-lg hover:bg-gray-700 transition-all duration-200"
           >
-            ×
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
           </button>
         </div>
 
-        <p className="text-gray-600 mb-8">
-          Choose your city and connect with local peers and instructors.
-        </p>
-
-        <div className="space-y-6">
-          {cohortStyles.filter(style => style.cohortCount > 0).map((style) => {
-            const location = cohortLocations.find(loc => loc.id === style.id);
-            if (!location) return null;
-
-            return (
-              <div key={style.id} className={`relative overflow-hidden rounded-2xl border-2 ${style.accent} ${style.bgPattern} backdrop-blur-sm`}>
-                {/* Header with gradient */}
-                <div className={`bg-gradient-to-r ${style.gradient} p-6 text-white relative`}>
-                  <div className="absolute top-4 right-4 text-3xl">{style.emoji}</div>
-                  <h3 className="text-2xl font-bold mb-2">{style.fullName}</h3>
-                  <p className="text-white/90 mb-3">{style.description}</p>
-                  <div className="flex items-center gap-4">
-                    <span className="bg-black/20 px-3 py-1 rounded-full text-sm font-medium">
-                      📍 {style.location}
-                    </span>
-                    <span className="bg-black/20 px-3 py-1 rounded-full text-sm font-medium">
-                      👥 {style.cohortCount} cohorts
-                    </span>
-                  </div>
-                </div>
-
-                {/* Cohort Selection */}
-                <div className="p-6 bg-white/95">
-                  <h4 className="text-lg font-semibold text-gray-800 mb-4">Available Cohorts:</h4>
-                  <div className="grid grid-cols-3 gap-3">
-                    {location.cohorts.map((cohort) => (
-                      <button
-                        key={cohort.id}
-                        onClick={() => handleCohortJoin(cohort)}
-                        className={`group relative overflow-hidden bg-gradient-to-br ${style.gradient} text-white p-4 rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-lg`}
-                      >
-                        <div className="relative z-10">
-                          <div className="font-bold text-lg mb-1">{cohort.name}</div>
-                          <div className="text-white/80 text-sm mb-2">
-                            {cohort.members.length} members
-                          </div>
-                          <div className="text-xs bg-black/20 px-2 py-1 rounded-full inline-block">
-                            Click to Join →
-                          </div>
-                        </div>
-                        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-all duration-300"></div>
-                      </button>
-                    ))}
-                  </div>
-                </div>
+        <div className="p-6">
+          {/* Step 1: Location Selection */}
+          {step === 'location' && (
+            <div className="space-y-4">
+              <p className="text-gray-300 mb-6">
+                Choose your site location to access local cohorts.
+              </p>
+              <div className="grid gap-3">
+                {activeLocations.map((location) => (
+                  <button
+                    key={location.id}
+                    onClick={() => handleLocationSelect(location.id)}
+                    className="group flex items-center justify-between p-4 bg-gray-800/50 hover:bg-gray-700/50 rounded-lg border border-gray-700 hover:border-green-400/40 transition-all duration-200"
+                  >
+                    <div className="flex items-center space-x-4">
+                      <div className="w-12 h-12 bg-green-400/10 rounded-lg flex items-center justify-center text-2xl">
+                        📍
+                      </div>
+                      <div className="text-left">
+                        <h3 className="text-lg font-semibold text-white">{location.fullName}</h3>
+                        <p className="text-sm text-gray-400">{location.cohortCount} active cohorts</p>
+                      </div>
+                    </div>
+                    <svg className="w-5 h-5 text-gray-400 group-hover:text-green-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
+                  </button>
+                ))}
               </div>
-            );
-          })}
-        </div>
+            </div>
+          )}
 
-        <div className="mt-8 text-center">
-          <p className="text-gray-500 text-sm">
-            Can't find your cohort? Contact your instructor for assistance.
-          </p>
+          {/* Step 2: Cohort Selection */}
+          {step === 'cohort' && selectedLocationData && (
+            <div className="space-y-4">
+              <p className="text-gray-300 mb-6">
+                Select a cohort to join in {selectedLocationData.fullName}.
+              </p>
+              <div className="grid gap-3">
+                {selectedLocationData.cohorts.map((cohort) => (
+                  <button
+                    key={cohort.id}
+                    onClick={() => handleCohortSelect(cohort)}
+                    className="group flex items-center justify-between p-4 bg-gray-800/50 hover:bg-gray-700/50 rounded-lg border border-gray-700 hover:border-green-400/40 transition-all duration-200"
+                  >
+                    <div className="flex items-center space-x-4">
+                      <div className="w-12 h-12 bg-green-400/10 rounded-lg flex items-center justify-center text-lg font-bold text-green-400">
+                        {cohort.number}
+                      </div>
+                      <div className="text-left">
+                        <h3 className="text-lg font-semibold text-white">{cohort.name}</h3>
+                        <p className="text-sm text-gray-400">{cohort.members.length} members • Password protected</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <div className="w-2 h-2 bg-green-400 rounded-full"></div>
+                      <svg className="w-5 h-5 text-gray-400 group-hover:text-green-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                      </svg>
+                    </div>
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Step 3: Password Entry */}
+          {step === 'password' && selectedCohort && (
+            <div className="space-y-6">
+              <div className="text-center">
+                <div className="w-16 h-16 bg-green-400/10 rounded-full flex items-center justify-center text-2xl mx-auto mb-4">
+                  🔐
+                </div>
+                <h3 className="text-xl font-semibold text-white mb-2">{selectedCohort.name}</h3>
+                <p className="text-gray-300 mb-6">
+                  This cohort is password protected. Enter the password provided by your instructor.
+                </p>
+              </div>
+              
+              <form onSubmit={handlePasswordSubmit} className="space-y-4">
+                <div>
+                  <input
+                    type="password"
+                    value={passwordInput}
+                    onChange={(e) => {
+                      setPasswordInput(e.target.value);
+                      setPasswordError('');
+                    }}
+                    placeholder="Enter password"
+                    className="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-green-400 transition-colors"
+                    autoFocus
+                  />
+                  {passwordError && (
+                    <p className="text-red-400 text-sm mt-2">{passwordError}</p>
+                  )}
+                </div>
+                
+                <button
+                  type="submit"
+                  disabled={!passwordInput.trim()}
+                  className="w-full bg-green-400 hover:bg-green-500 disabled:bg-gray-600 disabled:cursor-not-allowed text-black font-semibold py-3 px-4 rounded-lg transition-colors"
+                >
+                  Join Cohort
+                </button>
+              </form>
+            </div>
+          )}
         </div>
       </div>
     </div>

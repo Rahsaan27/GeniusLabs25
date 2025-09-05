@@ -185,110 +185,6 @@ getMessage().then(result => console.log(result));`,
   },
 
   {
-    id: 'js-design-patterns',
-    title: 'JavaScript Design Patterns',
-    description: 'Learn essential design patterns: Module, Observer, and Factory patterns',
-    difficulty: 'advanced',
-    language: 'javascript',
-    estimatedTime: 1,
-    content: {
-      theory: `
-# JavaScript Design Patterns
-
-Design patterns are reusable solutions to common programming problems. They provide a vocabulary for developers and promote code reusability.
-
-## Essential Patterns:
-- **Module Pattern**: Encapsulation and privacy using closures
-- **Observer Pattern**: One-to-many dependency between objects
-- **Factory Pattern**: Creating objects without specifying exact classes
-- **Singleton Pattern**: Ensuring only one instance exists
-
-## Benefits:
-- Code organization and maintainability
-- Proven solutions to common problems
-- Better communication between developers
-- Improved code reusability
-      `,
-      instructions: `
-Create a simple module that stores a list:
-
-1. Add a private array for items
-2. Create methods to add and get items
-3. Return the public methods
-      `,
-      starterCode: `const ListManager = (function() {
-  // Private variables
-  let items = [];
-  
-  // Public interface
-  return {
-    add: function(item) {
-      // Add item to the array
-      
-    },
-    
-    getAll: function() {
-      // Return all items
-      
-    }
-  };
-})();
-
-// Test it
-ListManager.add('apple');
-console.log(ListManager.getAll());`,
-      solution: `const ListManager = (function() {
-  // Private variables
-  let items = [];
-  
-  // Public interface
-  return {
-    add: function(item) {
-      items.push(item);
-    },
-    
-    getAll: function() {
-      return items;
-    }
-  };
-})();
-
-// Test it
-ListManager.add('apple');
-console.log(ListManager.getAll());`,
-      testCases: [
-        {
-          id: 'test-1',
-          input: 'UserManager.addUser("John", "john@email.com")',
-          expectedOutput: 'User object with id, name, email',
-          description: 'Should create and return user object'
-        }
-      ]
-    },
-    quiz: {
-      id: 'patterns-quiz',
-      title: 'Design Patterns Knowledge Check',
-      timePerQuestion: 15,
-      passingScore: 80,
-      questions: [
-        {
-          id: 'module-pattern-benefits',
-          question: 'What is the main benefit of the Module Pattern?',
-          options: [
-            'Faster code execution',
-            'Data encapsulation and privacy',
-            'Smaller file sizes',
-            'Better browser compatibility'
-          ],
-          correctAnswer: 1,
-          explanation: 'Correct! The Module Pattern provides data encapsulation and privacy through closures!',
-          emoji: '🏗️'
-        }
-      ]
-    }
-  },
-
-  {
     id: 'python-decorators-advanced',
     title: 'Python Decorators Mastery',
     description: 'Master decorators, metaclasses, and advanced Python patterns',
@@ -495,7 +391,7 @@ export const shortFormModules = [
     language: 'python', 
     category: 'technology' as const,
     difficulty: 'advanced' as const,
-    estimatedTime: 3,
+    estimatedTime: 1,
     lessons: shortFormLessons.filter(lesson => lesson.language === 'python')
   },
   {
@@ -505,7 +401,7 @@ export const shortFormModules = [
     language: 'theory',
     category: 'technology' as const,
     difficulty: 'advanced' as const,
-    estimatedTime: 2,
+    estimatedTime: 1,
     lessons: shortFormLessons.filter(lesson => lesson.language === 'theory')
   }
 ];

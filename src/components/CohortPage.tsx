@@ -35,46 +35,46 @@ export default function CohortPage() {
         <div className="max-w-7xl mx-auto px-4 py-12">
           <div className="text-center mb-12">
             <h1 className="text-4xl font-bold mb-4">Join Your Cohort</h1>
-            <p className="text-gray-400 text-lg">
+            <p className="text-gray-300 text-lg">
               Connect with your peers and instructors in your local cohort space
             </p>
           </div>
 
-          <div className="max-w-md mx-auto text-center">
-            <div className="bg-gradient-to-br from-green-500 to-green-600 rounded-2xl p-8 mb-8">
-              <div className="text-6xl mb-4">👥</div>
-              <h2 className="text-2xl font-bold mb-4">Cohort Collaboration</h2>
-              <p className="text-green-100 mb-6">
-                Join group discussions, ask questions, share resources, and collaborate with students in your area.
+          <div className="max-w-lg mx-auto text-center">
+            <div className="bg-gradient-to-br from-green-400/20 to-green-600/20 border border-green-400/20 rounded-2xl p-8 mb-8 backdrop-blur-sm">
+              <div className="text-6xl mb-4">💬</div>
+              <h2 className="text-2xl font-bold mb-4">Cohort Chat</h2>
+              <p className="text-gray-300 mb-6">
+                Connect with students in your area. Share knowledge, ask questions, and build lasting friendships through collaborative learning.
               </p>
               <button
                 onClick={() => setShowSelector(true)}
-                className="bg-white text-green-600 px-8 py-3 rounded-xl font-bold hover:bg-gray-100 transition-colors"
+                className="bg-green-400 hover:bg-green-500 text-black px-8 py-3 rounded-lg font-bold transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105"
               >
                 Find My Cohort
               </button>
             </div>
 
             <div className="grid grid-cols-2 gap-4 text-sm">
-              <div className="bg-gray-900 p-4 rounded-lg">
-                <div className="text-2xl mb-2">💬</div>
-                <div className="font-semibold mb-1">Group Chat</div>
-                <div className="text-gray-400">Real-time messaging</div>
+              <div className="bg-gray-800/50 p-4 rounded-lg border border-gray-700/50">
+                <div className="text-2xl mb-2">⚡</div>
+                <div className="font-semibold mb-1 text-white">Real-time Chat</div>
+                <div className="text-gray-400">Instant messaging</div>
               </div>
-              <div className="bg-gray-900 p-4 rounded-lg">
-                <div className="text-2xl mb-2">📚</div>
-                <div className="font-semibold mb-1">Share Resources</div>
-                <div className="text-gray-400">Help each other learn</div>
+              <div className="bg-gray-800/50 p-4 rounded-lg border border-gray-700/50">
+                <div className="text-2xl mb-2">🔒</div>
+                <div className="font-semibold mb-1 text-white">Private Groups</div>
+                <div className="text-gray-400">Password protected</div>
               </div>
-              <div className="bg-gray-900 p-4 rounded-lg">
-                <div className="text-2xl mb-2">🤝</div>
-                <div className="font-semibold mb-1">Peer Support</div>
-                <div className="text-gray-400">Learn together</div>
-              </div>
-              <div className="bg-gray-900 p-4 rounded-lg">
-                <div className="text-2xl mb-2">🎯</div>
-                <div className="font-semibold mb-1">Local Focus</div>
+              <div className="bg-gray-800/50 p-4 rounded-lg border border-gray-700/50">
+                <div className="text-2xl mb-2">📍</div>
+                <div className="font-semibold mb-1 text-white">Local Focus</div>
                 <div className="text-gray-400">Your area cohort</div>
+              </div>
+              <div className="bg-gray-800/50 p-4 rounded-lg border border-gray-700/50">
+                <div className="text-2xl mb-2">🤝</div>
+                <div className="font-semibold mb-1 text-white">Peer Learning</div>
+                <div className="text-gray-400">Collaborative growth</div>
               </div>
             </div>
           </div>
@@ -91,36 +91,65 @@ export default function CohortPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-100">
-      <div className="bg-white border-b px-4 py-3">
-        <div className="max-w-7xl mx-auto flex justify-between items-center">
-          <div className="flex items-center space-x-4">
-            <h1 className="text-2xl font-bold text-black">Cohort Space</h1>
-            <span className="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-medium">
-              {userCohort.name}
-            </span>
-          </div>
-          <div className="flex items-center space-x-4">
-            <button
-              onClick={() => setShowSelector(true)}
-              className="text-gray-600 hover:text-gray-800 text-sm font-medium"
-            >
-              Switch Cohort
-            </button>
-            <button
-              onClick={handleLeaveCohort}
-              className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors"
-            >
-              Leave Cohort
-            </button>
-          </div>
+    <div className="h-screen bg-black overflow-hidden">
+      {/* Discord-like Server Bar */}
+      <div className="fixed top-20 left-0 w-20 h-[calc(100vh-5rem)] bg-gray-900 border-r border-gray-700 flex flex-col items-center py-4 z-10">
+        <div className="w-12 h-12 bg-green-400 rounded-2xl hover:rounded-xl flex items-center justify-center text-2xl mb-4 transition-all duration-200 cursor-pointer">
+          💬
+        </div>
+        <div className="w-8 h-px bg-gray-700 mb-4"></div>
+        <div className="w-12 h-12 bg-gray-700 rounded-full hover:rounded-2xl flex items-center justify-center text-lg font-bold text-white transition-all duration-200 cursor-pointer hover:bg-green-400 hover:text-black">
+          {userCohort.location.charAt(0)}
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto p-4">
-        <div className="bg-white rounded-xl shadow-lg h-[calc(100vh-120px)]">
-          <CohortChat cohort={userCohort} currentUser={currentUser} />
+      {/* Discord-like Channel Sidebar */}
+      <div className="fixed top-20 left-20 w-64 h-[calc(100vh-5rem)] bg-gray-800 border-r border-gray-700 flex flex-col z-10">
+        {/* Server Header */}
+        <div className="h-16 px-4 border-b border-gray-700 flex items-center justify-between">
+          <div className="font-bold text-white truncate">{userCohort.location}</div>
+          <button
+            onClick={() => setShowSelector(true)}
+            className="text-gray-400 hover:text-white p-1 rounded transition-colors"
+          >
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
         </div>
+
+        {/* Channel List */}
+        <div className="flex-1 p-4 overflow-y-auto">
+          <div className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Text Channels</div>
+          <div className="flex items-center px-2 py-1 rounded text-gray-300 bg-gray-700/50">
+            <span className="mr-2">#</span>
+            <span className="text-sm font-medium">{userCohort.name.toLowerCase().replace(/\s+/g, '-')}</span>
+          </div>
+        </div>
+
+        {/* User Area */}
+        <div className="h-16 px-3 bg-gray-900/50 border-t border-gray-700 flex items-center justify-between flex-shrink-0">
+          <div className="flex items-center space-x-2 flex-1 min-w-0">
+            <div className="w-8 h-8 bg-green-400 rounded-full flex items-center justify-center text-sm font-bold text-black">
+              {currentUser.name.charAt(0)}
+            </div>
+            <div className="text-sm text-white truncate">{currentUser.name}</div>
+          </div>
+          <button
+            onClick={handleLeaveCohort}
+            className="text-gray-400 hover:text-red-400 p-1 rounded transition-colors"
+            title="Leave Cohort"
+          >
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      {/* Main Chat Area */}
+      <div className="fixed top-20 left-84 right-0 bottom-0 h-[calc(100vh-5rem)]">
+        <CohortChat cohort={userCohort} currentUser={currentUser} />
       </div>
 
       {showSelector && (

@@ -13,7 +13,8 @@ export const cohortLocations: CohortLocation[] = [
       number: i + 1,
       members: [],
       createdAt: new Date(),
-      isActive: true
+      isActive: true,
+      password: '0000'
     }))
   },
   {
@@ -28,7 +29,8 @@ export const cohortLocations: CohortLocation[] = [
       number: i + 1,
       members: [],
       createdAt: new Date(),
-      isActive: true
+      isActive: true,
+      password: '0000'
     }))
   },
   {
@@ -57,7 +59,8 @@ export const cohortLocations: CohortLocation[] = [
       number: 1,
       members: [],
       createdAt: new Date(),
-      isActive: true
+      isActive: true,
+      password: '0000'
     }]
   },
   {
@@ -72,7 +75,8 @@ export const cohortLocations: CohortLocation[] = [
       number: i + 1,
       members: [],
       createdAt: new Date(),
-      isActive: true
+      isActive: true,
+      password: '0000'
     }))
   },
   {
@@ -94,7 +98,8 @@ export const cohortLocations: CohortLocation[] = [
       number: i + 1,
       members: [],
       createdAt: new Date(),
-      isActive: true
+      isActive: true,
+      password: '0000'
     }))
   }
 ];
