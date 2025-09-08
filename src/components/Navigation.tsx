@@ -3,19 +3,29 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import Image from 'next/image'
+import { useAuth } from '@/hooks/useAuth'
 import logo from '@/assets/Genius-Lab-Logo-Main-Green-600.png'
 
 export default function Navigation() {
   const pathname = usePathname()
+  const { isAuthenticated, user } = useAuth()
 
-  const navItems = [
+  const authenticatedNavItems = [
     { href: '/', label: 'Home' },
     { href: '/modules', label: 'Modules' },
-    { href: '/activity', label: 'Activity' },
+    { href: '/cohort', label: 'Cohort' },
+    { href: '/profile', label: 'Profile' },
+  ]
+
+  const unauthenticatedNavItems = [
+    { href: '/', label: 'Home' },
+    { href: '/modules', label: 'Modules' },
     { href: '/cohort', label: 'Cohort' },
     { href: '/login', label: 'Login' },
     { href: '/signup', label: 'Sign Up' },
   ]
+
+  const navItems = isAuthenticated ? authenticatedNavItems : unauthenticatedNavItems
 
   return (
     <nav className="bg-black/95 backdrop-blur-md shadow-2xl border-b border-green-500/20 sticky top-0 z-50">
@@ -54,6 +64,15 @@ export default function Navigation() {
                 )}
               </Link>
             ))}
+            
+            {/* User Avatar for Authenticated Users */}
+            {isAuthenticated && user && (
+              <div className="ml-4">
+                <div className="w-10 h-10 bg-gradient-to-r from-green-400 to-green-500 rounded-full flex items-center justify-center text-black font-bold text-sm">
+                  {user.name ? user.name.charAt(0).toUpperCase() : user.email.charAt(0).toUpperCase()}
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>

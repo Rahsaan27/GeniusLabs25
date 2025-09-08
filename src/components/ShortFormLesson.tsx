@@ -121,7 +121,7 @@ export default function ShortFormLesson({ lesson, onComplete }: ShortFormLessonP
 
           {/* Exit button */}
           <Link
-            href="/activity"
+            href="/modules"
             className="bg-black/20 hover:bg-black/30 p-2 rounded-full transition-all duration-200"
           >
             <X size={18} />
@@ -184,7 +184,7 @@ function HookSlide({ onNext }: { onNext: () => void }) {
   }, []);
 
   return (
-    <div className="h-full bg-gray-900/95 backdrop-blur-sm rounded-3xl border border-green-400/20 p-8 flex flex-col justify-center items-center text-center shadow-2xl">
+    <div className="h-[80%] bg-gray-900/95 backdrop-blur-sm rounded-3xl border border-green-400/20 p-8 flex flex-col justify-center items-center text-center shadow-2xl">
       <div className="text-8xl mb-6 animate-pulse">⚡</div>
       <h1 className="text-4xl font-bold mb-4 bg-gradient-to-r from-green-400 via-green-300 to-green-500 bg-clip-text text-transparent leading-tight">
         JavaScript Closures in 60 Seconds!
@@ -245,16 +245,16 @@ function TapRevealSlide({
   ];
 
   return (
-    <div className="h-full bg-gray-900/95 backdrop-blur-sm rounded-3xl border border-green-400/20 p-6 flex flex-col shadow-2xl">
+    <div className="h-[80%] bg-gray-900/95  border border-green-400/20 p-6 flex flex-col shadow-2xl">
       <h2 className="text-2xl font-bold mb-4 text-green-400">Tap to Reveal! 👆</h2>
       <p className="text-lg mb-6">JavaScript closures are like...</p>
       
-      <div className="grid grid-cols-1 gap-4 mb-6">
+      <div className="grid grid-cols-1 gap-4 mb-6 p-4 ">
         {zones.map((zone, index) => (
           <div
             key={index}
             onClick={() => revealZone(index)}
-            className={`bg-white/5 border-2 border-white/20 rounded-2xl p-6 text-center cursor-pointer transition-all duration-300 relative overflow-hidden ${
+            className={`bg-white/5 border-2 border-white/20 rounded-xl sm:rounded-2xl p-3 text-center cursor-pointer transition-all duration-300 relative overflow-hidden ${
               isRevealed(index) 
                 ? 'bg-gradient-to-br from-green-400/20 to-green-500/20 border-green-400 transform scale-105' 
                 : 'hover:scale-105 hover:border-green-400/50'
@@ -264,14 +264,14 @@ function TapRevealSlide({
               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-green-400/30 to-transparent transform -translate-x-full hover:translate-x-full transition-transform duration-500"></div>
             )}
             
-            <div className="text-4xl mb-3">{zone.emoji}</div>
+            <div className="text-2xl sm:text-3xl lg:text-4xl mb-2 sm:mb-3">{zone.emoji}</div>
             <div className={`transition-all duration-500 ${
               isRevealed(index) 
                 ? 'opacity-100 transform scale-100' 
                 : 'opacity-0 transform scale-0'
             }`}>
-              <strong className="block text-green-400 text-lg mb-2">{zone.title}</strong>
-              <small className="text-white/80">{zone.subtitle}</small>
+              <strong className="block text-green-400 text-sm sm:text-base lg:text-lg mb-1 sm:mb-2">{zone.title}</strong>
+              <small className="text-white/80 text-xs sm:text-sm">{zone.subtitle}</small>
             </div>
           </div>
         ))}
@@ -357,18 +357,18 @@ console.log(counter());`;
   const isCorrect = output.includes('🎉');
 
   return (
-    <div className="h-full bg-gray-900/95 backdrop-blur-sm rounded-3xl border border-green-400/20 p-6 shadow-2xl">
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 h-full">
+    <div className="h-[80%]bg-gray-900/95 backdrop-blur-sm rounded-2xl sm:rounded-3xl border border-green-400/20 p-4 sm:p-6 shadow-2xl">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 h-full">
         {/* Left column - Instructions and buttons */}
         <div className="flex flex-col">
-          <h2 className="text-2xl font-bold mb-4 text-green-400">Code Challenge! 💻</h2>
-          <p className="text-lg mb-6">Complete this closure to create a private counter:</p>
+          <h2 className="text-xl sm:text-2xl font-bold mb-3 sm:mb-4 text-green-400">Code Challenge! 💻</h2>
+          <p className="text-base sm:text-lg mb-4 sm:mb-6">Complete this closure to create a private counter:</p>
           
           <div className="flex gap-2 mb-4">
             <button
               onClick={runCode}
               disabled={isRunning}
-              className="bg-green-400 text-black px-6 py-3 rounded-lg hover:bg-green-300 disabled:opacity-50 transition-colors flex-1 font-bold text-lg"
+              className="bg-green-400 text-black px-4 sm:px-6 py-2 sm:py-3 rounded-lg hover:bg-green-300 disabled:opacity-50 transition-colors flex-1 font-bold text-base sm:text-lg"
             >
               {isRunning ? 'Running...' : 'Run Code'}
             </button>
@@ -404,8 +404,8 @@ console.log(counter());`;
                 setUserCode(e.target.value);
                 onStateUpdate({ userInput: e.target.value });
               }}
-              className="bg-transparent border-none text-green-400 font-mono text-sm w-full h-full outline-none resize-none"
-              style={{ minHeight: '350px' }}
+              className="bg-transparent border-none text-green-400 font-mono text-xs sm:text-sm w-full h-full outline-none resize-none"
+              style={{ minHeight: '250px' }}
             />
           </div>
         </div>
@@ -457,7 +457,7 @@ function QuizSlide({
   };
 
   return (
-    <div className="h-full bg-gray-900/95 backdrop-blur-sm rounded-3xl border border-green-400/20 p-6 flex flex-col shadow-2xl">
+    <div className = " h-[80%] bg-gray-900/95 backdrop-blur-sm rounded-3xl border border-green-400/20 p-6 flex flex-col shadow-2xl">
       <h2 className="text-2xl font-bold mb-4 text-green-400">Speed Round! 🏃‍♂️</h2>
       <p className="text-lg mb-6 font-semibold">{question}</p>
       
@@ -565,7 +565,7 @@ function DragDropSlide({
   };
 
   return (
-    <div className="h-full bg-gray-900/95 backdrop-blur-sm rounded-3xl border border-green-400/20 p-6 flex flex-col shadow-2xl">
+    <div className="h-[80%] bg-gray-900/95 backdrop-blur-sm rounded-3xl border border-green-400/20 p-6 flex flex-col shadow-2xl">
       <h2 className="text-2xl font-bold mb-4 text-green-400">Match the Concepts! 🎯</h2>
       <p className="text-sm mb-4">Drag each concept to where it belongs in closures:</p>
       
@@ -639,7 +639,7 @@ function VictorySlide({ startTime }: { startTime: number }) {
   }, [startTime]);
 
   return (
-    <div className="h-full bg-gray-900/95 backdrop-blur-sm rounded-3xl border border-green-400/20 p-8 flex flex-col justify-center items-center text-center shadow-2xl">
+    <div className= "h-[80%] bg-gray-900/95 backdrop-blur-sm rounded-3xl border border-green-400/20 p-8 flex flex-col justify-center items-center text-center shadow-2xl">
       <div className="text-8xl mb-6 animate-bounce">🏆</div>
       <h1 className="text-3xl font-bold mb-4 bg-gradient-to-r from-green-400 via-green-300 to-green-500 bg-clip-text text-transparent">
         You Mastered Closures!
@@ -661,10 +661,10 @@ function VictorySlide({ startTime }: { startTime: number }) {
       </div>
       
       <Link
-        href="/activity"
+        href="/modules"
         className="w-full bg-gradient-to-r from-green-400 to-green-500 text-black text-center font-bold py-4 rounded-full text-lg transition-all duration-300 hover:shadow-lg hover:shadow-green-400/30 hover:scale-105"
       >
-        Explore More Lessons! 🚀
+        Explore More Modules! 🚀
       </Link>
     </div>
   );

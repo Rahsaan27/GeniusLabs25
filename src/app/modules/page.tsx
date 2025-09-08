@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import Link from "next/link";
 import Image from "next/image";
 import { modules } from '@/data/lessons';
+import { shortFormModules } from '@/data/shortFormLessons';
 import { getModuleProgress, getUserProgress } from '@/utils/progress';
 import jsLogo from '@/assets/javascript.png';
 import pythonLogo from '@/assets/python.png';
@@ -247,7 +248,7 @@ export default function ModulesPage() {
                         {/* Action Button */}
                         <div className="px-6 pb-6">
                           <Link
-                            href={`/activity`}
+                            href={shortFormModules.find(sfm => sfm.id === module.id) ? `/short-form/${module.id}` : `/activity`}
                             className="w-full bg-green-400 text-black px-4 py-3 rounded-xl hover:bg-green-300 transition-all duration-200 text-center font-bold text-sm shadow-lg hover:shadow-xl group-hover:scale-105 transform inline-block"
                           >
                             {progress.percentage > 0 ? 'Continue Learning' : 'Start Module'}
@@ -266,10 +267,10 @@ export default function ModulesPage() {
       {/* Progress Modal */}
       {showProgressModal && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div className="bg-gray-900 rounded-2xl border border-green-400/20 shadow-2xl max-w-2xl w-full max-h-[80vh] overflow-hidden">
+          <div className="bg-gray-900 rounded-2xl border border-green-400/20 shadow-2xl max-w-4xl w-full max-h-[80vh] overflow-hidden">
             {/* Modal Header */}
             <div className="flex items-center justify-between p-6 border-b border-gray-700">
-              <h2 className="text-2xl font-bold text-white">Your Progress</h2>
+              <h2 className="text-2xl font-bold text-white">Learning Progress & Achievements</h2>
               <button 
                 onClick={() => setShowProgressModal(false)}
                 className="text-gray-400 hover:text-white p-2 rounded-lg hover:bg-gray-700 transition-all duration-200"
@@ -282,6 +283,29 @@ export default function ModulesPage() {
             
             {/* Modal Content */}
             <div className="p-6 overflow-y-auto max-h-[calc(80vh-120px)]">
+              {/* Metrics Section */}
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+                <div className="bg-gray-800/50 rounded-xl p-4 text-center border border-gray-700/50">
+                  <div className="text-2xl font-bold text-green-400">{modules.reduce((acc, mod) => acc + (moduleProgress[mod.id]?.completed || 0), 0)}</div>
+                  <div className="text-xs text-gray-400 mt-1">Lessons Completed</div>
+                </div>
+                <div className="bg-gray-800/50 rounded-xl p-4 text-center border border-gray-700/50">
+                  <div className="text-2xl font-bold text-blue-400">{modules.reduce((acc, mod) => acc + mod.lessons.length, 0)}</div>
+                  <div className="text-xs text-gray-400 mt-1">Total Lessons</div>
+                </div>
+                <div className="bg-gray-800/50 rounded-xl p-4 text-center border border-gray-700/50">
+                  <div className="text-2xl font-bold text-purple-400">{Math.round(modules.reduce((acc, mod) => {
+                    const progress = moduleProgress[mod.id] || { percentage: 0 };
+                    return acc + progress.percentage;
+                  }, 0) / modules.length)}%</div>
+                  <div className="text-xs text-gray-400 mt-1">Overall Progress</div>
+                </div>
+                <div className="bg-gray-800/50 rounded-xl p-4 text-center border border-gray-700/50">
+                  <div className="text-2xl font-bold text-yellow-400">{modules.filter(mod => (moduleProgress[mod.id]?.percentage || 0) === 100).length}</div>
+                  <div className="text-xs text-gray-400 mt-1">Modules Mastered</div>
+                </div>
+              </div>
+              
               <div className="space-y-4">
                 {modules.map((module) => {
                   const progress = moduleProgress[module.id] || { completed: 0, total: module.lessons.length, percentage: 0 };

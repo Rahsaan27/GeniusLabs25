@@ -31,9 +31,21 @@ export function useAuth() {
 
   const logout = async () => {
     try {
-      await auth.signoutRedirect();
+      // Use removeUser instead of signoutRedirect to avoid redirect issues
+      await auth.removeUser();
+      // Clear any local storage or session storage
+      if (typeof window !== 'undefined') {
+        localStorage.clear();
+        sessionStorage.clear();
+      }
       return { success: true };
     } catch (error: unknown) {
+      console.error('Logout error:', error);
+      // Even if there's an error, try to clear local state
+      if (typeof window !== 'undefined') {
+        localStorage.clear();
+        sessionStorage.clear();
+      }
       const message = error instanceof Error ? error.message : 'Logout failed';
       return { success: false, error: message };
     }
