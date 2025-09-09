@@ -5,6 +5,30 @@ export interface Message {
   content: string;
   timestamp: Date;
   cohortId: string;
+  type: 'message' | 'announcement' | 'assignment';
+  isAdminMessage?: boolean;
+  assignmentData?: Assignment;
+}
+
+export interface Assignment {
+  id: string;
+  title: string;
+  description: string;
+  moduleId: string;
+  lessonIds: string[];
+  dueDate?: Date;
+  createdAt: Date;
+  completedBy: string[];
+}
+
+export interface Announcement {
+  id: string;
+  title: string;
+  content: string;
+  createdAt: Date;
+  createdBy: string;
+  cohortId: string;
+  priority: 'low' | 'medium' | 'high';
 }
 
 export interface Cohort {
@@ -31,5 +55,14 @@ export interface User {
   name: string;
   email: string;
   cohortId?: string;
+  joinedAt: Date;
+  isAdmin?: boolean;
+}
+
+export interface CohortUser {
+  id: string;
+  name: string;
+  email?: string;
+  isAdmin: boolean;
   joinedAt: Date;
 }

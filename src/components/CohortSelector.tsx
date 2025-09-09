@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { cohortLocations } from '@/data/cohorts';
 import { Cohort } from '@/types/cohort';
 
@@ -16,6 +16,14 @@ export default function CohortSelector({ onCohortSelect, onClose }: CohortSelect
 
   const activeLocations = cohortLocations.filter(loc => loc.cohortCount > 0);
 
+  // Prevent body scroll when modal is open
+  useEffect(() => {
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, []);
+
   const handleLocationSelect = (locationId: string) => {
     setSelectedLocation(locationId);
     setStep('cohort');
@@ -30,9 +38,19 @@ export default function CohortSelector({ onCohortSelect, onClose }: CohortSelect
     e.preventDefault();
     if (!selectedCohort) return;
 
-    if (passwordInput === selectedCohort.password) {
-      localStorage.setItem('userCohort', JSON.stringify(selectedCohort));
-      onCohortSelect(selectedCohort);
+    // Check for admin access (password 1111) or student access (password 0000)
+    const isAdminPassword = passwordInput === '1111';
+    const isStudentPassword = passwordInput === '0000';
+
+    if (isAdminPassword || isStudentPassword) {
+      const userRole = isAdminPassword ? 'admin' : 'student';
+      const cohortWithUserInfo = {
+        ...selectedCohort,
+        userRole
+      };
+      localStorage.setItem('userCohort', JSON.stringify(cohortWithUserInfo));
+      localStorage.setItem('userRole', userRole);
+      onCohortSelect(cohortWithUserInfo);
       onClose();
     } else {
       setPasswordError('Incorrect password. Please try again.');
@@ -54,10 +72,17 @@ export default function CohortSelector({ onCohortSelect, onClose }: CohortSelect
   const selectedLocationData = cohortLocations.find(loc => loc.id === selectedLocation);
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm">
-      <div className="bg-gray-900 rounded-2xl border border-green-400/20 shadow-2xl mx-4 max-w-2xl w-full max-h-[80vh] overflow-hidden">
+    <div 
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm overflow-y-auto"
+      onClick={(e) => {
+        if (e.target === e.currentTarget) {
+          onClose();
+        }
+      }}
+    >
+      <div className="bg-gray-900 rounded-2xl border border-green-400/20 shadow-2xl mx-4 max-w-2xl w-full max-h-[90vh] flex flex-col my-8">
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-gray-700">
+        <div className="flex items-center justify-between p-6 border-b border-gray-700 flex-shrink-0">
           <div className="flex items-center space-x-3">
             {step !== 'location' && (
               <button
@@ -85,7 +110,7 @@ export default function CohortSelector({ onCohortSelect, onClose }: CohortSelect
           </button>
         </div>
 
-        <div className="p-6">
+        <div className="p-6 overflow-y-auto flex-1 scrollbar-thin">
           {/* Step 1: Location Selection */}
           {step === 'location' && (
             <div className="space-y-4">
@@ -162,6 +187,11 @@ export default function CohortSelector({ onCohortSelect, onClose }: CohortSelect
                 <p className="text-gray-300 mb-6">
                   This cohort is password protected. Enter the password provided by your instructor.
                 </p>
+                <div className="bg-blue-400/10 border border-blue-400/20 rounded-lg p-3 mb-4">
+                  <p className="text-blue-400 text-xs">
+                    💡 <strong>Tip:</strong> Teachers can use password "1111" for admin access
+                  </p>
+                </div>
               </div>
               
               <form onSubmit={handlePasswordSubmit} className="space-y-4">

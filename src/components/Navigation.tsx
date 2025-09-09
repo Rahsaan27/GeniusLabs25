@@ -4,11 +4,18 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import Image from 'next/image'
 import { useAuth } from '@/hooks/useAuth'
+import { useState, useEffect } from 'react'
 import logo from '@/assets/Genius-Lab-Logo-Main-Green-600.png'
 
 export default function Navigation() {
   const pathname = usePathname()
   const { isAuthenticated, user } = useAuth()
+  const [mounted, setMounted] = useState(false)
+
+  // Fix hydration mismatch
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
   const authenticatedNavItems = [
     { href: '/', label: 'Home' },
@@ -25,7 +32,8 @@ export default function Navigation() {
     { href: '/signup', label: 'Sign Up' },
   ]
 
-  const navItems = isAuthenticated ? authenticatedNavItems : unauthenticatedNavItems
+  // Use default items during SSR to prevent hydration mismatch
+  const navItems = mounted && isAuthenticated ? authenticatedNavItems : unauthenticatedNavItems
 
   return (
     <nav className="bg-black/95 backdrop-blur-md shadow-2xl border-b border-green-500/20 sticky top-0 z-50">
@@ -51,7 +59,7 @@ export default function Navigation() {
                 key={item.href}
                 href={item.href}
                 className={`px-6 py-3 rounded-xl text-sm font-bold transition-all duration-300 relative overflow-hidden group ${
-                  pathname === item.href
+                  mounted && pathname === item.href
                     ? 'text-black bg-green-400 shadow-lg shadow-green-400/25'
                     : 'text-white hover:text-green-400 hover:bg-green-400/10'
                 }`}
@@ -59,14 +67,17 @@ export default function Navigation() {
                 <span className="relative z-10">
                   {item.label}
                 </span>
-                {pathname !== item.href && (
-                  <div className="absolute inset-0 bg-green-400/5 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
-                )}
+                {/* Always render the hover effect div to prevent hydration mismatch */}
+                <div className={`absolute inset-0 bg-green-400/5 transition-transform duration-300 ${
+                  mounted && pathname === item.href 
+                    ? 'translate-y-full' 
+                    : 'translate-y-full group-hover:translate-y-0'
+                }`}></div>
               </Link>
             ))}
             
             {/* User Avatar for Authenticated Users */}
-            {isAuthenticated && user && (
+            {mounted && isAuthenticated && user && (
               <div className="ml-4">
                 <div className="w-10 h-10 bg-gradient-to-r from-green-400 to-green-500 rounded-full flex items-center justify-center text-black font-bold text-sm">
                   {user.name ? user.name.charAt(0).toUpperCase() : user.email.charAt(0).toUpperCase()}

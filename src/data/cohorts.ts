@@ -2,14 +2,14 @@ import { Cohort, CohortLocation } from '@/types/cohort';
 
 export const cohortLocations: CohortLocation[] = [
   {
-    id: 'oak',
-    name: 'Oak',
-    fullName: 'Oak City',
+    id: 'oakland',
+    name: 'Oakland',
+    fullName: 'Oakland',
     cohortCount: 15,
     cohorts: Array.from({ length: 15 }, (_, i) => ({
-      id: `oak-${i + 1}`,
-      name: `Oak ${i + 1}`,
-      location: 'Oak',
+      id: `oakland-${i + 1}`,
+      name: `Oakland ${i + 1}`,
+      location: 'Oakland',
       number: i + 1,
       members: [],
       createdAt: new Date(),
