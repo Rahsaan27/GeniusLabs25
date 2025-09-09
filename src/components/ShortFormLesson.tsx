@@ -131,7 +131,7 @@ export default function ShortFormLesson({ lesson, onComplete }: ShortFormLessonP
         {/* Main content area */}
         <div className="flex-1 relative overflow-hidden px-6 max-w-none">
           {currentSlide === 0 && (
-            <HookSlide onNext={nextSlide} />
+            <HookSlide onNext={nextSlide} lesson={lesson} />
           )}
           {currentSlide === 1 && (
             <TapRevealSlide 
@@ -139,6 +139,7 @@ export default function ShortFormLesson({ lesson, onComplete }: ShortFormLessonP
               onStateUpdate={(state) => updateSlideState(1, state)}
               onNext={nextSlide}
               onStreak={updateStreak}
+              lesson={lesson}
             />
           )}
           {currentSlide === 2 && (
@@ -147,6 +148,7 @@ export default function ShortFormLesson({ lesson, onComplete }: ShortFormLessonP
               onStateUpdate={(state) => updateSlideState(2, state)}
               onNext={nextSlide}
               onStreak={updateStreak}
+              lesson={lesson}
             />
           )}
           {currentSlide === 3 && (
@@ -155,6 +157,7 @@ export default function ShortFormLesson({ lesson, onComplete }: ShortFormLessonP
               onStateUpdate={(state) => updateSlideState(3, state)}
               onNext={nextSlide}
               onStreak={updateStreak}
+              lesson={lesson}
             />
           )}
           {currentSlide === 4 && (
@@ -163,10 +166,11 @@ export default function ShortFormLesson({ lesson, onComplete }: ShortFormLessonP
               onStateUpdate={(state) => updateSlideState(4, state)}
               onNext={nextSlide}
               onStreak={updateStreak}
+              lesson={lesson}
             />
           )}
           {currentSlide === 5 && (
-            <VictorySlide startTime={startTime} />
+            <VictorySlide startTime={startTime} lesson={lesson} />
           )}
         </div>
       </div>
@@ -175,7 +179,7 @@ export default function ShortFormLesson({ lesson, onComplete }: ShortFormLessonP
 }
 
 // Hook Slide Component
-function HookSlide({ onNext }: { onNext: () => void }) {
+function HookSlide({ onNext, lesson }: { onNext: () => void; lesson: Lesson }) {
   const [showContinue, setShowContinue] = useState(false);
 
   useEffect(() => {
@@ -183,16 +187,24 @@ function HookSlide({ onNext }: { onNext: () => void }) {
     return () => clearTimeout(timer);
   }, []);
 
+  // Get hook data from shortFormConfig if available, otherwise use default
+  const hookData = lesson.shortFormConfig?.slides?.hook || {
+    emoji: '⚡',
+    title: `${lesson.title} in 60 Seconds!`,
+    subtitle: 'Master the concepts quickly',
+    description: 'Let\'s get started!'
+  };
+
   return (
     <div className="h-[80%] bg-gray-900/95 backdrop-blur-sm rounded-3xl border border-green-400/20 p-8 flex flex-col justify-center items-center text-center shadow-2xl">
-      <div className="text-8xl mb-6 animate-pulse">⚡</div>
+      <div className="text-8xl mb-6 animate-pulse">{hookData.emoji}</div>
       <h1 className="text-4xl font-bold mb-4 bg-gradient-to-r from-green-400 via-green-300 to-green-500 bg-clip-text text-transparent leading-tight">
-        JavaScript Closures in 60 Seconds!
+        {hookData.title}
       </h1>
       <p className="text-lg mb-4 opacity-90">
-        Think closures are <span className="bg-gradient-to-r from-green-500 to-green-400 px-3 py-1 rounded-full font-bold animate-pulse">too complex</span>?
+        {hookData.subtitle}
       </p>
-      <p className="text-lg mb-8">We'll prove you wrong! 🚀</p>
+      <p className="text-lg mb-8">{hookData.description}</p>
       
       {showContinue && (
         <div className="space-y-4 w-full">
@@ -201,7 +213,7 @@ function HookSlide({ onNext }: { onNext: () => void }) {
             onClick={onNext}
             className="w-full bg-gradient-to-r from-green-400 to-green-500 text-black font-bold py-4 rounded-full text-lg hover:shadow-lg hover:shadow-green-400/30 transition-all duration-300 relative overflow-hidden group"
           >
-            <span className="relative z-10">Master Closures! ⚡</span>
+            <span className="relative z-10">Start Learning! {hookData.emoji}</span>
             <div className="absolute inset-0 bg-white/20 transform skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
           </button>
         </div>
@@ -215,12 +227,14 @@ function TapRevealSlide({
   state, 
   onStateUpdate, 
   onNext, 
-  onStreak 
+  onStreak,
+  lesson
 }: {
   state: SlideState;
   onStateUpdate: (state: Partial<SlideState>) => void;
   onNext: () => void;
   onStreak: () => void;
+  lesson: Lesson;
 }) {
   const [showContinue, setShowContinue] = useState(false);
 
@@ -238,18 +252,18 @@ function TapRevealSlide({
 
   const isRevealed = (index: number) => ((state.revealedCount || 0) & (1 << index)) > 0;
 
-  const zones = [
+  // Get concepts from shortFormConfig if available, otherwise use default
+  const zones = lesson.shortFormConfig?.slides?.concepts || [
     { emoji: '📦', title: 'Function Factory', subtitle: 'Creates new functions!' },
     { emoji: '🔐', title: 'Private Variables', subtitle: 'Hidden from outside!' },
     { emoji: '🎯', title: 'Remember Context', subtitle: 'Keeps parent scope!' }
   ];
 
   return (
-    <div className="h-[80%] bg-gray-900/95  border border-green-400/20 p-6 flex flex-col shadow-2xl">
+    <div className="h-[80%] bg-gray-900/95 border border-green-400/20 p-6 flex flex-col shadow-2xl rounded-2xl">
       <h2 className="text-2xl font-bold mb-4 text-green-400">Tap to Reveal! 👆</h2>
       <p className="text-lg mb-6">JavaScript closures are like...</p>
-      
-      <div className="grid grid-cols-1 gap-4 mb-6 p-4 ">
+      <div className="grid grid-cols-3 gap-4 mb-6 p-4 ">
         {zones.map((zone, index) => (
           <div
             key={index}
@@ -300,29 +314,26 @@ function CodeChallengeSlide({
   state, 
   onStateUpdate, 
   onNext, 
-  onStreak 
+  onStreak,
+  lesson
 }: {
   state: SlideState;
   onStateUpdate: (state: Partial<SlideState>) => void;
   onNext: () => void;
   onStreak: () => void;
+  lesson: Lesson;
 }) {
   const [userCode, setUserCode] = useState(state.userInput || '');
   const [output, setOutput] = useState(state.codeOutput || '');
   const [isRunning, setIsRunning] = useState(false);
 
-  const starterCode = `function createCounter() {
-  let count = 0;
-  
-  return function() {
-    count = count + 1;
-    // Return the count here
-    
+  // Get code challenge data from shortFormConfig if available, otherwise use lesson content
+  const codeChallenge = lesson.shortFormConfig?.slides?.codeChallenge || {
+    description: lesson.content.instructions,
+    starterCode: lesson.content.starterCode,
+    solution: lesson.content.solution,
+    successKeyword: 'success'
   };
-}
-
-const counter = createCounter();
-console.log(counter());`;
 
   const runCode = () => {
     setIsRunning(true);
@@ -330,17 +341,18 @@ console.log(counter());`;
     
     setTimeout(() => {
       try {
-        // Simple check for the return statement
-        const hasReturn = userCode.includes('return count');
+        // Check if the code contains the success keyword or expected pattern
+        const successKeyword = codeChallenge.successKeyword;
+        const hasSuccess = userCode.includes('return') || userCode.includes(successKeyword);
         
-        if (hasReturn) {
-          const successOutput = `1
-🎉 Perfect! Your closure works correctly!`;
+        if (hasSuccess) {
+          const successOutput = `${successKeyword}
+🎉 Perfect! Your code works correctly!`;
           setOutput(successOutput);
           onStateUpdate({ codeOutput: successOutput });
           onStreak();
         } else {
-          setOutput('❌ Add "return count" to complete the function.');
+          setOutput('❌ Try adding the missing code to complete the challenge.');
         }
       } catch (error) {
         setOutput(`Error: ${error instanceof Error ? error.message : 'Unknown error'}`);
@@ -351,7 +363,7 @@ console.log(counter());`;
   };
 
   useEffect(() => {
-    setUserCode(state.userInput || starterCode);
+    setUserCode(state.userInput || codeChallenge.starterCode);
   }, []);
 
   const isCorrect = output.includes('🎉');
@@ -362,7 +374,7 @@ console.log(counter());`;
         {/* Left column - Instructions and buttons */}
         <div className="flex flex-col">
           <h2 className="text-xl sm:text-2xl font-bold mb-3 sm:mb-4 text-green-400">Code Challenge! 💻</h2>
-          <p className="text-base sm:text-lg mb-4 sm:mb-6">Complete this closure to create a private counter:</p>
+          <p className="text-base sm:text-lg mb-4 sm:mb-6">{codeChallenge.description}</p>
           
           <div className="flex gap-2 mb-4">
             <button
@@ -419,25 +431,30 @@ function QuizSlide({
   state, 
   onStateUpdate, 
   onNext, 
-  onStreak 
+  onStreak,
+  lesson
 }: {
   state: SlideState;
   onStateUpdate: (state: Partial<SlideState>) => void;
   onNext: () => void;
   onStreak: () => void;
+  lesson: Lesson;
 }) {
   const [showFeedback, setShowFeedback] = useState(false);
   const [showContinue, setShowContinue] = useState(false);
 
-  const question = "What happens to variables in a closure's outer scope?";
-  const options = [
-    "They are copied into the closure",
-    "They remain accessible and live as long as the closure exists",
-    "They are deleted when the function returns",
-    "They become global variables"
-  ];
-  const correctAnswer = 1;
-  const explanation = "Correct! Closures maintain references to their outer scope variables, keeping them alive!";
+  // Get quiz data from shortFormConfig if available, otherwise use lesson quiz
+  const quizData = lesson.shortFormConfig?.slides?.quiz || lesson.quiz?.questions[0] || {
+    question: "What is the main concept in this lesson?",
+    options: ["Option A", "Option B", "Option C", "Option D"],
+    correctAnswer: 0,
+    explanation: "Great job!"
+  };
+
+  const question = quizData.question;
+  const options = quizData.options;
+  const correctAnswer = quizData.correctAnswer;
+  const explanation = quizData.explanation;
 
   const selectAnswer = (index: number) => {
     if (state.selectedAnswer !== undefined) return;
@@ -509,27 +526,35 @@ function DragDropSlide({
   state, 
   onStateUpdate, 
   onNext, 
-  onStreak 
+  onStreak,
+  lesson
 }: {
   state: SlideState;
   onStateUpdate: (state: Partial<SlideState>) => void;
   onNext: () => void;
   onStreak: () => void;
+  lesson: Lesson;
 }) {
   const [draggedItems, setDraggedItems] = useState(state.draggedItems || {});
   const [showContinue, setShowContinue] = useState(false);
 
-  const items = [
-    { id: 'outer-scope', text: 'Outer Scope Variables', type: 'accessible' },
-    { id: 'private-state', text: 'Private State', type: 'maintained' },
-    { id: 'memory-leaks', text: 'Memory Leaks', type: 'avoided' }
-  ];
+  // Get drag drop data from shortFormConfig if available, otherwise use default
+  const dragDropData = lesson.shortFormConfig?.slides?.dragDrop || {
+    description: "Match the concepts!",
+    items: [
+      { id: 'concept1', text: 'Concept 1', type: 'type1' },
+      { id: 'concept2', text: 'Concept 2', type: 'type2' },
+      { id: 'concept3', text: 'Concept 3', type: 'type3' }
+    ],
+    zones: [
+      { id: 'type1', label: '📦 Category 1', type: 'type1' },
+      { id: 'type2', label: '🔄 Category 2', type: 'type2' },
+      { id: 'type3', label: '➡️ Category 3', type: 'type3' }
+    ]
+  };
 
-  const dropZones = [
-    { id: 'accessible', label: '✅ Accessible in Closure', type: 'accessible' },
-    { id: 'maintained', label: '🔒 Maintained Between Calls', type: 'maintained' },
-    { id: 'avoided', label: '❌ Common Pitfall to Avoid', type: 'avoided' }
-  ];
+  const items = dragDropData.items;
+  const dropZones = dragDropData.zones;
 
   const handleDragStart = (e: React.DragEvent, itemId: string) => {
     e.dataTransfer.setData('text/plain', itemId);
@@ -567,7 +592,7 @@ function DragDropSlide({
   return (
     <div className="h-[80%] bg-gray-900/95 backdrop-blur-sm rounded-3xl border border-green-400/20 p-6 flex flex-col shadow-2xl">
       <h2 className="text-2xl font-bold mb-4 text-green-400">Match the Concepts! 🎯</h2>
-      <p className="text-sm mb-4">Drag each concept to where it belongs in closures:</p>
+      <p className="text-sm mb-4">{dragDropData.description}</p>
       
       {/* Draggable items */}
       <div className="mb-6">
@@ -630,7 +655,7 @@ function DragDropSlide({
 }
 
 // Victory Slide Component
-function VictorySlide({ startTime }: { startTime: number }) {
+function VictorySlide({ startTime, lesson }: { startTime: number; lesson: Lesson }) {
   const [finalTime, setFinalTime] = useState(60);
 
   useEffect(() => {
@@ -638,25 +663,31 @@ function VictorySlide({ startTime }: { startTime: number }) {
     setFinalTime(Math.max(timeTaken, 45)); // Minimum 45 seconds for realism
   }, [startTime]);
 
+  // Get concepts from lesson for victory summary
+  const concepts = lesson.shortFormConfig?.slides?.concepts || [
+    { emoji: '✅', title: 'Key Concept 1', subtitle: 'Main learning point' },
+    { emoji: '✅', title: 'Key Concept 2', subtitle: 'Another important point' },
+    { emoji: '✅', title: 'Key Concept 3', subtitle: 'Final takeaway' }
+  ];
+
   return (
     <div className= "h-[80%] bg-gray-900/95 backdrop-blur-sm rounded-3xl border border-green-400/20 p-8 flex flex-col justify-center items-center text-center shadow-2xl">
       <div className="text-8xl mb-6 animate-bounce">🏆</div>
       <h1 className="text-3xl font-bold mb-4 bg-gradient-to-r from-green-400 via-green-300 to-green-500 bg-clip-text text-transparent">
-        You Mastered Closures!
+        You Mastered {lesson.title}!
       </h1>
       
       <div className="text-5xl font-bold bg-gradient-to-r from-green-400 to-green-500 bg-clip-text text-transparent mb-2">
         {finalTime}s
       </div>
-      <p className="text-lg mb-6">To learn advanced JavaScript closures!</p>
+      <p className="text-lg mb-6">To learn {lesson.description.toLowerCase()}!</p>
       
       <div className="bg-green-400/5 border-2 border-green-400 rounded-2xl p-6 mb-8 w-full">
         <p className="text-center font-bold text-green-400 mb-4">🧠 You learned:</p>
         <div className="space-y-2 text-center">
-          <p>✅ How closures capture scope</p>
-          <p>✅ Private variables & encapsulation</p>
-          <p>✅ Memory management in closures</p>
-          <p>✅ Real-world closure patterns</p>
+          {concepts.map((concept: { emoji: string; title: string; subtitle: string }, index: number) => (
+            <p key={index}>✅ {concept.title}: {concept.subtitle}</p>
+          ))}
         </div>
       </div>
       

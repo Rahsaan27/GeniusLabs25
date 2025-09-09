@@ -1,9 +1,11 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import Image from 'next/image';
 import CohortSelector from '@/components/CohortSelector';
 import CohortChat from '@/components/CohortChat';
 import { Cohort } from '@/types/cohort';
+import cohortImage from '@/assets/Cohort.png';
 
 export default function CohortPage() {
   const [userCohort, setUserCohort] = useState<Cohort | null>(null);
@@ -31,51 +33,102 @@ export default function CohortPage() {
 
   if (!userCohort) {
     return (
-      <div className="min-h-screen bg-black text-white">
-        <div className="max-w-7xl mx-auto px-4 py-12">
-          <div className="text-center mb-12">
-            <h1 className="text-4xl font-bold mb-4">Join Your Cohort</h1>
-            <p className="text-gray-300 text-lg">
-              Connect with your peers and instructors in your local cohort space
-            </p>
+      <div className="min-h-screen flex bg-black">
+        {/* Left Side - Image */}
+        <div className="hidden lg:flex lg:w-1/2 relative">
+          <div className="absolute inset-0 bg-gradient-to-br from-green-400/20 to-black/40 z-10"></div>
+          <Image
+            src={cohortImage}
+            alt="Students collaborating in a cohort - Join the community"
+            fill
+            className="object-cover"
+            priority
+          />
+          <div className="absolute bottom-8 left-8 z-20 text-white">
+            <h3 className="text-2xl font-bold mb-2">Connect & Collaborate</h3>
+            <p className="text-lg opacity-90">Join your local learning community</p>
           </div>
+          {/* Top overlay with features */}
+          {/* <div className="absolute top-8 right-8 z-20">
+            <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-4 text-white">
+              <h4 className="font-bold text-sm mb-2">💬 Cohort Features</h4>
+              <ul className="text-xs space-y-1 opacity-90">
+                <li>• Real-time messaging</li>
+                <li>• Private group spaces</li>
+                <li>• Local peer connections</li>
+                <li>• Collaborative learning</li>
+              </ul>
+            </div>
+          </div> */}
+        </div>
 
-          <div className="max-w-lg mx-auto text-center">
-            <div className="bg-gradient-to-br from-green-400/20 to-green-600/20 border border-green-400/20 rounded-2xl p-8 mb-8 backdrop-blur-sm">
-              <div className="text-6xl mb-4">💬</div>
-              <h2 className="text-2xl font-bold mb-4">Cohort Chat</h2>
-              <p className="text-gray-300 mb-6">
-                Connect with students in your area. Share knowledge, ask questions, and build lasting friendships through collaborative learning.
+        {/* Right Side - Content */}
+        <div className="flex-1 flex items-center justify-center px-4 sm:px-6 lg:px-8">
+          <div className="max-w-md w-full space-y-8">
+            {/* Mobile Image */}
+            <div className="lg:hidden mb-8 relative h-48 rounded-2xl overflow-hidden">
+              <div className="absolute inset-0 bg-gradient-to-br from-green-400/20 to-black/40 z-10"></div>
+              <Image
+                src={cohortImage}
+                alt="Students collaborating in a cohort"
+                fill
+                className="object-cover"
+              />
+              <div className="absolute bottom-4 left-4 z-20 text-white">
+                <h3 className="text-lg font-bold">Connect & Collaborate</h3>
+              </div>
+            </div>
+
+            <div className="text-center">
+              <h2 className="text-4xl font-bold text-white mb-4">
+                Join Your Cohort
+              </h2>
+              <p className="text-gray-300">
+                Connect with your peers and instructors in your local cohort space
               </p>
+            </div>
+
+            <div className="bg-gray-900/50 backdrop-blur-sm border border-gray-700/50 rounded-2xl p-8">
+              <div className="text-center mb-6">
+                <div className="text-6xl mb-4">💬</div>
+                <h3 className="text-xl font-semibold text-white mb-2">Cohort Chat</h3>
+                <p className="text-gray-300 text-sm leading-relaxed">
+                  Connect with students in your area. Share knowledge, ask questions, and build lasting friendships through collaborative learning.
+                </p>
+              </div>
+
               <button
                 onClick={() => setShowSelector(true)}
-                className="bg-green-400 hover:bg-green-500 text-black px-8 py-3 rounded-lg font-bold transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105"
+                className="w-full bg-gradient-to-r from-green-400 to-green-500 hover:from-green-500 hover:to-green-600 text-black font-bold py-4 px-6 rounded-xl transition-all duration-200 shadow-lg hover:shadow-green-400/25 transform hover:scale-105"
               >
                 Find My Cohort
               </button>
+
+              {/* Features Grid - Only on larger screens */}
+              <div className="hidden sm:grid grid-cols-2 gap-3 mt-6">
+                <div className="bg-gray-800/50 p-3 rounded-lg border border-gray-700/50 text-center">
+                  <div className="text-lg mb-1">⚡</div>
+                  <div className="font-semibold text-white text-xs">Real-time Chat</div>
+                </div>
+                <div className="bg-gray-800/50 p-3 rounded-lg border border-gray-700/50 text-center">
+                  <div className="text-lg mb-1">🔒</div>
+                  <div className="font-semibold text-white text-xs">Private Groups</div>
+                </div>
+                <div className="bg-gray-800/50 p-3 rounded-lg border border-gray-700/50 text-center">
+                  <div className="text-lg mb-1">📍</div>
+                  <div className="font-semibold text-white text-xs">Local Focus</div>
+                </div>
+                <div className="bg-gray-800/50 p-3 rounded-lg border border-gray-700/50 text-center">
+                  <div className="text-lg mb-1">🤝</div>
+                  <div className="font-semibold text-white text-xs">Peer Learning</div>
+                </div>
+              </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-4 text-sm">
-              <div className="bg-gray-800/50 p-4 rounded-lg border border-gray-700/50">
-                <div className="text-2xl mb-2">⚡</div>
-                <div className="font-semibold mb-1 text-white">Real-time Chat</div>
-                <div className="text-gray-400">Instant messaging</div>
-              </div>
-              <div className="bg-gray-800/50 p-4 rounded-lg border border-gray-700/50">
-                <div className="text-2xl mb-2">🔒</div>
-                <div className="font-semibold mb-1 text-white">Private Groups</div>
-                <div className="text-gray-400">Password protected</div>
-              </div>
-              <div className="bg-gray-800/50 p-4 rounded-lg border border-gray-700/50">
-                <div className="text-2xl mb-2">📍</div>
-                <div className="font-semibold mb-1 text-white">Local Focus</div>
-                <div className="text-gray-400">Your area cohort</div>
-              </div>
-              <div className="bg-gray-800/50 p-4 rounded-lg border border-gray-700/50">
-                <div className="text-2xl mb-2">🤝</div>
-                <div className="font-semibold mb-1 text-white">Peer Learning</div>
-                <div className="text-gray-400">Collaborative growth</div>
-              </div>
+            <div className="text-center">
+              <p className="text-xs text-gray-500">
+                Powered by Hidden Genius Project & GeniusLabs
+              </p>
             </div>
           </div>
         </div>

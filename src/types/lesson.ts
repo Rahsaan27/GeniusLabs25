@@ -31,6 +31,7 @@ export interface Lesson {
   };
   quiz?: Quiz;
   prerequisites?: string[]; // lesson IDs
+  shortFormConfig?: any; // For storing short-form specific data
 }
 
 export interface TestCase {

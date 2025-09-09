@@ -1,7 +1,8 @@
 import { Lesson, QuizQuestion } from '@/types/lesson';
+import { lessonConfigs, generateLessonFromConfig } from '@/utils/lessonTemplates';
 
 // Advanced technical lessons designed for the short-form format
-export const shortFormLessons: Lesson[] = [
+const advancedLessons: Lesson[] = [
   {
     id: 'js-closures-advanced',
     title: 'JavaScript Closures Mastery',
@@ -371,6 +372,15 @@ def binary_search(arr, target):
       ]
     }
   }
+];
+
+// Generate new lessons from templates
+const generatedLessons: Lesson[] = lessonConfigs.map(generateLessonFromConfig);
+
+// Combine all short form lessons
+export const shortFormLessons: Lesson[] = [
+  ...advancedLessons,
+  ...generatedLessons
 ];
 
 export const shortFormModules = [

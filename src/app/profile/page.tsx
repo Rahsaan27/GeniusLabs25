@@ -139,7 +139,7 @@ export default function ProfilePage() {
             <div className="mt-4 md:mt-0 space-x-2">
               <button
                 onClick={() => setIsEditing(!isEditing)}
-                className="bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded-lg transition-colors flex items-center space-x-2"
+                className="bg-gray-700 hover:bg-gray-600 text-white px-4 mb-3 py-2 rounded-lg transition-colors flex items-center space-x-2"
               >
                 <Edit2 size={16} />
                 <span>Edit Profile</span>
@@ -313,7 +313,7 @@ export default function ProfilePage() {
                   <input
                     type="text"
                     defaultValue={user.name || ''}
-                    disabled={!isEditing}
+                    // disabled={!isEditing}
                     className="w-full p-3 bg-gray-800 border border-gray-600 rounded-lg text-white disabled:opacity-50"
                     placeholder="Enter your display name"
                   />
@@ -326,6 +326,10 @@ export default function ProfilePage() {
                     disabled
                     className="w-full p-3 bg-gray-800 border border-gray-600 rounded-lg text-white opacity-50"
                   />
+                </div>
+                <div className="">
+                  <button className='border border-green-400 rounded-lg p-2 text-green-400 w-20 
+                  hover:duration-300 hover:bg-green-400 hover:text-white'>Save</button>
                 </div>
               </div>
             </div>

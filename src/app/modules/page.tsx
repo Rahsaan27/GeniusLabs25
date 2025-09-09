@@ -4,8 +4,8 @@ import { useState, useEffect } from 'react';
 import Link from "next/link";
 import Image from "next/image";
 import { modules } from '@/data/lessons';
-import { shortFormModules } from '@/data/shortFormLessons';
 import { getModuleProgress, getUserProgress } from '@/utils/progress';
+import ProgressBar from '@/components/ProgressBar';
 import jsLogo from '@/assets/javascript.png';
 import pythonLogo from '@/assets/python.png';
 import cppLogo from '@/assets/c++.png';
@@ -74,11 +74,7 @@ export default function ModulesPage() {
                   Master programming and social entrepreneurship skills
                 </p>
               </div>
-            
             </div>
-            
-          
-
             {/* Progress Button */}
             <div className="mt-6 lg:mt-0">
               <button 
@@ -92,185 +88,159 @@ export default function ModulesPage() {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Modern Pill Filters */}
-        <div className="mb-8">
-          <div className="flex flex-col sm:flex-row gap-4">
-            {/* Category Pills */}
-            <div className="flex flex-wrap gap-2">
-              <span className="text-sm font-medium text-gray-400 mr-2">Category:</span>
-              {["All", "Technology", "Entrepreneurship", "Leadership"].map((category) => (
-                <button
-                  key={category}
-                  onClick={() => setSelectedCategory(category)}
-                  className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 ${
-                    selectedCategory === category
-                      ? 'bg-green-400 text-black shadow-lg'
-                      : 'bg-gray-800/50 text-gray-300 border border-gray-700 hover:border-green-400/40 hover:text-green-400'
-                  }`}
-                >
-                  {category}
-                </button>
-              ))}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div className="flex flex-col lg:flex-row gap-8">
+          <div className="lg:w-1/4 space-y-6">
+            {/* Category Filter */}
+            <div className="bg-gray-800/50 backdrop-blur-sm p-6 rounded-2xl border border-green-400/20">
+              <h3 className="text-lg font-semibold mb-4 text-white">Filter by Category</h3>
+              <div className="space-y-2">
+                {["All", "Technology", "Entrepreneurship"].map((category) => (
+                  <label key={category} className="flex items-center cursor-pointer">
+                    <input
+                      type="radio"
+                      name="category"
+                      value={category}
+                      checked={selectedCategory === category}
+                      onChange={(e) => setSelectedCategory(e.target.value)}
+                      className="rounded border-gray-500 text-green-400 focus:ring-green-500 bg-gray-700"
+                    />
+                    <span className="ml-2 text-sm text-gray-300">{category}</span>
+                  </label>
+                ))}
+              </div>
             </div>
 
-            {/* Level Pills */}
-            <div className="flex flex-wrap gap-2">
-              <span className="text-sm font-medium text-gray-400 mr-2">Level:</span>
-              {["All", "Beginner", "Intermediate", "Advanced"].map((level) => (
-                <button
-                  key={level}
-                  onClick={() => setSelectedLevel(level)}
-                  className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 ${
-                    selectedLevel === level
-                      ? 'bg-green-400 text-black shadow-lg'
-                      : 'bg-gray-800/50 text-gray-300 border border-gray-700 hover:border-green-400/40 hover:text-green-400'
-                  }`}
-                >
-                  {level}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* Progress Tracking Bar */}
-          <div className="mt-6 bg-gray-800/30 rounded-full p-1">
-            <div className="flex items-center justify-between text-xs text-gray-400 px-4 py-2">
-              <span>Overall Progress</span>
-              <span>{Math.round(modules.reduce((acc, mod) => {
-                const progress = moduleProgress[mod.id] || { percentage: 0 };
-                return acc + progress.percentage;
-              }, 0) / modules.length)}%</span>
-            </div>
-            <div className="w-full bg-gray-700 rounded-full h-1">
-              <div 
-                className="h-1 rounded-full bg-green-400 transition-all duration-300"
-                style={{ width: `${Math.round(modules.reduce((acc, mod) => {
-                  const progress = moduleProgress[mod.id] || { percentage: 0 };
-                  return acc + progress.percentage;
-                }, 0) / modules.length)}%` }}
-              ></div>
+            {/* Level Filter */}
+            <div className="bg-gray-800/50 backdrop-blur-sm p-6 rounded-2xl border border-green-400/20">
+              <h3 className="text-lg font-semibold mb-4 text-white">Filter by Level</h3>
+              <div className="space-y-2">
+                {["All", "Beginner", "Intermediate", "Advanced"].map((level) => (
+                  <label key={level} className="flex items-center cursor-pointer">
+                    <input
+                      type="radio"
+                      name="level"
+                      value={level}
+                      checked={selectedLevel === level}
+                      onChange={(e) => setSelectedLevel(e.target.value)}
+                      className="rounded border-gray-500 text-green-400 focus:ring-green-500 bg-gray-700"
+                    />
+                    <span className="ml-2 text-sm text-gray-300">{level}</span>
+                  </label>
+                ))}
+              </div>
             </div>
           </div>
-        </div>
 
-        {/* Module Sections */}
-        <div className="space-y-12">
-
-          {/* Group modules by category */}
-          {['Technology', 'Entrepreneurship', 'Leadership'].map((categoryName) => {
-            const categoryModules = filteredModules.filter(module => 
-              selectedCategory === 'All' || module.category === categoryName.toLowerCase()
-            ).filter(module => module.category === categoryName.toLowerCase());
-            
-            if (categoryModules.length === 0) return null;
-            
-            return (
-              <div key={categoryName} className="space-y-6">
-                <div className="flex items-center gap-4">
-                  <h2 className="text-2xl font-bold text-white">{categoryName}</h2>
-                  <div className="flex-1 h-px bg-gradient-to-r from-green-400/20 to-transparent"></div>
-                  <span className="text-sm text-gray-400">{categoryModules.length} modules</span>
-                </div>
+          <div className="lg:w-3/4">
+            <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+              {filteredModules.map((module) => {
+                const progress = moduleProgress[module.id] || { completed: 0, total: module.lessons.length, percentage: 0 };
+                const getLanguageLogo = (language: string) => {
+                  switch(language) {
+                    case 'javascript': return jsLogo;
+                    case 'python': return pythonLogo;
+                    case 'cpp': return cppLogo;
+                    default: return null;
+                  }
+                };
                 
-                <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
-                  {categoryModules.map((module) => {
-                    const progress = moduleProgress[module.id] || { completed: 0, total: module.lessons.length, percentage: 0 };
-                    const getLanguageLogo = (language: string) => {
-                      switch(language) {
-                        case 'javascript': return jsLogo;
-                        case 'python': return pythonLogo;
-                        case 'cpp': return cppLogo;
-                        default: return null;
-                      }
-                    };
-                    
-                    return (
-                      <div
-                        key={module.id}
-                        className="group bg-gray-900/80 backdrop-blur-sm rounded-2xl border border-gray-700/50 hover:border-green-400/30 transition-all duration-300 hover:shadow-2xl hover:shadow-green-400/10 hover:-translate-y-2 overflow-hidden"
-                      >
-                        {/* Card Header */}
-                        <div className="p-6 pb-4">
-                          <div className="flex items-start justify-between mb-4">
-                            <div className="flex items-center">
-                              {getLanguageLogo(module.language) ? (
-                                <Image
-                                  src={getLanguageLogo(module.language)!}
-                                  alt={`${module.language} logo`}
-                                  width={28}
-                                  height={28}
-                                  className="w-7 h-7 mr-3 flex-shrink-0 opacity-80 group-hover:opacity-100 transition-opacity"
-                                />
-                              ) : (
-                                <div className="w-7 h-7 mr-3 text-xl flex items-center justify-center flex-shrink-0 opacity-80 group-hover:opacity-100 transition-opacity">
-                                  {getCategoryIcon(module.category)}
-                                </div>
-                              )}
-                              <div className="flex-1">
-                                <h3 className="text-lg font-bold text-white mb-2 group-hover:text-green-400 transition-colors line-clamp-2">
-                                  {module.title}
-                                </h3>
-                              </div>
+                return (
+                  <div
+                    key={module.id}
+                    className="bg-gray-800/50 backdrop-blur-sm p-6 rounded-2xl shadow-lg border border-green-400/20 hover:shadow-xl hover:border-green-400/40 transition-all duration-300 transform hover:-translate-y-1 h-fit"
+                  >
+                    <div className="flex flex-col h-full">
+                      <div className="flex-1">
+                        <div className="flex items-start mb-4">
+                          {getLanguageLogo(module.language) ? (
+                            <Image
+                              src={getLanguageLogo(module.language)!}
+                              alt={`${module.language} logo`}
+                              width={32}
+                              height={32}
+                              className="w-8 h-8 mr-3 mt-1 flex-shrink-0"
+                            />
+                          ) : (
+                            <div className="w-8 h-8 mr-3 mt-1 text-2xl flex items-center justify-center flex-shrink-0">
+                              {getCategoryIcon(module.category)}
                             </div>
-                          </div>
-                          
-                          {/* Tags */}
-                          <div className="flex flex-wrap gap-2 mb-4">
-                            <span className={`px-3 py-1 rounded-full text-xs font-semibold border ${getCategoryColor(module.category)}`}>
-                              {module.category}
-                            </span>
-                            <span className={`px-3 py-1 rounded-full text-xs font-semibold border ${getDifficultyColor(module.difficulty)}`}>
-                              {module.difficulty}
-                            </span>
-                          </div>
-                        </div>
-                        
-                        {/* Progress Section */}
-                        <div className="px-6 pb-4">
-                          <div className="bg-gray-800/30 rounded-lg p-3">
-                            <div className="flex justify-between items-center mb-2">
-                              <span className="text-xs text-gray-400 font-medium">Progress</span>
-                              <span className="text-xs font-bold text-green-400">{progress.percentage}%</span>
-                            </div>
-                            <div className="w-full bg-gray-700 rounded-full h-1.5">
-                              <div 
-                                className="h-1.5 rounded-full bg-green-400 transition-all duration-500"
-                                style={{ width: `${progress.percentage}%` }}
-                              ></div>
-                            </div>
-                            <div className="text-xs text-gray-500 mt-1">
-                              {progress.completed}/{progress.total} lessons • {module.estimatedTime}min
+                          )}
+                          <div className="flex-1">
+                            <h3 className="text-xl font-semibold text-white mb-2 leading-tight">
+                              {module.title}
+                            </h3>
+                            <div className="flex flex-wrap gap-2 mb-3">
+                              <span className={`px-2 py-1 rounded-full text-xs font-medium border ${getCategoryColor(module.category)}`}>
+                                {module.category}
+                              </span>
+                              <span className={`px-2 py-1 rounded-full text-xs font-medium border ${getDifficultyColor(module.difficulty)}`}>
+                                {module.difficulty}
+                              </span>
                             </div>
                           </div>
                         </div>
                         
-                        {/* Action Button */}
-                        <div className="px-6 pb-6">
-                          <Link
-                            href={shortFormModules.find(sfm => sfm.id === module.id) ? `/short-form/${module.id}` : `/activity`}
-                            className="w-full bg-green-400 text-black px-4 py-3 rounded-xl hover:bg-green-300 transition-all duration-200 text-center font-bold text-sm shadow-lg hover:shadow-xl group-hover:scale-105 transform inline-block"
-                          >
-                            {progress.percentage > 0 ? 'Continue Learning' : 'Start Module'}
-                          </Link>
+                        <p className="text-gray-300 mb-4 leading-relaxed text-sm">{module.description}</p>
+                        
+                        {/* Progress Bar */}
+                        <div className="mb-4">
+                          <ProgressBar 
+                            percentage={progress.percentage} 
+                            showLabel={false}
+                            size="sm"
+                          />
+                          <div className="flex justify-between text-xs text-gray-400 mt-1">
+                            <span>Progress</span>
+                            <span>{progress.completed}/{progress.total} lessons</span>
+                          </div>
+                        </div>
+                        
+                        <div className="flex flex-wrap gap-3 text-xs text-gray-400 mb-4">
+                          <span className="flex items-center">
+                            <span className="mr-1">⏱️</span>
+                            {module.estimatedTime} min
+                          </span>
+                          <span className="flex items-center">
+                            <span className="mr-1">📖</span>
+                            {module.lessons.length} lessons
+                          </span>
+                          <span className="flex items-center">
+                            <span className="mr-1">💻</span>
+                            {module.language}
+                          </span>
                         </div>
                       </div>
-                    );
-                  })}
-                </div>
-              </div>
-            );
-          })}
+                      
+                      <div className="flex flex-col space-y-2 mt-auto">
+                        <Link
+                          href={`/modules/${module.id}`}
+                          className="inline-block bg-green-400 text-black px-4 py-2.5 rounded-lg hover:bg-green-300 transition-all duration-200 text-center font-medium text-sm shadow-lg hover:shadow-xl transform hover:scale-105"
+                        >
+                          {progress.percentage > 0 ? 'Continue Module' : 'Start Module'}
+                        </Link>
+                        {progress.percentage > 0 && (
+                          <div className="text-center text-xs text-gray-400">
+                            {progress.percentage}% Complete
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
         </div>
       </div>
 
       {/* Progress Modal */}
       {showProgressModal && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div className="bg-gray-900 rounded-2xl border border-green-400/20 shadow-2xl max-w-4xl w-full max-h-[80vh] overflow-hidden">
+          <div className="bg-gray-900 rounded-2xl border border-green-400/20 shadow-2xl max-w-2xl w-full max-h-[80vh] overflow-hidden">
             {/* Modal Header */}
             <div className="flex items-center justify-between p-6 border-b border-gray-700">
-              <h2 className="text-2xl font-bold text-white">Learning Progress & Achievements</h2>
+              <h2 className="text-2xl font-bold text-white">Your Progress</h2>
               <button 
                 onClick={() => setShowProgressModal(false)}
                 className="text-gray-400 hover:text-white p-2 rounded-lg hover:bg-gray-700 transition-all duration-200"
@@ -283,29 +253,6 @@ export default function ModulesPage() {
             
             {/* Modal Content */}
             <div className="p-6 overflow-y-auto max-h-[calc(80vh-120px)]">
-              {/* Metrics Section */}
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-                <div className="bg-gray-800/50 rounded-xl p-4 text-center border border-gray-700/50">
-                  <div className="text-2xl font-bold text-green-400">{modules.reduce((acc, mod) => acc + (moduleProgress[mod.id]?.completed || 0), 0)}</div>
-                  <div className="text-xs text-gray-400 mt-1">Lessons Completed</div>
-                </div>
-                <div className="bg-gray-800/50 rounded-xl p-4 text-center border border-gray-700/50">
-                  <div className="text-2xl font-bold text-blue-400">{modules.reduce((acc, mod) => acc + mod.lessons.length, 0)}</div>
-                  <div className="text-xs text-gray-400 mt-1">Total Lessons</div>
-                </div>
-                <div className="bg-gray-800/50 rounded-xl p-4 text-center border border-gray-700/50">
-                  <div className="text-2xl font-bold text-purple-400">{Math.round(modules.reduce((acc, mod) => {
-                    const progress = moduleProgress[mod.id] || { percentage: 0 };
-                    return acc + progress.percentage;
-                  }, 0) / modules.length)}%</div>
-                  <div className="text-xs text-gray-400 mt-1">Overall Progress</div>
-                </div>
-                <div className="bg-gray-800/50 rounded-xl p-4 text-center border border-gray-700/50">
-                  <div className="text-2xl font-bold text-yellow-400">{modules.filter(mod => (moduleProgress[mod.id]?.percentage || 0) === 100).length}</div>
-                  <div className="text-xs text-gray-400 mt-1">Modules Mastered</div>
-                </div>
-              </div>
-              
               <div className="space-y-4">
                 {modules.map((module) => {
                   const progress = moduleProgress[module.id] || { completed: 0, total: module.lessons.length, percentage: 0 };
