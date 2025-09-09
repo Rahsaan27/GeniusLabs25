@@ -42,14 +42,14 @@ export default function AdminPanel({ cohortId, cohortName }: AdminPanelProps) {
       </div>
 
       {/* Tabs */}
-      <div className="flex border-b border-gray-700">
+      <div className="grid-cols-1 border-b border-gray-700">
         {tabs.map(tab => {
           const Icon = tab.icon;
           return (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id as any)}
-              className={`flex items-center space-x-2 px-4 py-3 text-sm font-medium transition-colors ${
+              className={`flex w-full items-center space-x-2 px-4 py-3 text-sm font-medium transition-colors ${
                 activeTab === tab.id
                   ? 'bg-green-400/10 text-green-400 border-b-2 border-green-400'
                   : 'text-gray-400 hover:text-white hover:bg-gray-800'
@@ -397,8 +397,18 @@ function CreateFormModal({
   const selectedModuleData = modules.find(m => m.id === selectedModule);
 
   return (
-    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-      <div className="bg-gray-900 rounded-2xl border border-gray-700 shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+    <div 
+      className="fixed top-0 left-0 w-full h-screen bg-black/80 backdrop-blur-md flex mt-10 items-center justify-end p-4"
+      style={{ 
+        zIndex: 999999,
+        position: 'fixed',
+        inset: 0
+      }}
+    >
+      <div 
+        className="bg-gray-900 rounded-2xl border border-gray-600 shadow-2xl max-w-2xl w-full max-h-[85vh] overflow-hidden mx-4 relative"
+        style={{ zIndex: 1000000 }}
+      >
         <div className="flex items-center justify-between p-6 border-b border-gray-700">
           <h2 className="text-xl font-bold text-white">
             Create {type === 'announcement' ? 'Announcement' : 'Assignment'}
@@ -411,7 +421,8 @@ function CreateFormModal({
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="p-6 space-y-6">
+        <div className="overflow-y-auto" style={{ maxHeight: 'calc(85vh - 80px)' }}>
+          <form onSubmit={handleSubmit} className="p-6 space-y-6">
           <div>
             <label className="block text-gray-300 text-sm font-medium mb-2">
               Title
@@ -534,6 +545,7 @@ function CreateFormModal({
             </button>
           </div>
         </form>
+        </div>
       </div>
     </div>
   );

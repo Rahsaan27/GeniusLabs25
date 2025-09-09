@@ -403,20 +403,27 @@ function CohortPageContent() {
 
       {/* Small Screen Admin Panel Modal */}
       {showAdminPanel && isAdmin && (
-        <div className="lg:hidden fixed inset-0 top-32 z-50">
-          <div className="absolute inset-0 bg-black/50" onClick={() => setShowAdminPanel(false)}></div>
-          <div className="relative w-full h-full bg-gray-900 overflow-auto">
-            <div className="sticky top-0 bg-gray-900 border-b border-gray-700 p-4 flex items-center justify-between">
-              <h2 className="text-lg font-bold text-white">Admin Panel</h2>
+        <div 
+          className="lg:hidden fixed top-0 left-0 w-full h-full flex items-center justify-center p-4"
+          style={{ zIndex: 9999 }}
+        >
+          <div className="absolute inset-0 bg-black/70" onClick={() => setShowAdminPanel(false)}></div>
+          <div className="relative w-full max-w-3xl max-h-[85vh] bg-gray-900 rounded-xl border border-gray-600 shadow-2xl overflow-hidden mx-4">
+            <div className="flex items-center justify-between p-4 bg-gray-800 border-b border-gray-600">
+              <h2 className="text-xl font-bold text-white">🎓 Admin Panel</h2>
               <button
                 onClick={() => setShowAdminPanel(false)}
-                className="text-gray-400 hover:text-white p-1 rounded"
+                className="text-gray-400 hover:text-white p-2 rounded-lg hover:bg-gray-700 transition-colors"
               >
-                ✕
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
               </button>
             </div>
-            <div className="p-4">
-              <AdminPanel cohortId={userCohort.id} cohortName={userCohort.name} />
+            <div className="overflow-y-auto" style={{ maxHeight: 'calc(85vh - 80px)' }}>
+              <div className="p-6">
+                <AdminPanel cohortId={userCohort.id} cohortName={userCohort.name} />
+              </div>
             </div>
           </div>
         </div>
