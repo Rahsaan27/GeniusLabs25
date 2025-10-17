@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import { createPortal } from 'react-dom';
 import { useAdmin } from '@/hooks/useAdmin';
 import { Assignment, Announcement } from '@/types/cohort';
 import { modules } from '@/data/lessons';
@@ -396,18 +397,21 @@ function CreateFormModal({
 
   const selectedModuleData = modules.find(m => m.id === selectedModule);
 
-  return (
+  return createPortal(
     <div 
-      className="fixed top-0 left-0 w-full h-screen bg-black/80 backdrop-blur-md flex mt-10 items-center justify-end p-4"
+      className="fixed top-0 left-0 w-full h-screen bg-black/80 backdrop-blur-md flex items-center justify-center p-4"
       style={{ 
-        zIndex: 999999,
+        zIndex: 10000,
         position: 'fixed',
         inset: 0
       }}
     >
       <div 
         className="bg-gray-900 rounded-2xl border border-gray-600 shadow-2xl max-w-2xl w-full max-h-[85vh] overflow-hidden mx-4 relative"
-        style={{ zIndex: 1000000 }}
+        style={{ 
+          zIndex: '2147483647',
+          position: 'relative'
+        }}
       >
         <div className="flex items-center justify-between p-6 border-b border-gray-700">
           <h2 className="text-xl font-bold text-white">
@@ -547,6 +551,7 @@ function CreateFormModal({
         </form>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }

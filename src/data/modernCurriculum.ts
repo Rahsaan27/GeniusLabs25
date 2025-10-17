@@ -9,6 +9,7 @@ export const modernJavascriptLessons: Lesson[] = [
     difficulty: 'beginner',
     language: 'javascript',
     estimatedTime: 15,
+    activities: ['code', 'quiz'],
     content: {
       theory: `
 # Let's Write Some Code! 🎉
@@ -117,6 +118,7 @@ console.log("JavaScript is awesome!");`,
     difficulty: 'beginner',
     language: 'javascript',
     estimatedTime: 20,
+    activities: ['code', 'quiz'],
     content: {
       theory: `
 # Variables = Your Code's Memory! 🧠
@@ -273,6 +275,7 @@ export const modernPythonLessons: Lesson[] = [
     difficulty: 'beginner',
     language: 'python',
     estimatedTime: 15,
+    activities: ['code', 'quiz'],
     content: {
       theory: `
 # Welcome to Python Magic! ✨🐍
@@ -390,6 +393,7 @@ print("🐍 I'm becoming a Python master! 🐍")`,
     difficulty: 'beginner',
     language: 'python',
     estimatedTime: 20,
+    activities: ['code', 'quiz'],
     content: {
       theory: `
 # Variables = Your Data Superpowers! 🦸‍♂️

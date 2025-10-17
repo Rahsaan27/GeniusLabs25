@@ -196,22 +196,22 @@ function HookSlide({ onNext, lesson }: { onNext: () => void; lesson: Lesson }) {
   };
 
   return (
-    <div className="h-[80%] bg-gray-900/95 backdrop-blur-sm rounded-3xl border border-green-400/20 p-8 flex flex-col justify-center items-center text-center shadow-2xl">
-      <div className="text-8xl mb-6 animate-pulse">{hookData.emoji}</div>
-      <h1 className="text-4xl font-bold mb-4 bg-gradient-to-r from-green-400 via-green-300 to-green-500 bg-clip-text text-transparent leading-tight">
+    <div className="h-[80%] bg-gray-900/95 backdrop-blur-sm rounded-3xl border border-green-400/20 p-6 flex flex-col justify-center items-center text-center shadow-2xl">
+      <div className="text-5xl mb-3 animate-pulse">{hookData.emoji}</div>
+      <h1 className="text-2xl font-bold mb-2 bg-gradient-to-r from-green-400 via-green-300 to-green-500 bg-clip-text text-transparent leading-tight">
         {hookData.title}
       </h1>
-      <p className="text-lg mb-4 opacity-90">
+      <p className="text-sm mb-2 opacity-90">
         {hookData.subtitle}
       </p>
-      <p className="text-lg mb-8">{hookData.description}</p>
-      
+      <p className="text-sm mb-6">{hookData.description}</p>
+
       {showContinue && (
-        <div className="space-y-4 w-full">
-          <p className="text-sm opacity-60">Swipe up or tap to start...</p>
-          <button 
+        <div className="space-y-3 w-full">
+          <p className="text-xs opacity-60">Swipe up or tap to start...</p>
+          <button
             onClick={onNext}
-            className="w-full bg-gradient-to-r from-green-400 to-green-500 text-black font-bold py-4 rounded-full text-lg hover:shadow-lg hover:shadow-green-400/30 transition-all duration-300 relative overflow-hidden group"
+            className="w-full bg-gradient-to-r from-green-400 to-green-500 text-black font-bold py-3 rounded-full text-base hover:shadow-lg hover:shadow-green-400/30 transition-all duration-300 relative overflow-hidden group"
           >
             <span className="relative z-10">Start Learning! {hookData.emoji}</span>
             <div className="absolute inset-0 bg-white/20 transform skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>

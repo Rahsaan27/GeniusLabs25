@@ -10,6 +10,7 @@ const advancedLessons: Lesson[] = [
     difficulty: 'advanced',
     language: 'javascript',
     estimatedTime: 1,
+    activities: ['code', 'quiz'],
     content: {
       theory: `
 # JavaScript Closures Mastery
@@ -103,6 +104,7 @@ console.log(counter());`,
     difficulty: 'advanced',
     language: 'javascript',
     estimatedTime: 1,
+    activities: ['code', 'quiz'],
     content: {
       theory: `
 # Advanced Async/Await Patterns
@@ -192,6 +194,7 @@ getMessage().then(result => console.log(result));`,
     difficulty: 'advanced',
     language: 'python',
     estimatedTime: 1,
+    activities: ['code', 'quiz'],
     content: {
       theory: `
 # Python Decorators Mastery
@@ -285,6 +288,7 @@ print(result)`,
     difficulty: 'advanced',
     language: 'theory',
     estimatedTime: 1,
+    activities: ['code', 'quiz'],
     content: {
       theory: `
 # Big O Complexity Analysis

@@ -15,6 +15,14 @@ export interface Quiz {
   passingScore: number; // percentage needed to pass
 }
 
+export type ActivityType = 'videos' | 'docs' | 'code' | 'quiz';
+
+export interface LessonActivity {
+  type: ActivityType;
+  title: string;
+  hasContent: boolean; // If false, show "Continue" button
+}
+
 export interface Lesson {
   id: string;
   title: string;
@@ -22,6 +30,7 @@ export interface Lesson {
   difficulty: 'beginner' | 'intermediate' | 'advanced';
   language: string;
   estimatedTime: number; // in minutes
+  activities: ActivityType[]; // Ordered list of activities for this lesson
   content: {
     theory: string;
     instructions: string;
@@ -50,6 +59,7 @@ export interface UserProgress {
   timeSpent: number; // in minutes
   currentCode?: string;
   score?: number; // 0-100
+  completedActivities?: ActivityType[]; // Track which activities are completed
 }
 
 export interface Module {
