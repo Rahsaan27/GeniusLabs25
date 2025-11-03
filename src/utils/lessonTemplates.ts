@@ -55,6 +55,7 @@ export function generateLessonFromConfig(config: ShortFormLessonConfig): Lesson 
     difficulty: config.difficulty,
     language: config.language,
     estimatedTime: config.estimatedTime,
+    activities: ['code', 'quiz'],
     content: {
       theory: `# ${config.title}\n\n${config.description}\n\n## What You'll Learn:\n${config.slides.concepts.map(c => `- **${c.title}**: ${c.subtitle}`).join('\n')}`,
       instructions: config.slides.codeChallenge ? `Complete the coding challenge:\n\n${config.slides.codeChallenge.description}` : 'Learn through interactive activities and quizzes.',

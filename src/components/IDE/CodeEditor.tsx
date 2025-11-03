@@ -58,6 +58,8 @@ export default function CodeEditor({ language, code, onChange }: CodeEditorProps
         return tokenizePython(line);
       } else if (lang === 'javascript') {
         return tokenizeJavaScript(line);
+      } else if (lang === 'html') {
+        return tokenizeHTML(line);
       }
       return [{ type: 'text', value: line }];
     });
@@ -296,3 +298,95 @@ function tokenizeJavaScript(line: string): Token[] {
 
   return tokens;
 }
+
+// Tokenizer for HTML
+function tokenizeHTML(line: string): Token[] {
+  const tokens: Token[] = [];
+
+  // Check if entire line is a comment
+  if (line.trim().startsWith("<!--")) {
+    return [{ type: "comment", value: line }];
+  }
+
+  let i = 0;
+  while (i < line.length) {
+    // HTML Comments
+    if (line.substring(i).startsWith("<!--")) {
+      let j = i + 4;
+      while (j < line.length && !line.substring(j).startsWith("-->")) j++;
+      j += 3; // Include the closing -->
+      tokens.push({ type: "comment", value: line.slice(i, j) });
+      i = j;
+      continue;
+    }
+
+    // HTML Tags
+    if (line[i] === "<") {
+      let j = i + 1;
+
+      // Check for closing tag or self-closing
+      const isClosing = line[j] === "/";
+      if (isClosing) j++;
+
+      // Get tag name
+      let tagStart = j;
+      while (j < line.length && /[a-zA-Z0-9]/.test(line[j])) j++;
+
+      // Highlight the tag
+      tokens.push({ type: "keyword", value: line.slice(i, j) });
+      i = j;
+
+      // Parse attributes
+      while (i < line.length && line[i] !== ">") {
+        // Skip whitespace
+        if (/\s/.test(line[i])) {
+          tokens.push({ type: "text", value: line[i] });
+          i++;
+          continue;
+        }
+
+        // Attribute name
+        if (/[a-zA-Z-]/.test(line[i])) {
+          let attrStart = i;
+          while (i < line.length && /[a-zA-Z-]/.test(line[i])) i++;
+          tokens.push({ type: "builtin", value: line.slice(attrStart, i) });
+          continue;
+        }
+
+        // Attribute value
+        if (line[i] === "=") {
+          tokens.push({ type: "text", value: line[i] });
+          i++;
+          
+          if (i < line.length && (line[i] === "\"" || line[i] === "'")) {
+            const quote = line[i];
+            let valueStart = i;
+            i++;
+            while (i < line.length && line[i] !== quote) i++;
+            i++; // Include closing quote
+            tokens.push({ type: "string", value: line.slice(valueStart, i) });
+          }
+          continue;
+        }
+
+        // Anything else
+        tokens.push({ type: "text", value: line[i] });
+        i++;
+      }
+
+      // Closing >
+      if (i < line.length && line[i] === ">") {
+        tokens.push({ type: "keyword", value: ">" });
+        i++;
+      }
+      continue;
+    }
+
+    // Regular text content
+    tokens.push({ type: "text", value: line[i] });
+    i++;
+  }
+
+  return tokens;
+}
+

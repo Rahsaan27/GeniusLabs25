@@ -12,5 +12,6 @@ const client = new DynamoDBClient({
 export const docClient = DynamoDBDocumentClient.from(client);
 
 export const TABLE_NAMES = {
-  MESSAGES: process.env.DYNAMODB_MESSAGES_TABLE || "genius-labs-messages"
+  MESSAGES: process.env.DYNAMODB_MESSAGES_TABLE || "genius-labs-messages",
+  USER_PROGRESS: process.env.DYNAMODB_USER_PROGRESS_TABLE || "genius-labs-user-progress"
 } as const;

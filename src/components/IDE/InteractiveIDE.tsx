@@ -57,6 +57,7 @@ export default function InteractiveIDE({
   const [output, setOutput] = useState('');
   const [isRunning, setIsRunning] = useState(false);
   const [hasError, setHasError] = useState(false);
+  const [htmlContent, setHtmlContent] = useState('');
 
   useEffect(() => {
     setCode(initialCode);
@@ -136,13 +137,14 @@ export default function InteractiveIDE({
 
   const executeHTML = (htmlCode: string) => {
     // For HTML, we'll render it in an iframe
-    setOutput('HTML Preview rendered below');
-    // This would be handled differently in the OutputConsole
+    setHtmlContent(htmlCode);
+    setOutput('HTML rendered successfully');
   };
 
   const clearOutput = () => {
     setOutput('');
     setHasError(false);
+    setHtmlContent('');
   };
 
   return (
@@ -192,10 +194,21 @@ export default function InteractiveIDE({
       <div className="flex-1 flex flex-col min-h-0 min-w-0">
         <div className="flex items-center justify-between px-4 py-2.5 bg-[#252526] border-b border-gray-800 h-[50px] flex-shrink-0">
           <div className="flex items-center gap-2">
-            <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-            </svg>
-            <span className="text-xs text-gray-300 font-medium">Output</span>
+            {language === 'html' ? (
+              <>
+                <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" />
+                </svg>
+                <span className="text-xs text-gray-300 font-medium">Browser Preview</span>
+              </>
+            ) : (
+              <>
+                <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+                <span className="text-xs text-gray-300 font-medium">Output</span>
+              </>
+            )}
           </div>
           <button
             onClick={clearOutput}
@@ -210,6 +223,8 @@ export default function InteractiveIDE({
           output={output}
           isRunning={isRunning}
           hasError={hasError}
+          language={language}
+          htmlContent={htmlContent}
         />
       </div>
     </div>

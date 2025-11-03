@@ -2,11 +2,13 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { X } from 'lucide-react';
 import { Lesson } from '@/types/lesson';
 
 interface ShortFormLessonProps {
   lesson: Lesson;
+  moduleId?: string;
   onComplete?: () => void;
 }
 
@@ -18,19 +20,37 @@ interface SlideState {
   codeOutput?: string;
 }
 
-export default function ShortFormLesson({ lesson, onComplete }: ShortFormLessonProps) {
+export default function ShortFormLesson({ lesson, moduleId, onComplete }: ShortFormLessonProps) {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [streak, setStreak] = useState(0);
   const [startTime] = useState(Date.now());
   const [slideStates, setSlideStates] = useState<Record<number, SlideState>>({});
+  const [completedSections, setCompletedSections] = useState<string[]>([]);
 
-  const totalSlides = 6; // hook, tap-reveal, code-challenge, quiz, drag-drop, victory
+  const totalSlides = 5; // hook, tap-reveal (video), code-challenge, drag-drop (docs), complete
 
   const nextSlide = () => {
+    // Mark section as completed
+    const sectionName = getSectionName(currentSlide);
+    if (sectionName && !completedSections.includes(sectionName)) {
+      setCompletedSections(prev => [...prev, sectionName]);
+    }
+
     if (currentSlide < totalSlides - 1) {
       setCurrentSlide(prev => prev + 1);
     } else {
       onComplete?.();
+    }
+  };
+
+  const getSectionName = (slideIndex: number): string => {
+    switch (slideIndex) {
+      case 0: return 'intro';
+      case 1: return 'video';
+      case 2: return 'code';
+      case 3: return 'documentation';
+      case 4: return 'completed';
+      default: return '';
     }
   };
 
@@ -77,18 +97,12 @@ export default function ShortFormLesson({ lesson, onComplete }: ShortFormLessonP
   const canProceedFromSlide = (slideIndex: number, state: SlideState): boolean => {
     switch (slideIndex) {
       case 0: return true; // Hook slide
-      case 1: return (state.revealedCount || 0) === 7; // All 3 zones revealed (binary 111 = 7)
+      case 1: return (state.revealedCount || 0) === 7; // All 3 zones revealed (video section)
       case 2: return !!state.codeOutput && state.codeOutput.includes('success'); // Code challenge completed
-      case 3: return !!state.selectedAnswer && state.selectedAnswer === getCorrectAnswer(); // Quiz answered correctly
-      case 4: return Object.keys(state.draggedItems || {}).length === 3; // All items dragged
-      case 5: return true; // Victory slide
+      case 3: return Object.keys(state.draggedItems || {}).length === 3; // All items dragged (docs)
+      case 4: return true; // Completion slide
       default: return false;
     }
-  };
-
-  const getCorrectAnswer = (): number => {
-    // Based on our technical quiz question
-    return 1; // Index of the correct answer
   };
 
   return (
@@ -152,7 +166,7 @@ export default function ShortFormLesson({ lesson, onComplete }: ShortFormLessonP
             />
           )}
           {currentSlide === 3 && (
-            <QuizSlide 
+            <DragDropSlide
               state={getSlideState(3)}
               onStateUpdate={(state) => updateSlideState(3, state)}
               onNext={nextSlide}
@@ -161,16 +175,12 @@ export default function ShortFormLesson({ lesson, onComplete }: ShortFormLessonP
             />
           )}
           {currentSlide === 4 && (
-            <DragDropSlide 
-              state={getSlideState(4)}
-              onStateUpdate={(state) => updateSlideState(4, state)}
-              onNext={nextSlide}
-              onStreak={updateStreak}
+            <CompletionSlide
+              startTime={startTime}
               lesson={lesson}
+              moduleId={moduleId}
+              completedSections={completedSections}
             />
-          )}
-          {currentSlide === 5 && (
-            <VictorySlide startTime={startTime} lesson={lesson} />
           )}
         </div>
       </div>
@@ -264,7 +274,7 @@ function TapRevealSlide({
       <h2 className="text-2xl font-bold mb-4 text-green-400">Tap to Reveal! 👆</h2>
       <p className="text-lg mb-6">JavaScript closures are like...</p>
       <div className="grid grid-cols-3 gap-4 mb-6 p-4 ">
-        {zones.map((zone, index) => (
+        {zones.map((zone: any, index: number) => (
           <div
             key={index}
             onClick={() => revealZone(index)}
@@ -426,97 +436,161 @@ function CodeChallengeSlide({
   );
 }
 
-// Quiz Slide Component
-function QuizSlide({ 
-  state, 
-  onStateUpdate, 
-  onNext, 
-  onStreak,
-  lesson
+// Completion Slide Component with Lightbulb Animation
+function CompletionSlide({
+  startTime,
+  lesson,
+  moduleId,
+  completedSections
 }: {
-  state: SlideState;
-  onStateUpdate: (state: Partial<SlideState>) => void;
-  onNext: () => void;
-  onStreak: () => void;
+  startTime: number;
   lesson: Lesson;
+  moduleId?: string;
+  completedSections: string[];
 }) {
-  const [showFeedback, setShowFeedback] = useState(false);
-  const [showContinue, setShowContinue] = useState(false);
+  const [showLightbulb, setShowLightbulb] = useState(false);
+  const [lightOn, setLightOn] = useState(false);
+  const [showButtons, setShowButtons] = useState(false);
+  const router = useRouter();
+  const [finalTime, setFinalTime] = useState(60);
 
-  // Get quiz data from shortFormConfig if available, otherwise use lesson quiz
-  const quizData = lesson.shortFormConfig?.slides?.quiz || lesson.quiz?.questions[0] || {
-    question: "What is the main concept in this lesson?",
-    options: ["Option A", "Option B", "Option C", "Option D"],
-    correctAnswer: 0,
-    explanation: "Great job!"
+  useEffect(() => {
+    const timeTaken = Math.round((Date.now() - startTime) / 1000);
+    setFinalTime(Math.max(timeTaken, 45));
+  }, [startTime]);
+
+  const handleComplete = async () => {
+    setShowLightbulb(true);
+
+    // Animate lightbulb turning on
+    setTimeout(() => {
+      setLightOn(true);
+    }, 500);
+
+    // TODO: Save progress to DynamoDB
+    // const userId = 'user@example.com'; // Get from auth
+    // await fetch(`/api/user-progress/${moduleId}/lesson`, {
+    //   method: 'POST',
+    //   headers: { 'Content-Type': 'application/json' },
+    //   body: JSON.stringify({ userId, lessonId: lesson.id })
+    // });
+
+    // Show buttons after animation
+    setTimeout(() => {
+      setShowButtons(true);
+    }, 1500);
   };
 
-  const question = quizData.question;
-  const options = quizData.options;
-  const correctAnswer = quizData.correctAnswer;
-  const explanation = quizData.explanation;
-
-  const selectAnswer = (index: number) => {
-    if (state.selectedAnswer !== undefined) return;
-    
-    onStateUpdate({ selectedAnswer: index });
-    setShowFeedback(true);
-    
-    if (index === correctAnswer) {
-      onStreak();
-      setTimeout(() => setShowContinue(true), 1500);
-    } else {
-      setTimeout(() => {
-        onStateUpdate({ selectedAnswer: undefined });
-        setShowFeedback(false);
-      }, 2500);
-    }
+  const goToModule = () => {
+    // Navigate back to module page
+    const targetModuleId = moduleId || 'javascript-basics';
+    router.push(`/modules/${targetModuleId}`);
   };
+
+  const goHome = () => {
+    router.push('/modules');
+  };
+
+  if (showLightbulb) {
+    return (
+      <div className="h-[80%] bg-gray-900/95 backdrop-blur-sm rounded-3xl border border-green-400/20 p-8 flex flex-col justify-center items-center text-center shadow-2xl">
+        {/* Lightbulb Animation */}
+        <div className="relative mb-8">
+          <div className={`text-9xl transition-all duration-1000 ${
+            lightOn
+              ? 'filter drop-shadow-[0_0_30px_rgba(250,204,21,0.9)] animate-pulse'
+              : 'opacity-50'
+          }`}>
+            💡
+          </div>
+          {lightOn && (
+            <>
+              <div className="absolute inset-0 bg-yellow-400/20 rounded-full blur-3xl animate-pulse"></div>
+              <div className="absolute -inset-4 bg-yellow-300/10 rounded-full blur-2xl animate-pulse"></div>
+            </>
+          )}
+        </div>
+
+        <h1 className="text-4xl font-bold mb-4 bg-gradient-to-r from-green-400 via-yellow-300 to-green-500 bg-clip-text text-transparent animate-pulse">
+          Lesson Complete!
+        </h1>
+
+        <p className="text-xl text-gray-300 mb-8">
+          Great work! You've completed {lesson.title}
+        </p>
+
+        <div className="bg-green-400/10 border-2 border-green-400 rounded-2xl p-6 mb-8 w-full">
+          <p className="text-green-400 font-bold mb-4">✨ Sections Completed:</p>
+          <div className="space-y-2">
+            {completedSections.map((section) => (
+              <div key={section} className="flex items-center gap-2 text-left">
+                <span className="text-green-400">✓</span>
+                <span className="capitalize">{section}</span>
+              </div>
+            ))}
+          </div>
+          <div className="mt-4 pt-4 border-t border-green-400/30">
+            <p className="text-sm text-gray-400">Completed in {finalTime}s</p>
+          </div>
+        </div>
+
+        {showButtons && (
+          <div className="space-y-3 w-full animate-fadeInUp">
+            <button
+              onClick={goToModule}
+              className="w-full bg-gradient-to-r from-green-400 to-green-500 text-black font-bold py-4 rounded-full text-lg transition-all duration-300 hover:shadow-lg hover:shadow-green-400/30 hover:scale-105"
+            >
+              Next Lesson →
+            </button>
+            <button
+              onClick={goHome}
+              className="w-full bg-gray-800 border-2 border-green-400 text-green-400 font-bold py-4 rounded-full text-lg transition-all duration-300 hover:bg-green-400/10 hover:scale-105"
+            >
+              Back to Modules
+            </button>
+          </div>
+        )}
+      </div>
+    );
+  }
 
   return (
-    <div className = " h-[80%] bg-gray-900/95 backdrop-blur-sm rounded-3xl border border-green-400/20 p-6 flex flex-col shadow-2xl">
-      <h2 className="text-2xl font-bold mb-4 text-green-400">Speed Round! 🏃‍♂️</h2>
-      <p className="text-lg mb-6 font-semibold">{question}</p>
-      
-      <div className="space-y-3 mb-6 flex-1">
-        {options.map((option, index) => (
-          <div
-            key={index}
-            onClick={() => selectAnswer(index)}
-            className={`p-4 rounded-2xl cursor-pointer transition-all duration-300 relative overflow-hidden border-2 ${
-              state.selectedAnswer === undefined
-                ? 'bg-white/5 border-white/10 hover:border-green-400 hover:translate-x-1'
-                : state.selectedAnswer === index
-                  ? index === correctAnswer
-                    ? 'bg-green-500/20 border-green-500 animate-pulse'
-                    : 'bg-red-500/20 border-red-500 animate-shake'
-                  : 'bg-white/5 border-white/10 opacity-50'
-            }`}
-          >
-            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-green-400/30 to-transparent transform -translate-x-full hover:translate-x-full transition-transform duration-500"></div>
-            <div className="relative z-10 font-medium">{option}</div>
+    <div className="h-[80%] bg-gray-900/95 backdrop-blur-sm rounded-3xl border border-green-400/20 p-8 flex flex-col justify-center items-center text-center shadow-2xl">
+      <div className="text-7xl mb-6">🎓</div>
+      <h2 className="text-3xl font-bold mb-6 text-green-400">
+        Ready to Complete?
+      </h2>
+      <p className="text-xl text-gray-300 mb-8">
+        You've gone through all the sections of this lesson!
+      </p>
+
+      <div className="bg-gray-800 rounded-xl p-6 mb-8 w-full">
+        <p className="text-sm text-gray-400 mb-4">You completed:</p>
+        <div className="space-y-2">
+          <div className="flex items-center gap-2">
+            <span className="text-green-400">✓</span> Introduction
           </div>
-        ))}
+          <div className="flex items-center gap-2">
+            <span className="text-green-400">✓</span> Video Content
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="text-green-400">✓</span> Code Challenge
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="text-green-400">✓</span> Documentation
+          </div>
+        </div>
       </div>
 
-      {showFeedback && (
-        <div className={`p-4 rounded-xl mb-6 text-center font-bold animate-bounce ${
-          state.selectedAnswer === correctAnswer
-            ? 'bg-green-500/20 border-2 border-green-500 text-green-400'
-            : 'bg-red-500/20 border-2 border-red-500 text-red-400'
-        }`}>
-          {state.selectedAnswer === correctAnswer ? explanation : 'Not quite! Think about memory management...'}
-        </div>
-      )}
-
-      {showContinue && (
-        <button 
-          onClick={onNext}
-          className="w-full bg-gradient-to-r from-green-400 to-green-500 text-black font-bold py-3 rounded-full text-base transition-all duration-300 hover:shadow-lg hover:shadow-green-400/30"
-        >
-          Correct! →
-        </button>
-      )}
+      <button
+        onClick={handleComplete}
+        className="w-full bg-gradient-to-r from-green-400 to-green-500 text-black font-bold py-4 rounded-full text-xl transition-all duration-300 hover:shadow-lg hover:shadow-green-400/30 hover:scale-105 group"
+      >
+        <span className="flex items-center justify-center gap-2">
+          Complete Lesson
+          <span className="group-hover:rotate-12 transition-transform">🎉</span>
+        </span>
+      </button>
     </div>
   );
 }
@@ -567,7 +641,7 @@ function DragDropSlide({
   const handleDrop = (e: React.DragEvent, zoneType: string) => {
     e.preventDefault();
     const itemId = e.dataTransfer.getData('text/plain');
-    const item = items.find(i => i.id === itemId);
+    const item = items.find((i: any) => i.id === itemId);
     
     if (item && item.type === zoneType) {
       const newDraggedItems = { ...draggedItems, [itemId]: zoneType };
@@ -585,7 +659,7 @@ function DragDropSlide({
   const getItemsInZone = (zoneType: string) => {
     return Object.entries(draggedItems)
       .filter(([_, type]) => type === zoneType)
-      .map(([itemId, _]) => items.find(item => item.id === itemId)!)
+      .map(([itemId, _]) => items.find((item: any) => item.id === itemId)!)
       .filter(Boolean);
   };
 
@@ -597,7 +671,7 @@ function DragDropSlide({
       {/* Draggable items */}
       <div className="mb-6">
         <div className="flex flex-wrap gap-2">
-          {items.map((item) => (
+          {items.map((item: any) => (
             !isItemDragged(item.id) && (
               <div
                 key={item.id}
@@ -614,7 +688,7 @@ function DragDropSlide({
       
       {/* Drop zones */}
       <div className="space-y-3 flex-1">
-        {dropZones.map((zone) => (
+        {dropZones.map((zone: any) => (
           <div
             key={zone.id}
             onDragOver={handleDragOver}
@@ -650,53 +724,6 @@ function DragDropSlide({
           All correct! →
         </button>
       )}
-    </div>
-  );
-}
-
-// Victory Slide Component
-function VictorySlide({ startTime, lesson }: { startTime: number; lesson: Lesson }) {
-  const [finalTime, setFinalTime] = useState(60);
-
-  useEffect(() => {
-    const timeTaken = Math.round((Date.now() - startTime) / 1000);
-    setFinalTime(Math.max(timeTaken, 45)); // Minimum 45 seconds for realism
-  }, [startTime]);
-
-  // Get concepts from lesson for victory summary
-  const concepts = lesson.shortFormConfig?.slides?.concepts || [
-    { emoji: '✅', title: 'Key Concept 1', subtitle: 'Main learning point' },
-    { emoji: '✅', title: 'Key Concept 2', subtitle: 'Another important point' },
-    { emoji: '✅', title: 'Key Concept 3', subtitle: 'Final takeaway' }
-  ];
-
-  return (
-    <div className= "h-[80%] bg-gray-900/95 backdrop-blur-sm rounded-3xl border border-green-400/20 p-8 flex flex-col justify-center items-center text-center shadow-2xl">
-      <div className="text-8xl mb-6 animate-bounce">🏆</div>
-      <h1 className="text-3xl font-bold mb-4 bg-gradient-to-r from-green-400 via-green-300 to-green-500 bg-clip-text text-transparent">
-        You Mastered {lesson.title}!
-      </h1>
-      
-      <div className="text-5xl font-bold bg-gradient-to-r from-green-400 to-green-500 bg-clip-text text-transparent mb-2">
-        {finalTime}s
-      </div>
-      <p className="text-lg mb-6">To learn {lesson.description.toLowerCase()}!</p>
-      
-      <div className="bg-green-400/5 border-2 border-green-400 rounded-2xl p-6 mb-8 w-full">
-        <p className="text-center font-bold text-green-400 mb-4">🧠 You learned:</p>
-        <div className="space-y-2 text-center">
-          {concepts.map((concept: { emoji: string; title: string; subtitle: string }, index: number) => (
-            <p key={index}>✅ {concept.title}: {concept.subtitle}</p>
-          ))}
-        </div>
-      </div>
-      
-      <Link
-        href="/modules"
-        className="w-full bg-gradient-to-r from-green-400 to-green-500 text-black text-center font-bold py-4 rounded-full text-lg transition-all duration-300 hover:shadow-lg hover:shadow-green-400/30 hover:scale-105"
-      >
-        Explore More Modules! 🚀
-      </Link>
     </div>
   );
 }

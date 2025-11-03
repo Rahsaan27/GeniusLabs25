@@ -5,8 +5,10 @@ import Link from 'next/link';
 import { modules } from '@/data/lessons';
 import { getModuleProgress, getUserProgress } from '@/utils/progress';
 import { InteractiveIDE } from '@/components/IDE';
+import { useAuth } from '@/hooks/useAuth';
 
 export default function ModuleDetailPage({ params }: { params: Promise<{ moduleId: string }> }) {
+  const { user, isAuthenticated } = useAuth();
   const [module, setModule] = useState<any>(null);
   const [selectedLesson, setSelectedLesson] = useState<any>(null);
   const [moduleProgress, setModuleProgress] = useState<any>(null);
@@ -14,11 +16,18 @@ export default function ModuleDetailPage({ params }: { params: Promise<{ moduleI
   const [activeTab, setActiveTab] = useState<'videos' | 'docs' | 'code' | 'quiz'>('code');
   const [userCode, setUserCode] = useState('');
   const [completedActivities, setCompletedActivities] = useState<string[]>([]);
+  const [showCompletion, setShowCompletion] = useState(false);
+  const [lightOn, setLightOn] = useState(false);
+  const [moduleId, setModuleId] = useState<string>('');
+  const [dbProgress, setDbProgress] = useState<any>(null);
+  const [progressLoaded, setProgressLoaded] = useState(false);
 
   useEffect(() => {
     const loadModule = async () => {
       const resolvedParams = await params;
-      const foundModule = modules.find(m => m.id === resolvedParams.moduleId);
+      const moduleIdValue = resolvedParams.moduleId;
+      setModuleId(moduleIdValue);
+      const foundModule = modules.find(m => m.id === moduleIdValue);
       if (foundModule) {
         setModule(foundModule);
         const progress = getModuleProgress(foundModule.id, foundModule.lessons.map(l => l.id));
@@ -31,6 +40,29 @@ export default function ModuleDetailPage({ params }: { params: Promise<{ moduleI
     };
     loadModule();
   }, [params]);
+
+  // Separate effect for loading progress - only runs once when auth state is available
+  useEffect(() => {
+    const loadProgress = async () => {
+      if (isAuthenticated && user?.email && moduleId && !progressLoaded) {
+        setProgressLoaded(true);
+        try {
+          const response = await fetch(`/api/user-progress/${moduleId}?userId=${user.email}`);
+          if (response.ok) {
+            const data = await response.json();
+            setDbProgress(data.progress);
+          } else if (response.status === 404) {
+            // Progress record doesn't exist yet - that's okay
+            setDbProgress(null);
+          }
+        } catch (error) {
+          console.error('Error loading progress:', error);
+          setDbProgress(null);
+        }
+      }
+    };
+    loadProgress();
+  }, [isAuthenticated, user?.email, moduleId, progressLoaded]);
 
   // Update when lesson changes
   useEffect(() => {
@@ -60,7 +92,7 @@ export default function ModuleDetailPage({ params }: { params: Promise<{ moduleI
     return completedActivities.includes(previousActivity);
   };
 
-  const markActivityComplete = (activityType: string) => {
+  const markActivityComplete = async (activityType: string) => {
     // Mark as complete if not already
     if (!completedActivities.includes(activityType)) {
       const updated = [...completedActivities, activityType];
@@ -68,11 +100,64 @@ export default function ModuleDetailPage({ params }: { params: Promise<{ moduleI
       localStorage.setItem(`lesson-${selectedLesson.id}-completed`, JSON.stringify(updated));
     }
 
-    // Always move to next activity if available (even if already completed)
+    // Check if this is the last activity
     const currentIndex = selectedLesson.activities.indexOf(activityType);
-    if (currentIndex < selectedLesson.activities.length - 1) {
+    const isLastActivity = currentIndex === selectedLesson.activities.length - 1;
+
+    if (isLastActivity) {
+      // Show completion animation
+      setShowCompletion(true);
+
+      // Animate lightbulb
+      setTimeout(() => {
+        setLightOn(true);
+      }, 500);
+
+      // Save to DynamoDB
+      if (isAuthenticated && user?.email) {
+        try {
+          const userId = user.email;
+
+          // First, ensure progress record exists
+          const checkResponse = await fetch(`/api/user-progress/${moduleId}?userId=${userId}`);
+          if (!checkResponse.ok) {
+            // Create progress record if it doesn't exist
+            await fetch('/api/user-progress', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ userId, moduleId })
+            });
+          }
+
+          // Then mark lesson as completed
+          const lessonResponse = await fetch(`/api/user-progress/${moduleId}/lesson`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ userId, lessonId: selectedLesson.id })
+          });
+
+          if (lessonResponse.ok) {
+            const data = await lessonResponse.json();
+            setDbProgress(data.progress);
+            console.log('Progress saved to DynamoDB!', data.progress);
+          }
+        } catch (error) {
+          console.error('Error saving progress:', error);
+        }
+      } else {
+        console.log('User not authenticated - progress not saved to DB');
+      }
+    } else {
+      // Move to next activity
       setActiveTab(selectedLesson.activities[currentIndex + 1]);
     }
+  };
+
+  const handleBackToLessons = () => {
+    setShowCompletion(false);
+    setLightOn(false);
+    setSelectedLesson(null);
+    setCompletedActivities([]);
   };
 
   const getActivityIcon = (type: string) => {
@@ -91,6 +176,13 @@ export default function ModuleDetailPage({ params }: { params: Promise<{ moduleI
   };
 
   const getLessonProgress = (lessonId: string) => {
+    // Check DB progress first if available
+    if (dbProgress && dbProgress.lessonsCompleted) {
+      const isCompleted = dbProgress.lessonsCompleted.includes(lessonId);
+      if (isCompleted) return 'completed';
+    }
+
+    // Fallback to localStorage
     const progress = getUserProgress(lessonId);
     return progress?.status || 'not_started';
   };
@@ -129,6 +221,57 @@ export default function ModuleDetailPage({ params }: { params: Promise<{ moduleI
 
   return (
     <div className="min-h-screen bg-black text-white flex flex-col">
+      {/* Completion Modal */}
+      {showCompletion && (
+        <div className="fixed inset-0 bg-black/90 z-50 flex items-center justify-center p-4">
+          <div className="bg-gray-900 rounded-3xl border border-green-400/20 p-8 max-w-2xl w-full text-center">
+            {/* Lightbulb Animation */}
+            <div className="relative mb-8">
+              <div className={`text-9xl transition-all duration-1000 ${
+                lightOn
+                  ? 'filter drop-shadow-[0_0_30px_rgba(250,204,21,0.9)] animate-pulse'
+                  : 'opacity-50'
+              }`}>
+                💡
+              </div>
+              {lightOn && (
+                <>
+                  <div className="absolute inset-0 bg-yellow-400/20 rounded-full blur-3xl animate-pulse"></div>
+                  <div className="absolute -inset-4 bg-yellow-300/10 rounded-full blur-2xl animate-pulse"></div>
+                </>
+              )}
+            </div>
+
+            <h1 className="text-4xl font-bold mb-4 bg-gradient-to-r from-green-400 via-yellow-300 to-green-500 bg-clip-text text-transparent animate-pulse">
+              Lesson Complete!
+            </h1>
+
+            <p className="text-xl text-gray-300 mb-8">
+              Great work! You've completed {selectedLesson?.title}
+            </p>
+
+            <div className="bg-green-400/10 border-2 border-green-400 rounded-2xl p-6 mb-8">
+              <p className="text-green-400 font-bold mb-4">✨ Sections Completed:</p>
+              <div className="space-y-2">
+                {completedActivities.map((activity) => (
+                  <div key={activity} className="flex items-center gap-2 justify-center">
+                    <span className="text-green-400">✓</span>
+                    <span className="capitalize">{activity}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <button
+              onClick={handleBackToLessons}
+              className="w-full bg-gradient-to-r from-green-400 to-green-500 text-black font-bold py-4 rounded-full text-lg transition-all duration-300 hover:shadow-lg hover:shadow-green-400/30 hover:scale-105"
+            >
+              Back to Lessons
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* Header */}
       <div className="border-b border-gray-800 px-6 py-2">
         <Link href="/modules" className="text-green-400 hover:text-green-300 text-sm inline-block">
@@ -246,8 +389,23 @@ export default function ModuleDetailPage({ params }: { params: Promise<{ moduleI
                       <div className="bg-blue-500/10 border border-blue-500/30 rounded-lg p-3">
                         <h3 className="text-sm font-semibold text-blue-400 mb-2">💡 Key Concepts</h3>
                         <p className="text-xs text-gray-300 leading-relaxed">
-                          <strong>Variables</strong> store information.<br/>
-                          <strong>print()</strong> displays text on screen.
+                          {module.language === 'html' ? (
+                            <>
+                              <strong>&lt;html&gt;</strong> is the root element.<br/>
+                              <strong>&lt;body&gt;</strong> contains visible content.<br/>
+                              <strong>&lt;h1&gt;</strong> creates headings.
+                            </>
+                          ) : module.language === 'javascript' ? (
+                            <>
+                              <strong>const/let</strong> declares variables.<br/>
+                              <strong>console.log()</strong> displays output.
+                            </>
+                          ) : (
+                            <>
+                              <strong>Variables</strong> store information.<br/>
+                              <strong>print()</strong> displays text on screen.
+                            </>
+                          )}
                         </p>
                       </div>
 
@@ -255,23 +413,37 @@ export default function ModuleDetailPage({ params }: { params: Promise<{ moduleI
                         <h3 className="text-sm font-bold text-white mb-2">🎯 Try This</h3>
                         <div className="bg-gray-800/50 rounded-lg p-3 space-y-2 text-xs">
                           <div className="text-gray-300">
-                            <span className="text-yellow-400 font-bold">1.</span> Click "Run Code" to see the output
+                            <span className="text-yellow-400 font-bold">1.</span> Click "Run Code" to see the {module.language === 'html' ? 'webpage' : 'output'}
                           </div>
                           <div className="text-gray-300">
-                            <span className="text-yellow-400 font-bold">2.</span> Change the name to yours
+                            <span className="text-yellow-400 font-bold">2.</span> {module.language === 'html' ? 'Change the heading text' : 'Change the name to yours'}
                           </div>
                           <div className="text-gray-300">
-                            <span className="text-yellow-400 font-bold">3.</span> Add a new variable
+                            <span className="text-yellow-400 font-bold">3.</span> {module.language === 'html' ? 'Add a new paragraph with <p>' : 'Add a new variable'}
                           </div>
                         </div>
                       </div>
+
+                      {/* Complete Section Button */}
+                      <button
+                        onClick={() => markActivityComplete('code')}
+                        className="w-full px-4 py-3 bg-green-400 hover:bg-green-300 text-black font-bold rounded-lg transition-colors shadow-lg hover:shadow-green-400/30"
+                      >
+                        Complete Section →
+                      </button>
                     </div>
 
                     {/* IDE */}
                     <div className="flex-1 min-h-0 flex flex-col">
                       <InteractiveIDE
-                        language="python"
-                        initialCode={`# Try modifying this code and clicking "Run Code"\nname = "Student"\nage = 16\n\nprint("Hello, my name is", name)\nprint("I am", age, "years old")`}
+                        language={module.language as 'python' | 'javascript' | 'html'}
+                        initialCode={
+                          module.language === 'html'
+                            ? `<!DOCTYPE html>\n<html>\n<head>\n    <title>My First Page</title>\n</head>\n<body>\n    <h1>Hello, World!</h1>\n    <p>Try modifying this HTML and clicking "Run Code"!</p>\n</body>\n</html>`
+                            : module.language === 'javascript'
+                            ? `// Try modifying this code and clicking "Run Code"\nconst name = "Student";\nconst age = 16;\n\nconsole.log("Hello, my name is", name);\nconsole.log("I am", age, "years old");`
+                            : `# Try modifying this code and clicking "Run Code"\nname = "Student"\nage = 16\n\nprint("Hello, my name is", name)\nprint("I am", age, "years old")`
+                        }
                         onCodeChange={setUserCode}
                       />
                     </div>
@@ -327,17 +499,34 @@ export default function ModuleDetailPage({ params }: { params: Promise<{ moduleI
                 {/* Progress Overview */}
                 <div className="bg-gray-900/50 border border-gray-800 rounded-lg p-6 mb-8">
                   <div className="flex items-center justify-between mb-3">
-                    <h3 className="text-lg font-semibold text-white">Your Progress</h3>
-                    <span className="text-green-400 font-bold">{moduleProgress?.percentage || 0}%</span>
+                    <div>
+                      <h3 className="text-lg font-semibold text-white">Your Progress</h3>
+                      {isAuthenticated && user?.email ? (
+                        <p className="text-xs text-green-400 mt-1">✓ Logged in as {user.email}</p>
+                      ) : (
+                        <p className="text-xs text-yellow-400 mt-1">⚠ Not logged in - progress won't be saved</p>
+                      )}
+                    </div>
+                    <span className="text-green-400 font-bold">
+                      {dbProgress && dbProgress.lessonsCompleted
+                        ? Math.round((dbProgress.lessonsCompleted.length / module.lessons.length) * 100)
+                        : moduleProgress?.percentage || 0}%
+                    </span>
                   </div>
                   <div className="w-full bg-gray-800 rounded-full h-3 mb-2">
                     <div
                       className="h-3 bg-green-400 rounded-full transition-all duration-500"
-                      style={{ width: `${moduleProgress?.percentage || 0}%` }}
+                      style={{
+                        width: `${dbProgress && dbProgress.lessonsCompleted
+                          ? Math.round((dbProgress.lessonsCompleted.length / module.lessons.length) * 100)
+                          : moduleProgress?.percentage || 0}%`
+                      }}
                     />
                   </div>
-                  <p className="text-sm text-gray-500">
-                    {moduleProgress?.completed || 0} of {moduleProgress?.total || 0} lessons completed
+                  <p className="text-gray-500 text-sm">
+                    {dbProgress && dbProgress.lessonsCompleted
+                      ? dbProgress.lessonsCompleted.length
+                      : moduleProgress?.completed || 0} of {module.lessons.length} lessons completed
                   </p>
                 </div>
 

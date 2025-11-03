@@ -5,21 +5,58 @@ import Link from "next/link";
 import Image from "next/image";
 import { modules } from '@/data/lessons';
 import { getModuleProgress } from '@/utils/progress';
+import { useAuth } from '@/hooks/useAuth';
 import jsLogo from '@/assets/javascript.png';
 import pythonLogo from '@/assets/python.png';
 import cppLogo from '@/assets/c++.png';
 
 export default function ModulesPage() {
+  const { user, isAuthenticated } = useAuth();
   const [moduleProgress, setModuleProgress] = useState<{[key: string]: {completed: number, total: number, percentage: number}}>({});
 
   useEffect(() => {
-    const progress: {[key: string]: {completed: number, total: number, percentage: number}} = {};
-    modules.forEach(module => {
-      const lessonIds = module.lessons.map(lesson => lesson.id);
-      progress[module.id] = getModuleProgress(module.id, lessonIds);
-    });
-    setModuleProgress(progress);
-  }, []);
+    const loadProgress = async () => {
+      const progress: {[key: string]: {completed: number, total: number, percentage: number}} = {};
+
+      // If authenticated, load progress from DynamoDB
+      if (isAuthenticated && user?.email) {
+        try {
+          const response = await fetch(`/api/user-progress?userId=${user.email}`);
+          if (response.ok) {
+            const data = await response.json();
+
+            // Convert DB progress to module progress format
+            data.progress.forEach((dbProgress: any) => {
+              const module = modules.find(m => m.id === dbProgress.moduleId);
+              if (module) {
+                const completed = dbProgress.lessonsCompleted?.length || 0;
+                const total = module.lessons.length;
+                progress[module.id] = {
+                  completed,
+                  total,
+                  percentage: Math.round((completed / total) * 100)
+                };
+              }
+            });
+          }
+        } catch (error) {
+          console.error('Error loading progress from DB:', error);
+        }
+      }
+
+      // Fill in any modules not in DB with localStorage progress
+      modules.forEach(module => {
+        if (!progress[module.id]) {
+          const lessonIds = module.lessons.map(lesson => lesson.id);
+          progress[module.id] = getModuleProgress(module.id, lessonIds);
+        }
+      });
+
+      setModuleProgress(progress);
+    };
+
+    loadProgress();
+  }, [isAuthenticated, user?.email]);
 
   const getModuleColor = (category: string) => {
     switch (category) {

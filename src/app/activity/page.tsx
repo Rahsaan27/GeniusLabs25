@@ -1,25 +1,77 @@
 'use client'
 
 import { useState, useEffect } from 'react';
-import { lessons } from '@/data/lessons';
+import { lessons, modules } from '@/data/lessons';
 import { getProgressData, getOverallProgress } from '@/utils/progress';
 import { UserProgress } from '@/types/lesson';
+import { useAuth } from '@/hooks/useAuth';
 import Link from 'next/link';
 import Image from 'next/image';
 import jsLogo from '@/assets/javascript.png';
 import pythonLogo from '@/assets/python.png';
 
 export default function ActivityPage() {
+  const { user, isAuthenticated } = useAuth();
   const [selectedLanguage, setSelectedLanguage] = useState('All');
   const [selectedDifficulty, setSelectedDifficulty] = useState('All');
   const [progressData, setProgressData] = useState<UserProgress[]>([]);
   const [overallProgress, setOverallProgress] = useState({ completed: 0, total: 0, percentage: 0 });
+  const [allCompletedLessons, setAllCompletedLessons] = useState<string[]>([]);
+  const [completedLessons, setCompletedLessons] = useState(0);
+  const [totalScore, setTotalScore] = useState(0);
 
   useEffect(() => {
-    const progress = getProgressData();
-    setProgressData(progress);
-    setOverallProgress(getOverallProgress());
-  }, []);
+    const loadProgress = async () => {
+      let completedLessonIds: string[] = [];
+
+      // If authenticated, load progress from DynamoDB
+      if (isAuthenticated && user?.email) {
+        try {
+          const response = await fetch(`/api/user-progress?userId=${user.email}`);
+          if (response.ok) {
+            const data = await response.json();
+
+            // Collect all completed lessons from all modules
+            data.progress.forEach((moduleProgress: any) => {
+              if (moduleProgress.lessonsCompleted) {
+                completedLessonIds = [...completedLessonIds, ...moduleProgress.lessonsCompleted];
+              }
+            });
+
+            setAllCompletedLessons(completedLessonIds);
+            setCompletedLessons(completedLessonIds.length);
+          }
+        } catch (error) {
+          console.error('Error loading progress from DB:', error);
+        }
+      }
+
+      // Fallback to localStorage if not authenticated or no DB data
+      const localProgress = getProgressData();
+      setProgressData(localProgress);
+
+      // If no DB data, use localStorage
+      if (!isAuthenticated || completedLessonIds.length === 0) {
+        const completed = localProgress.filter(p => p.status === 'completed').length;
+        setCompletedLessons(completed);
+        setTotalScore(localProgress.reduce((sum, p) => sum + (p.score || 0), 0));
+      }
+
+      // Calculate overall progress
+      const totalLessons = modules.reduce((sum, module) => sum + module.lessons.length, 0);
+      const completed = isAuthenticated && completedLessonIds.length > 0
+        ? completedLessonIds.length
+        : localProgress.filter(p => p.status === 'completed').length;
+
+      setOverallProgress({
+        completed,
+        total: totalLessons,
+        percentage: Math.round((completed / totalLessons) * 100)
+      });
+    };
+
+    loadProgress();
+  }, [isAuthenticated, user?.email]);
 
   const filteredLessons = lessons.filter(lesson => {
     return (selectedLanguage === 'All' || lesson.language === selectedLanguage) &&
@@ -27,16 +79,19 @@ export default function ActivityPage() {
   });
 
   const getLessonProgress = (lessonId: string) => {
+    // Check DB progress first
+    if (allCompletedLessons.includes(lessonId)) {
+      return { lessonId, status: 'completed', score: 0 } as UserProgress;
+    }
+    // Fallback to localStorage
     return progressData.find(p => p.lessonId === lessonId);
   };
-
-  const completedLessons = progressData.filter(p => p.status === 'completed').length;
-  const totalScore = progressData.reduce((sum, p) => sum + (p.score || 0), 0);
 
   const getLanguageLogo = (language: string) => {
     switch(language) {
       case 'javascript': return jsLogo;
       case 'python': return pythonLogo;
+      case 'html': return null; // Can add HTML logo later
       default: return null;
     }
   };
@@ -113,6 +168,7 @@ export default function ActivityPage() {
                   <option value="All">All Languages</option>
                   <option value="javascript">JavaScript</option>
                   <option value="python">Python</option>
+                  <option value="html">HTML</option>
                 </select>
               </div>
 

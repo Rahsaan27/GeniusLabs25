@@ -11,11 +11,13 @@ export default function ModuleLessonsPage() {
   const router = useRouter();
   const [currentLessonIndex, setCurrentLessonIndex] = useState(0);
   const [moduleLessons, setModuleLessons] = useState<Lesson[]>([]);
+  const [moduleId, setModuleId] = useState<string>('');
 
   useEffect(() => {
-    const moduleId = params.moduleId as string;
-    const foundModule = shortFormModules.find(m => m.id === moduleId);
-    
+    const id = params.moduleId as string;
+    setModuleId(id);
+    const foundModule = shortFormModules.find(m => m.id === id);
+
     if (foundModule) {
       setModuleLessons(foundModule.lessons);
     } else {
@@ -30,8 +32,8 @@ export default function ModuleLessonsPage() {
     if (currentLessonIndex < moduleLessons.length - 1) {
       setCurrentLessonIndex(prev => prev + 1);
     } else {
-      // All lessons completed, return to modules
-      router.push('/modules');
+      // All lessons completed, return to module page
+      router.push(`/modules/${moduleId}`);
     }
   };
 
@@ -49,8 +51,9 @@ export default function ModuleLessonsPage() {
 
   return (
     <div className="relative">
-      <ShortFormLesson 
-        lesson={currentLesson} 
+      <ShortFormLesson
+        lesson={currentLesson}
+        moduleId={moduleId}
         onComplete={handleLessonComplete}
       />
     </div>
