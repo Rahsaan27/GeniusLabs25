@@ -71,4 +71,5 @@ export interface Module {
   lessons: Lesson[];
   estimatedTime: number;
   difficulty: 'beginner' | 'intermediate' | 'advanced';
+  comingSoon?: boolean; // If true, module is disabled and shows "Coming Soon"
 }

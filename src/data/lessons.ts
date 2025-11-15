@@ -246,7 +246,20 @@ Create a business model canvas for your social venture:
 ];
 
 export const modules: Module[] = [
-  // Python
+  // JavaScript - ACTIVE MODULE
+  {
+    id: 'javascript-basics',
+    title: 'Intro to JavaScript',
+    description: 'Learn the fundamentals of JavaScript programming',
+    language: 'javascript',
+    category: 'technology',
+    difficulty: 'beginner',
+    estimatedTime: 60,
+    lessons: lessons.filter(lesson => lesson.language === 'javascript'),
+    comingSoon: false
+  },
+
+  // COMING SOON MODULES
   {
     id: 'python-basics',
     title: 'Python Fundamentals',
@@ -255,34 +268,10 @@ export const modules: Module[] = [
     category: 'technology',
     difficulty: 'beginner',
     estimatedTime: 195,
-    lessons: pythonFundamentalsLessons
+    lessons: [],
+    comingSoon: true
   },
 
-  // Entrepreneurship
-  {
-    id: 'social-entrepreneurship',
-    title: 'Radical Social Entrepreneurship',
-    description: 'Create ventures that address pressing social issues',
-    language: 'theory',
-    category: 'entrepreneurship',
-    difficulty: 'beginner',
-    estimatedTime: 90,
-    lessons: entrepreneurshipLessons
-  },
-
-  // JavaScript
-  {
-    id: 'javascript-basics',
-    title: 'JavaScript Fundamentals',
-    description: 'Learn the basics of JavaScript programming',
-    language: 'javascript',
-    category: 'technology',
-    difficulty: 'beginner',
-    estimatedTime: 60,
-    lessons: lessons.filter(lesson => lesson.language === 'javascript')
-  },
-
-  // HTML & CSS
   {
     id: 'html-css-basics',
     title: 'HTML & CSS Fundamentals',
@@ -291,6 +280,19 @@ export const modules: Module[] = [
     category: 'technology',
     difficulty: 'beginner',
     estimatedTime: 105,
-    lessons: htmlLessons
+    lessons: [],
+    comingSoon: true
+  },
+
+  {
+    id: 'social-entrepreneurship',
+    title: 'Radical Social Entrepreneurship',
+    description: 'Create ventures that address pressing social issues',
+    language: 'theory',
+    category: 'entrepreneurship',
+    difficulty: 'beginner',
+    estimatedTime: 90,
+    lessons: [],
+    comingSoon: true
   }
 ];

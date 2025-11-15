@@ -42,7 +42,7 @@ export default function SignupPage() {
               fill
               className="object-cover"
             />
-            <div className="absolute bottom-4 left-4 z-20 text-white">
+            <div className="absolute bottom-24 left-4 z-20 text-white">
               <h3 className="text-lg font-bold">Join the Movement</h3>
             </div>
           </div>
@@ -121,7 +121,7 @@ export default function SignupPage() {
           className="object-cover"
           priority
         />
-        <div className="absolute bottom-8 right-8 z-20 text-white text-right">
+        <div className="absolute bottom-24 right-8 z-20 text-white text-right">
           <h3 className="text-2xl font-bold mb-2">Join the Movement</h3>
           <p className="text-lg opacity-90">Building the next generation of tech leaders</p>
         </div>

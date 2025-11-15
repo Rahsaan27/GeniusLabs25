@@ -1,0 +1,54 @@
+{
+  "lessonInfo": {
+    "id": "unique-lesson-id",
+    "title": "Lesson Title Here",
+    "description": "Brief description of what students will learn",
+    "difficulty": "beginner",
+    "estimatedTime": 30,
+    "language": "javascript"
+  },
+  "activities": ["videos", "docs", "code", "quiz"],
+  "content": {
+    "theory": "# Introduction\n\nThis is where you explain the concept. You can use Markdown:\n\n- Bullet points\n- **Bold text**\n- `code snippets`\n\n## Examples\n\nShow examples here.",
+    "instructions": "Write a JavaScript function that does XYZ. Make sure to:\n\n1. Use descriptive variable names\n2. Add a console.log() to show the result\n3. Test with different inputs",
+    "starterCode": "// Write your code here\nfunction myFunction() {\n  \n}",
+    "solution": "// Solution\nfunction myFunction() {\n  console.log('Hello World!');\n}",
+    "videos": [
+      {
+        "title": "Introduction to JavaScript",
+        "url": "https://www.youtube.com/embed/video-id-here",
+        "duration": "10:30"
+      }
+    ],
+    "documentation": "# Additional Resources\n\nRead more about this topic:\n\n- [MDN Web Docs](https://developer.mozilla.org)\n- [W3Schools](https://www.w3schools.com)\n\n## Key Concepts\n\nExplain important concepts here with examples."
+  },
+  "testCases": [
+    {
+      "id": "test-1",
+      "input": "",
+      "expectedOutput": "Hello World!",
+      "description": "Should print 'Hello World!'"
+    }
+  ],
+  "quiz": {
+    "id": "quiz-1",
+    "title": "Check Your Understanding",
+    "questions": [
+      {
+        "id": "q1",
+        "question": "What does console.log() do?",
+        "options": [
+          "Prints to the console",
+          "Creates a new variable",
+          "Defines a function",
+          "Deletes code"
+        ],
+        "correctAnswer": 0,
+        "explanation": "console.log() prints output to the browser's console for debugging.",
+        "emoji": "🖨️"
+      }
+    ],
+    "timePerQuestion": 30,
+    "passingScore": 70
+  }
+}

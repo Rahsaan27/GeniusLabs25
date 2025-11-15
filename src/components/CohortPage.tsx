@@ -50,7 +50,7 @@ export default function CohortPage() {
               priority
             />
             <div className="absolute inset-0 bg-black/40"></div>
-            <div className="absolute bottom-12 left-12 text-white">
+            <div className="absolute bottom-24 left-12 text-white">
               <h3 className="text-4xl font-bold mb-2">
                 Connect & Collaborate
               </h3>

@@ -40,7 +40,7 @@ export default function LoginPage() {
           className="object-cover"
           priority
         />
-        <div className="absolute bottom-8 left-8 z-20 text-white">
+        <div className="absolute bottom-24 left-8 z-20 text-white">
           <h3 className="text-2xl font-bold mb-2">Empowering Young Minds</h3>
           <p className="text-lg opacity-90">Join the Hidden Genius Project community</p>
         </div>

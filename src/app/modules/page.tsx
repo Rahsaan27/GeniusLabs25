@@ -104,13 +104,17 @@ export default function ModulesPage() {
             const badges = getBadges(progress, module.difficulty);
             const logo = getLanguageLogo(module.language);
 
+            // Disable link for coming soon modules
+            const ModuleCard = module.comingSoon ? 'div' : Link;
+            const linkProps = module.comingSoon ? {} : { href: `/modules/${module.id}` };
+
             return (
-              <Link
+              <ModuleCard
                 key={module.id}
-                href={`/modules/${module.id}`}
-                className="group"
+                {...linkProps}
+                className={`group ${module.comingSoon ? 'cursor-not-allowed' : 'cursor-pointer'}`}
               >
-                <div className={`relative bg-gradient-to-br ${getModuleColor(module.category)} border rounded-2xl p-6 transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-green-500/20 min-h-[280px] flex flex-col`}>
+                <div className={`relative bg-gradient-to-br ${getModuleColor(module.category)} border rounded-2xl p-6 transition-all duration-300 ${module.comingSoon ? 'opacity-60' : 'hover:scale-105 hover:shadow-2xl hover:shadow-green-500/20'} min-h-[280px] flex flex-col`}>
                   {/* Logo */}
                   <div className="absolute top-6 right-6">
                     {logo && (
@@ -128,6 +132,13 @@ export default function ModulesPage() {
                   <h2 className="text-2xl font-bold text-white mb-3 pr-16 group-hover:text-green-400 transition-colors">
                     {module.title}
                   </h2>
+
+                  {/* Coming Soon Badge */}
+                  {module.comingSoon && (
+                    <div className="bg-yellow-500/20 border border-yellow-400/40 text-yellow-400 px-3 py-1 rounded-full text-xs font-bold w-fit mb-3">
+                      🚧 COMING SOON
+                    </div>
+                  )}
 
                   {/* Badges */}
                   {badges.length > 0 && (
@@ -178,7 +189,7 @@ export default function ModulesPage() {
                     </div>
                   </div>
                 </div>
-              </Link>
+              </ModuleCard>
             );
           })}
         </div>
