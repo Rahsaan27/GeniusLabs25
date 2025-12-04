@@ -77,6 +77,8 @@ AWS Amplify is the easiest way to deploy Next.js applications with built-in CI/C
    NEXT_PUBLIC_COGNITO_LOGOUT_URI=https://main.YOUR_AMPLIFY_URL.amplifyapp.com
    ```
 
+   **⚠️ IMPORTANT**: Get your AWS credentials from your `.env.local` file. Do NOT commit real credentials to git!
+
    **⚠️ IMPORTANT**: You'll need to update the redirect URIs after deployment!
 
 5. **Review and Deploy:**
