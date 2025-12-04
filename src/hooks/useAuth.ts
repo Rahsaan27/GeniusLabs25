@@ -31,21 +31,25 @@ export function useAuth() {
 
   const logout = async () => {
     try {
-      // Use removeUser instead of signoutRedirect to avoid redirect issues
+      // Remove user from OIDC storage
       await auth.removeUser();
-      // Clear any local storage or session storage
+
+      // Clear all browser storage
       if (typeof window !== 'undefined') {
         localStorage.clear();
         sessionStorage.clear();
       }
+
       return { success: true };
     } catch (error: unknown) {
       console.error('Logout error:', error);
-      // Even if there's an error, try to clear local state
+
+      // Even on error, try to clear storage
       if (typeof window !== 'undefined') {
         localStorage.clear();
         sessionStorage.clear();
       }
+
       const message = error instanceof Error ? error.message : 'Logout failed';
       return { success: false, error: message };
     }

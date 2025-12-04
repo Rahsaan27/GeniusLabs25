@@ -1,6 +1,6 @@
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
 import { DynamoDBDocumentClient, GetCommand, PutCommand, ScanCommand, QueryCommand } from "@aws-sdk/lib-dynamodb";
-import { UserRole, DEFAULT_ROLE, EmailRoleMapping } from "@/types/roles";
+import { UserRole, DEFAULT_ROLE, EmailRoleMapping, getRoleFromEmail } from "@/types/roles";
 
 const client = new DynamoDBClient({
   region: process.env.AWS_REGION || "us-west-2",
@@ -15,6 +15,7 @@ const TABLE_NAME = process.env.DYNAMODB_ROLES_TABLE || "genius-labs-user-roles";
 
 /**
  * Get user role by email
+ * First checks DynamoDB, then falls back to email-based detection
  */
 export async function getUserRole(email: string): Promise<UserRole> {
   try {
@@ -29,11 +30,17 @@ export async function getUserRole(email: string): Promise<UserRole> {
       return response.Item.role as UserRole;
     }
 
-    // Return default role if not found
-    return DEFAULT_ROLE;
+    // If not in database, determine role from email and auto-assign
+    const detectedRole = getRoleFromEmail(email);
+
+    // Auto-assign the detected role
+    await assignUserRole(email, detectedRole, 'system-auto-assignment');
+
+    return detectedRole;
   } catch (error) {
     console.error("Error getting user role:", error);
-    return DEFAULT_ROLE;
+    // Fallback to email-based detection if DB fails
+    return getRoleFromEmail(email);
   }
 }
 

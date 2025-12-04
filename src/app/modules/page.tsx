@@ -45,8 +45,9 @@ export default function ModulesPage() {
       }
 
       // Fill in any modules not in DB with localStorage progress
+      // Skip disabled modules (comingSoon)
       modules.forEach(module => {
-        if (!progress[module.id]) {
+        if (!progress[module.id] && !module.comingSoon) {
           const lessonIds = module.lessons.map(lesson => lesson.id);
           progress[module.id] = getModuleProgress(module.id, lessonIds);
         }
@@ -104,16 +105,7 @@ export default function ModulesPage() {
             const badges = getBadges(progress, module.difficulty);
             const logo = getLanguageLogo(module.language);
 
-            // Disable link for coming soon modules
-            const ModuleCard = module.comingSoon ? 'div' : Link;
-            const linkProps = module.comingSoon ? {} : { href: `/modules/${module.id}` };
-
-            return (
-              <ModuleCard
-                key={module.id}
-                {...linkProps}
-                className={`group ${module.comingSoon ? 'cursor-not-allowed' : 'cursor-pointer'}`}
-              >
+            const cardContent = (
                 <div className={`relative bg-gradient-to-br ${getModuleColor(module.category)} border rounded-2xl p-6 transition-all duration-300 ${module.comingSoon ? 'opacity-60' : 'hover:scale-105 hover:shadow-2xl hover:shadow-green-500/20'} min-h-[280px] flex flex-col`}>
                   {/* Logo */}
                   <div className="absolute top-6 right-6">
@@ -151,45 +143,65 @@ export default function ModulesPage() {
                     </div>
                   )}
 
-                  {/* Progress Circle */}
-                  <div className="mt-auto pt-6">
-                    <div className="flex items-end justify-between">
-                      <div>
-                        <div className="text-sm text-gray-400 mb-1">{module.lessons.length} lessons</div>
-                        <div className="text-sm text-gray-500">{module.estimatedTime} min</div>
-                      </div>
-                      <div className="relative">
-                        <svg className="w-20 h-20 transform -rotate-90">
-                          <circle
-                            cx="40"
-                            cy="40"
-                            r="32"
-                            stroke="currentColor"
-                            strokeWidth="6"
-                            fill="none"
-                            className="text-gray-700"
-                          />
-                          <circle
-                            cx="40"
-                            cy="40"
-                            r="32"
-                            stroke="currentColor"
-                            strokeWidth="6"
-                            fill="none"
-                            strokeDasharray={`${2 * Math.PI * 32}`}
-                            strokeDashoffset={`${2 * Math.PI * 32 * (1 - progress.percentage / 100)}`}
-                            className="text-green-400 transition-all duration-500"
-                            strokeLinecap="round"
-                          />
-                        </svg>
-                        <div className="absolute inset-0 flex items-center justify-center">
-                          <span className="text-xl font-bold text-white">{progress.percentage}%</span>
+                  {/* Progress Circle - Only show for active modules */}
+                  {!module.comingSoon && (
+                    <div className="mt-auto pt-6">
+                      <div className="flex items-end justify-between">
+                        <div>
+                          <div className="text-sm text-gray-400 mb-1">{module.lessons.length} lessons</div>
+                          <div className="text-sm text-gray-500">{module.estimatedTime} min</div>
+                        </div>
+                        <div className="relative">
+                          <svg className="w-20 h-20 transform -rotate-90">
+                            <circle
+                              cx="40"
+                              cy="40"
+                              r="32"
+                              stroke="currentColor"
+                              strokeWidth="6"
+                              fill="none"
+                              className="text-gray-700"
+                            />
+                            <circle
+                              cx="40"
+                              cy="40"
+                              r="32"
+                              stroke="currentColor"
+                              strokeWidth="6"
+                              fill="none"
+                              strokeDasharray={`${2 * Math.PI * 32}`}
+                              strokeDashoffset={`${2 * Math.PI * 32 * (1 - progress.percentage / 100)}`}
+                              className="text-green-400 transition-all duration-500"
+                              strokeLinecap="round"
+                            />
+                          </svg>
+                          <div className="absolute inset-0 flex items-center justify-center">
+                            <span className="text-xl font-bold text-white">{progress.percentage}%</span>
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
+                  )}
+
+                  {/* Info for disabled modules */}
+                  {module.comingSoon && (
+                    <div className="mt-auto pt-6">
+                      <div className="text-sm text-gray-500">
+                        This module will be available soon
+                      </div>
+                    </div>
+                  )}
                 </div>
-              </ModuleCard>
+            );
+
+            return module.comingSoon ? (
+              <div key={module.id} className="group cursor-not-allowed">
+                {cardContent}
+              </div>
+            ) : (
+              <Link key={module.id} href={`/modules/${module.id}`} className="group cursor-pointer">
+                {cardContent}
+              </Link>
             );
           })}
         </div>

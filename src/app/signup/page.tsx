@@ -6,6 +6,7 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/hooks/useAuth';
 import HiddenGeniusInstagram from '@/assets/Hidden Genius Instagram.jpg';
+import LoadingScreen from '@/components/LoadingScreen';
 
 export default function SignupPage() {
   const [loading, setLoading] = useState(false);
@@ -27,6 +28,11 @@ export default function SignupPage() {
     // Note: If successful, user will be redirected to Cognito hosted UI
     // and then back to the callback URL, so no need to handle success here
   };
+
+  // Show loading screen while creating account
+  if (loading) {
+    return <LoadingScreen message="Creating your account..." />;
+  }
 
   return (
     <div className="min-h-screen flex bg-black">
@@ -125,17 +131,6 @@ export default function SignupPage() {
           <h3 className="text-2xl font-bold mb-2">Join the Movement</h3>
           <p className="text-lg opacity-90">Building the next generation of tech leaders</p>
         </div>
-        {/* <div className="absolute top-8 right-8 z-20">
-          <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-4 text-white">
-            <h4 className="font-bold text-sm">🚀 Why Join GeniusLabs?</h4>
-            <ul className="text-xs mt-2 space-y-1 opacity-90">
-              <li>• Interactive coding lessons</li>
-              <li>• Real-world projects</li>
-              <li>• Community support</li>
-              <li>• Career pathways</li>
-            </ul>
-          </div>
-        </div> */}
       </div>
     </div>
   );

@@ -47,9 +47,9 @@ export async function POST(request: NextRequest) {
     }
 
     // Validate role
-    if (!['genius', 'educator', 'admin'].includes(role)) {
+    if (!['student', 'genius', 'educator', 'admin', 'superadmin'].includes(role)) {
       return NextResponse.json(
-        { error: "Invalid role. Must be genius, educator, or admin" },
+        { error: "Invalid role. Must be student, genius, educator, admin, or superadmin" },
         { status: 400 }
       );
     }

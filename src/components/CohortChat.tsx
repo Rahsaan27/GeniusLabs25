@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Cohort } from '@/types/cohort';
 import { Message } from '@/types/message';
+import { useRole } from '@/hooks/useRole';
+import { useAuth } from '@/hooks/useAuth';
 
 interface CohortChatProps {
   cohort: Cohort;
@@ -9,6 +11,8 @@ interface CohortChatProps {
 }
 
 export default function CohortChat({ cohort, currentUser, activeChannel }: CohortChatProps) {
+  const { user } = useAuth();
+  const { permissions, isAdmin, isEducator, isSuperAdmin } = useRole();
   const [messages, setMessages] = useState<Message[]>([
     {
       id: 'welcome',
@@ -22,7 +26,13 @@ export default function CohortChat({ cohort, currentUser, activeChannel }: Cohor
     }
   ]);
   const [newMessage, setNewMessage] = useState('');
+  const [showAnnouncementModal, setShowAnnouncementModal] = useState(false);
+  const [announcementTitle, setAnnouncementTitle] = useState('');
+  const [announcementContent, setAnnouncementContent] = useState('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  // Check if user can make announcements
+  const canMakeAnnouncements = permissions?.canMakeAnnouncements ?? false;
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -39,11 +49,58 @@ export default function CohortChat({ cohort, currentUser, activeChannel }: Cohor
       timestamp: Date.now(),
       cohortId: cohort.id,
       createdAt: new Date().toISOString(),
-      type: 'message'
+      type: 'message',
+      isAdminMessage: isAdmin || isEducator || isSuperAdmin
     };
 
     setMessages(prev => [...prev, message]);
     setNewMessage('');
+  };
+
+  const handleCreateAnnouncement = async () => {
+    if (!announcementTitle.trim() || !announcementContent.trim()) return;
+
+    try {
+      const response = await fetch('/api/announcements', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          cohortId: cohort.id,
+          title: announcementTitle.trim(),
+          content: announcementContent.trim(),
+          createdBy: currentUser.name,
+          userEmail: user?.email,
+          priority: 'high'
+        })
+      });
+
+      if (response.ok) {
+        const { announcement } = await response.json();
+
+        // Add announcement as a message
+        const announcementMessage: Message = {
+          id: announcement.id,
+          userId: currentUser.id,
+          userName: currentUser.name,
+          content: `**${announcementTitle.trim()}**\n\n${announcementContent.trim()}`,
+          timestamp: Date.now(),
+          cohortId: cohort.id,
+          createdAt: new Date().toISOString(),
+          type: 'announcement',
+          isAdminMessage: true
+        };
+
+        setMessages(prev => [...prev, announcementMessage]);
+        setShowAnnouncementModal(false);
+        setAnnouncementTitle('');
+        setAnnouncementContent('');
+      } else {
+        alert('Failed to create announcement. Please try again.');
+      }
+    } catch (error) {
+      console.error('Error creating announcement:', error);
+      alert('Failed to create announcement. Please try again.');
+    }
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -121,31 +178,42 @@ export default function CohortChat({ cohort, currentUser, activeChannel }: Cohor
 
                 <div className="flex items-start space-x-3 mb-4">
                   <div className={`w-10 h-10 rounded-lg flex items-center justify-center text-sm font-bold flex-shrink-0 ${
-                    message.userId === 'system'
+                    message.type === 'announcement'
+                      ? 'bg-yellow-900 text-yellow-200'
+                      : message.userId === 'system'
                       ? 'bg-blue-900 text-blue-200'
                       : message.userId === currentUser.id
                       ? 'bg-gray-800 text-green-500'
                       : 'bg-gray-800 text-gray-300'
                   }`}>
-                    {message.userName.charAt(0).toUpperCase()}
+                    {message.type === 'announcement' ? '📢' : message.userName.charAt(0).toUpperCase()}
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-baseline space-x-2 mb-1">
                       <span className={`font-medium text-sm ${
-                        message.userId === 'system'
+                        message.type === 'announcement'
+                          ? 'text-yellow-400'
+                          : message.userId === 'system'
                           ? 'text-blue-400'
                           : message.userId === currentUser.id
                           ? 'text-green-500'
                           : 'text-white'
                       }`}>
-                        {message.userId === 'system' ? 'GeniusLabs' : message.userName}
+                        {message.type === 'announcement' ? `${message.userName} (Announcement)` : message.userId === 'system' ? 'GeniusLabs' : message.userName}
                       </span>
+                      {message.isAdminMessage && message.type !== 'announcement' && (
+                        <span className="text-xs bg-purple-900 text-purple-300 px-2 py-0.5 rounded">
+                          {isAdmin || isSuperAdmin ? 'Admin' : isEducator ? 'Educator' : 'Staff'}
+                        </span>
+                      )}
                       <span className="text-xs text-gray-600">
                         {formatTime(message.timestamp)}
                       </span>
                     </div>
                     <div className={`text-sm leading-relaxed whitespace-pre-wrap px-4 py-2 rounded-lg ${
-                      message.userId === 'system'
+                      message.type === 'announcement'
+                        ? 'bg-yellow-950 text-yellow-100 border border-yellow-900'
+                        : message.userId === 'system'
                         ? 'bg-blue-950 text-blue-100 border border-blue-900'
                         : message.userId === currentUser.id
                         ? 'bg-gray-900 text-gray-100 border border-gray-800'
@@ -177,8 +245,19 @@ export default function CohortChat({ cohort, currentUser, activeChannel }: Cohor
             />
 
             <div className="px-4 pb-3 flex justify-between items-center">
-              <div className="text-xs text-gray-600">
-                Press Enter to send
+              <div className="flex items-center space-x-3">
+                <div className="text-xs text-gray-600">
+                  Press Enter to send
+                </div>
+                {canMakeAnnouncements && (
+                  <button
+                    onClick={() => setShowAnnouncementModal(true)}
+                    className="text-xs text-yellow-400 hover:text-yellow-300 flex items-center space-x-1"
+                  >
+                    <span>📢</span>
+                    <span>Make Announcement</span>
+                  </button>
+                )}
               </div>
 
               <button
@@ -196,6 +275,81 @@ export default function CohortChat({ cohort, currentUser, activeChannel }: Cohor
           </div>
         </div>
       </div>
+
+      {/* Announcement Modal */}
+      {showAnnouncementModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm">
+          <div className="bg-gray-900 rounded-2xl border border-yellow-400/20 shadow-2xl mx-4 max-w-lg w-full">
+            <div className="flex items-center justify-between p-6 border-b border-gray-700">
+              <h2 className="text-2xl font-bold text-yellow-400 flex items-center space-x-2">
+                <span>📢</span>
+                <span>Create Announcement</span>
+              </h2>
+              <button
+                onClick={() => {
+                  setShowAnnouncementModal(false);
+                  setAnnouncementTitle('');
+                  setAnnouncementContent('');
+                }}
+                className="text-gray-400 hover:text-white p-2 rounded-lg hover:bg-gray-700 transition-all"
+              >
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+
+            <div className="p-6 space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-2">
+                  Title
+                </label>
+                <input
+                  type="text"
+                  value={announcementTitle}
+                  onChange={(e) => setAnnouncementTitle(e.target.value)}
+                  placeholder="Enter announcement title"
+                  className="w-full px-4 py-2 bg-gray-800 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-yellow-400 transition-colors"
+                  autoFocus
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-2">
+                  Content
+                </label>
+                <textarea
+                  value={announcementContent}
+                  onChange={(e) => setAnnouncementContent(e.target.value)}
+                  placeholder="Enter announcement content"
+                  className="w-full px-4 py-2 bg-gray-800 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-yellow-400 transition-colors resize-none"
+                  rows={5}
+                />
+              </div>
+
+              <div className="flex space-x-3">
+                <button
+                  onClick={() => {
+                    setShowAnnouncementModal(false);
+                    setAnnouncementTitle('');
+                    setAnnouncementContent('');
+                  }}
+                  className="flex-1 bg-gray-700 hover:bg-gray-600 text-white font-semibold py-2 px-4 rounded-lg transition-colors"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleCreateAnnouncement}
+                  disabled={!announcementTitle.trim() || !announcementContent.trim()}
+                  className="flex-1 bg-yellow-500 hover:bg-yellow-600 disabled:bg-gray-600 disabled:cursor-not-allowed text-black font-semibold py-2 px-4 rounded-lg transition-colors"
+                >
+                  Post Announcement
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

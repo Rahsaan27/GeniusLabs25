@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createUserProgress, getAllUserProgress } from "@/services/user-progress";
+import { createUserProgress, getAllUserProgress, deleteUserProgress } from "@/services/user-progress";
 
 /**
  * GET /api/user-progress?userId=xxx
@@ -56,6 +56,35 @@ export async function POST(request: NextRequest) {
     console.error("Error creating user progress:", error);
     return NextResponse.json(
       { error: "Failed to create user progress" },
+      { status: 500 }
+    );
+  }
+}
+
+/**
+ * DELETE /api/user-progress?userId=xxx&moduleId=xxx
+ * Delete progress record for a specific module
+ */
+export async function DELETE(request: NextRequest) {
+  try {
+    const searchParams = request.nextUrl.searchParams;
+    const userId = searchParams.get("userId");
+    const moduleId = searchParams.get("moduleId");
+
+    if (!userId || !moduleId) {
+      return NextResponse.json(
+        { error: "userId and moduleId are required" },
+        { status: 400 }
+      );
+    }
+
+    await deleteUserProgress(userId, moduleId);
+
+    return NextResponse.json({ message: "Progress deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting user progress:", error);
+    return NextResponse.json(
+      { error: "Failed to delete user progress" },
       { status: 500 }
     );
   }

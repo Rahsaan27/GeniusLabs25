@@ -206,3 +206,20 @@ export async function updateQuizScore(
     quizScores,
   });
 }
+
+/**
+ * Delete user's progress for a specific module
+ */
+export async function deleteUserProgress(userId: string, moduleId: string): Promise<void> {
+  const { DeleteCommand } = await import("@aws-sdk/lib-dynamodb");
+
+  await docClient.send(
+    new DeleteCommand({
+      TableName: TABLE_NAMES.USER_PROGRESS,
+      Key: {
+        userId,
+        moduleId,
+      },
+    })
+  );
+}

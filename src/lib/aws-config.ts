@@ -5,9 +5,7 @@ export const oidcConfig = {
   redirect_uri: 'http://localhost:3001/callback',
   post_logout_redirect_uri: 'http://localhost:3001',
   response_type: 'code',
-  scope: 'phone openid email',
-  automaticSilentRenew: true,
-  includeIdTokenInSilentRenew: true
+  scope: 'phone openid email'
 };
 
 

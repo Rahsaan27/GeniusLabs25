@@ -6,6 +6,7 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/hooks/useAuth';
 import HiddenGeniusProject from '@/assets/Hidden Genius Project Image.jpeg';
+import LoadingScreen from '@/components/LoadingScreen';
 
 export default function LoginPage() {
   const [loading, setLoading] = useState(false);
@@ -27,6 +28,11 @@ export default function LoginPage() {
     // Note: If successful, user will be redirected to Cognito hosted UI
     // and then back to the callback URL, so no need to handle success here
   };
+
+  // Show loading screen while authenticating
+  if (loading) {
+    return <LoadingScreen message="Signing you in..." />;
+  }
 
   return (
     <div className="min-h-screen flex bg-black">

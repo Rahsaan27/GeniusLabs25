@@ -6,7 +6,10 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "db:create-tables": "npx tsx scripts/create-tables.ts && npx tsx scripts/create-roles-table.ts && npx tsx scripts/create-profile-tables.ts && npx tsx scripts/create-announcements-table.ts",
+    "db:create-announcements": "npx tsx scripts/create-announcements-table.ts",
+    "db:cleanup-disabled-modules": "npx tsx scripts/cleanup-disabled-modules-progress.ts"
   },
   "dependencies": {
     "@aws-sdk/client-dynamodb": "^3.888.0",
@@ -26,6 +29,7 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "dotenv": "^17.2.3",
     "eslint": "^9",
     "eslint-config-next": "15.4.1",
     "tailwindcss": "^4",

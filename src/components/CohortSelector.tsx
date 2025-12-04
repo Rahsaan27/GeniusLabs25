@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { cohortLocations } from '@/data/cohorts';
 import { Cohort } from '@/types/cohort';
+import { useRole } from '@/hooks/useRole';
+import { useAuth } from '@/hooks/useAuth';
 
 interface CohortSelectorProps {
   onCohortSelect: (cohort: Cohort) => void;
@@ -8,6 +10,8 @@ interface CohortSelectorProps {
 }
 
 export default function CohortSelector({ onCohortSelect, onClose }: CohortSelectorProps) {
+  const { user } = useAuth();
+  const { role, permissions, loading: roleLoading } = useRole();
   const [selectedLocation, setSelectedLocation] = useState<string>('');
   const [selectedCohort, setSelectedCohort] = useState<Cohort | null>(null);
   const [passwordInput, setPasswordInput] = useState('');
@@ -15,6 +19,9 @@ export default function CohortSelector({ onCohortSelect, onClose }: CohortSelect
   const [step, setStep] = useState<'location' | 'cohort' | 'password'>('location');
 
   const activeLocations = cohortLocations.filter(loc => loc.cohortCount > 0);
+
+  // Check if user needs password (students need it, admins/superadmins don't)
+  const requiresPassword = permissions?.requiresCohortPassword ?? true;
 
   // Prevent body scroll when modal is open
   useEffect(() => {
@@ -31,25 +38,40 @@ export default function CohortSelector({ onCohortSelect, onClose }: CohortSelect
 
   const handleCohortSelect = (cohort: Cohort) => {
     setSelectedCohort(cohort);
-    setStep('password');
+
+    // If user doesn't require password (admin/superadmin), join directly
+    if (!requiresPassword) {
+      const cohortWithUserInfo = {
+        ...cohort,
+        userRole: role
+      };
+      localStorage.setItem('userCohort', JSON.stringify(cohortWithUserInfo));
+      if (role) {
+        localStorage.setItem('userRole', role);
+      }
+      onCohortSelect(cohortWithUserInfo);
+      onClose();
+    } else {
+      setStep('password');
+    }
   };
 
   const handlePasswordSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!selectedCohort) return;
 
-    // Check for admin access (password 1111) or student access (password 0000)
-    const isAdminPassword = passwordInput === '1111';
-    const isStudentPassword = passwordInput === '0000';
+    // Check password - default cohort password is '0000' for students
+    const isCorrectPassword = passwordInput === selectedCohort.password || passwordInput === '0000';
 
-    if (isAdminPassword || isStudentPassword) {
-      const userRole = isAdminPassword ? 'admin' : 'student';
+    if (isCorrectPassword) {
       const cohortWithUserInfo = {
         ...selectedCohort,
-        userRole
+        userRole: role
       };
       localStorage.setItem('userCohort', JSON.stringify(cohortWithUserInfo));
-      localStorage.setItem('userRole', userRole);
+      if (role) {
+        localStorage.setItem('userRole', role);
+      }
       onCohortSelect(cohortWithUserInfo);
       onClose();
     } else {
@@ -80,7 +102,7 @@ export default function CohortSelector({ onCohortSelect, onClose }: CohortSelect
         }
       }}
     >
-      <div className="bg-gray-900 rounded-2xl border border-green-400/20 shadow-2xl mx-4 max-w-2xl w-full max-h-[90vh] flex flex-col my-8">
+      <div className="bg-gray-900 rounded-2xl border border-green-400/20 shadow-2xl mx-4 max-w-2xl w-full max-h-[75vh] flex flex-col my-8 mt-10">
         {/* Header */}
         <div className="flex items-center justify-between p-6 border-b border-gray-700 flex-shrink-0">
           <div className="flex items-center space-x-3">
@@ -187,11 +209,13 @@ export default function CohortSelector({ onCohortSelect, onClose }: CohortSelect
                 <p className="text-gray-300 mb-6">
                   This cohort is password protected. Enter the password provided by your instructor.
                 </p>
-                <div className="bg-blue-400/10 border border-blue-400/20 rounded-lg p-3 mb-4">
-                  <p className="text-blue-400 text-xs">
-                    💡 <strong>Tip:</strong> Teachers can use password "1111" for admin access
-                  </p>
-                </div>
+                {role === 'student' && (
+                  <div className="bg-blue-400/10 border border-blue-400/20 rounded-lg p-3 mb-4">
+                    <p className="text-blue-400 text-xs">
+                      💡 <strong>Tip:</strong> Ask your instructor for the cohort password
+                    </p>
+                  </div>
+                )}
               </div>
               
               <form onSubmit={handlePasswordSubmit} className="space-y-4">
