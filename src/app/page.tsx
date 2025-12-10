@@ -228,7 +228,7 @@ export default function Home() {
             {[
               { name: 'JavaScript', logo: jsLogo, available: true, description: 'Build dynamic web applications', color: 'from-yellow-500 to-yellow-600' },
               { name: 'Python', logo: pythonLogo, available: true, description: 'AI, data science & web development', color: 'from-blue-500 to-blue-600' },
-              { name: 'C++', logo: cppLogo, available: false, description: 'System programming & game development', color: 'from-purple-500 to-purple-600' },
+              { name: 'C++', logo: cppLogo, available: false, description: 'Learn system programming & dev', color: 'from-purple-500 to-purple-600' },
             ].map((language, index) => (
               <div key={language.name} className="group relative" style={{animationDelay: `${index * 0.1}s`}}>
                 {/* Glowing background */}
