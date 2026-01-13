@@ -24,7 +24,7 @@ export default function Home() {
             {/* Logo with enhanced animations */}
             <div className="mb-8 group">
               <div className="relative inline-block">
-                <div className="absolute inset-0 bg-green-500/20 rounded-full blur-xl scale-110 group-hover:scale-125 transition-transform duration-500"></div>
+                <div className="-mt-2 absolute inset-0 bg-green-500/20 rounded-full blur-xl scale-110 group-hover:scale-125 transition-transform duration-500"></div>
                 <Image
                   src={logo}
                   alt="GeniusLabs Logo"
@@ -37,13 +37,13 @@ export default function Home() {
 
             {/* Enhanced title with staggered animation */}
             <div className="mb-8 space-y-4">
-              <h1 className="text-3xl md:text-6xl lg:text-6xl font-black leading-tight tracking-tight">
+              <h1 className="text-2xl md:text5xl lg:text-5xl font-black leading-tight tracking-tight">
                 <span className="block bg-gradient-to-r from-white via-gray-100 to-white bg-clip-text text-transparent animate-pulse">
-                  Learn to Code
+                  Start your
                 </span>
                 <span className="block mt-3">
                   <span className="text-transparent bg-clip-text bg-gradient-to-r from-green-400 via-green-300 to-green-500 animate-pulse" style={{animationDelay: '0.5s'}}>
-                    with GeniusLab
+                    coding journey
                   </span>
                 </span>
               </h1>
@@ -62,7 +62,7 @@ export default function Home() {
             <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
               <Link
                 href="/modules"
-                className="group relative overflow-hidden bg-gradient-to-r from-green-500 to-green-600 text-white px-12 py-5 rounded-2xl font-bold text-lg shadow-2xl shadow-green-500/25 hover:shadow-green-500/40 transition-all duration-300 transform hover:scale-105 hover:-translate-y-1"
+                className="group relative overflow-hidden bg-gradient-to-r from-green-500 to-green-600 text-white px-10 py-5 rounded-2xl font-bold text-lg shadow-2xl shadow-green-500/25 hover:shadow-green-500/40 transition-all duration-300 transform hover:scale-105 hover:-translate-y-1"
               >
                 <span className="relative z-10 flex items-center gap-3">
                   Start Learning
@@ -75,7 +75,7 @@ export default function Home() {
 
               <Link
                 href="/signup"
-                className="group relative overflow-hidden border-2 border-green-500 text-green-400 px-12 py-5 rounded-2xl font-bold text-lg hover:text-white transition-all duration-300 transform hover:scale-105 hover:-translate-y-1 backdrop-blur-sm bg-green-500/5 hover:bg-green-500/10"
+                className="group relative overflow-hidden border-2 border-green-500 text-green-400 px-10 py-5 rounded-2xl font-bold text-lg hover:text-white transition-all duration-300 transform hover:scale-105 hover:-translate-y-1 backdrop-blur-sm bg-green-500/5 hover:bg-green-500/10"
               >
                 <span className="relative z-10 flex items-center gap-3">
                   Sign Up Free
