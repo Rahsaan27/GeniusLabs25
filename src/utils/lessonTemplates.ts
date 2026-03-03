@@ -92,59 +92,8 @@ export function generateLessonFromConfig(config: ShortFormLessonConfig): Lesson 
 }
 
 export const lessonConfigs: ShortFormLessonConfig[] = [
-  // JavaScript Fundamentals - Super Simple Variables
-  {
-    id: 'js-variables-functions',
-    title: 'JavaScript Variables',
-    description: 'Learn how to store your name and favorite number in code',
-    language: 'javascript',
-    difficulty: 'beginner',
-    estimatedTime: 1,
-    slides: {
-      hook: {
-        emoji: '📦',
-        title: 'JavaScript Storage Box!',
-        subtitle: 'Variables are like labeled boxes that hold your stuff',
-        description: 'Let\'s store your name in code!'
-      },
-      concepts: [
-        { emoji: '📦', title: 'Variables', subtitle: 'Boxes that hold information' },
-        { emoji: '✏️', title: 'let keyword', subtitle: 'Creates a new box' },
-        { emoji: '🏷️', title: 'Names', subtitle: 'Labels for your boxes' }
-      ],
-      codeChallenge: {
-        description: 'Create a variable with your name and display it',
-        starterCode: `// Create a variable called myName
-// Put your name inside it
-
-console.log(myName);`,
-        solution: `// Create a variable called myName
-let myName = "Alex";
-
-console.log(myName);`,
-        successKeyword: 'Alex'
-      },
-      quiz: {
-        question: 'Which word creates a new variable in JavaScript?',
-        options: ['let', 'make', 'create', 'new'],
-        correctAnswer: 0,
-        explanation: 'Correct! The "let" keyword creates a new variable box.'
-      },
-      dragDrop: {
-        description: 'Match the parts of creating a variable',
-        items: [
-          { id: 'keyword', text: 'let', type: 'start' },
-          { id: 'name', text: 'myAge', type: 'middle' },
-          { id: 'value', text: '= 15', type: 'end' }
-        ],
-        zones: [
-          { id: 'start', label: '1️⃣ Keyword', type: 'start' },
-          { id: 'middle', label: '2️⃣ Name', type: 'middle' },
-          { id: 'end', label: '3️⃣ Value', type: 'end' }
-        ]
-      }
-    }
-  },
+  // NOTE: JavaScript Variables lesson moved to javascriptCurriculum.ts
+  // All JavaScript beginner lessons are now consolidated in that file
 
   // Python Fundamentals - Super Simple Lists
   {

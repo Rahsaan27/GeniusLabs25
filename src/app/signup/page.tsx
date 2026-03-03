@@ -3,7 +3,6 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';
 import { useAuth } from '@/hooks/useAuth';
 import HiddenGeniusInstagram from '@/assets/Hidden Genius Instagram.jpg';
 import LoadingScreen from '@/components/LoadingScreen';
@@ -11,7 +10,6 @@ import LoadingScreen from '@/components/LoadingScreen';
 export default function SignupPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const router = useRouter();
   const { register } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {

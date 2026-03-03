@@ -1,5 +1,7 @@
 'use client';
 
+import React from 'react';
+
 interface OutputConsoleProps {
   output: string;
   isRunning: boolean;
@@ -8,7 +10,7 @@ interface OutputConsoleProps {
   htmlContent?: string;
 }
 
-export default function OutputConsole({ output, isRunning, hasError, language, htmlContent }: OutputConsoleProps) {
+function OutputConsole({ output, isRunning, hasError, language, htmlContent }: OutputConsoleProps) {
   // For HTML, show a fake browser preview
   if (language === 'html' && htmlContent && !isRunning) {
     return (
@@ -65,3 +67,5 @@ export default function OutputConsole({ output, isRunning, hasError, language, h
     </div>
   );
 }
+
+export default React.memo(OutputConsole);

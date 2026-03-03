@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useAuth } from './useAuth';
 import { UserRole, UserPermissions, getPermissions, DEFAULT_ROLE, getRoleFromEmail } from '@/types/roles';
 
@@ -23,7 +23,7 @@ export function useRole(): UseRoleReturn {
   const [role, setRole] = useState<UserRole>(DEFAULT_ROLE);
   const [loading, setLoading] = useState(true);
 
-  const fetchUserRole = async () => {
+  const fetchUserRole = useCallback(async () => {
     if (!isAuthenticated || !user?.email) {
       setRole(DEFAULT_ROLE);
       setLoading(false);
@@ -42,7 +42,6 @@ export function useRole(): UseRoleReturn {
         setRole(detectedRole);
       }
     } catch (error) {
-      console.error('Error fetching user role:', error);
       // Fallback to email-based detection
       if (user?.email) {
         const detectedRole = getRoleFromEmail(user.email);
@@ -53,11 +52,11 @@ export function useRole(): UseRoleReturn {
     } finally {
       setLoading(false);
     }
-  };
+  }, [isAuthenticated, user?.email]);
 
   useEffect(() => {
     fetchUserRole();
-  }, [isAuthenticated, user?.email]);
+  }, [fetchUserRole]);
 
   const permissions = getPermissions(role);
 

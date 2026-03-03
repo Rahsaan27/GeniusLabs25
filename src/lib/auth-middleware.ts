@@ -80,32 +80,3 @@ export function unauthorizedResponse(message: string = 'Unauthorized') {
     { status: 403 }
   );
 }
-
-/**
- * Check if user can access a cohort
- * Admins and superadmins can access all cohorts
- * Educators can access their assigned cohorts
- * Students need to be members of the cohort
- */
-export async function canAccessCohort(
-  email: string,
-  cohortId: string,
-  isMember: boolean = false
-): Promise<boolean> {
-  const userRole = await getUserRole(email);
-
-  // Admins and superadmins can access all cohorts
-  if (userRole === 'admin' || userRole === 'superadmin') {
-    return true;
-  }
-
-  // Educators can access cohorts they manage
-  if (userRole === 'educator') {
-    // TODO: Check if educator is assigned to this cohort
-    // For now, allow educators to access all cohorts
-    return true;
-  }
-
-  // Students need to be members
-  return isMember;
-}

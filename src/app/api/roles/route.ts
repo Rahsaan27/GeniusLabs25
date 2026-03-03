@@ -31,12 +31,31 @@ export async function GET(request: NextRequest) {
 
 /**
  * POST /api/roles
- * Assign role to a user
+ * Assign role to a user (Admin/SuperAdmin only)
  */
 export async function POST(request: NextRequest) {
   try {
+    // Extract requesting user's email from query params or headers
+    const requestingUserEmail = request.nextUrl.searchParams.get("requestingUser");
+
+    // Authentication check - only admins and superadmins can assign roles
+    if (!requestingUserEmail) {
+      return NextResponse.json(
+        { error: "Authentication required. Missing requesting user email." },
+        { status: 401 }
+      );
+    }
+
+    const requestingUserRole = await getUserRole(requestingUserEmail);
+    if (requestingUserRole !== 'admin' && requestingUserRole !== 'superadmin') {
+      return NextResponse.json(
+        { error: "Forbidden. Only admins and superadmins can assign roles." },
+        { status: 403 }
+      );
+    }
+
     const body = await request.json();
-    const { email, role, assignedBy, cohortIds } = body;
+    const { email, role, assignedBy } = body;
 
     // Validate input
     if (!email || !role) {
@@ -54,17 +73,21 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // TODO: Add authentication check - only admins should be able to assign roles
-    // For now, we'll allow it for setup purposes
+    // Only superadmins can assign superadmin role
+    if (role === 'superadmin' && requestingUserRole !== 'superadmin') {
+      return NextResponse.json(
+        { error: "Forbidden. Only superadmins can assign superadmin role." },
+        { status: 403 }
+      );
+    }
 
-    const mapping = await assignUserRole(email, role as UserRole, assignedBy, cohortIds);
+    const mapping = await assignUserRole(email, role as UserRole, assignedBy || requestingUserEmail);
 
     return NextResponse.json({
       success: true,
       mapping
     });
   } catch (error) {
-    console.error("Error in POST /api/roles:", error);
     return NextResponse.json(
       { error: "Failed to assign role" },
       { status: 500 }

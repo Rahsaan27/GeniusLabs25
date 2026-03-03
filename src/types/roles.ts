@@ -10,14 +10,6 @@ export interface UserPermissions {
   // Learning Material Access
   canAccessLearningMaterial: boolean;
 
-  // Cohort Permissions
-  canAccessCohort: boolean;
-  canChatInCohort: boolean;
-  canMakeAnnouncements: boolean;
-  canEditUserList: boolean;
-  canAccessAllCohorts: boolean;
-  requiresCohortPassword: boolean; // Students need password, admins/educators don't
-
   // Content Management
   canEditLessons: boolean;
   canEditModules: boolean;
@@ -46,18 +38,10 @@ export const ROLE_DEFINITIONS: Record<UserRole, RoleDefinition> = {
   student: {
     role: 'student',
     displayName: 'Student',
-    description: 'Student with access to learning materials only (no cohort access)',
+    description: 'Student with access to learning materials only',
     permissions: {
       // Learning Material Access
       canAccessLearningMaterial: true,
-
-      // Cohort Permissions - STUDENTS CANNOT ACCESS COHORTS
-      canAccessCohort: false,
-      canChatInCohort: false,
-      canMakeAnnouncements: false,
-      canEditUserList: false,
-      canAccessAllCohorts: false,
-      requiresCohortPassword: true,
 
       // Content Management
       canEditLessons: false,
@@ -77,18 +61,10 @@ export const ROLE_DEFINITIONS: Record<UserRole, RoleDefinition> = {
   genius: {
     role: 'genius',
     displayName: 'Genius',
-    description: 'Genius Labs student with cohort access and learning materials',
+    description: 'Genius Labs student with access to learning materials',
     permissions: {
       // Learning Material Access
       canAccessLearningMaterial: true,
-
-      // Cohort Permissions - GENIUS HAS COHORT ACCESS
-      canAccessCohort: true,
-      canChatInCohort: true,
-      canMakeAnnouncements: false,
-      canEditUserList: false,
-      canAccessAllCohorts: false,
-      requiresCohortPassword: true, // Genius needs password to join cohorts
 
       // Content Management
       canEditLessons: false,
@@ -108,18 +84,10 @@ export const ROLE_DEFINITIONS: Record<UserRole, RoleDefinition> = {
   educator: {
     role: 'educator',
     displayName: 'Educator',
-    description: 'Teacher with cohort management capabilities',
+    description: 'Teacher with content management capabilities',
     permissions: {
       // Learning Material Access
       canAccessLearningMaterial: true,
-
-      // Cohort Permissions
-      canAccessCohort: true,
-      canChatInCohort: true,
-      canMakeAnnouncements: true,
-      canEditUserList: true,
-      canAccessAllCohorts: false, // Only their assigned cohorts
-      requiresCohortPassword: true, // Educators need password for cohorts they don't manage
 
       // Content Management
       canEditLessons: false,
@@ -132,7 +100,7 @@ export const ROLE_DEFINITIONS: Record<UserRole, RoleDefinition> = {
 
       // Admin Features
       canAccessAdminPanel: false,
-      canViewAnalytics: true, // Can view analytics for their cohorts
+      canViewAnalytics: true,
     }
   },
 
@@ -143,14 +111,6 @@ export const ROLE_DEFINITIONS: Record<UserRole, RoleDefinition> = {
     permissions: {
       // Learning Material Access
       canAccessLearningMaterial: true,
-
-      // Cohort Permissions
-      canAccessCohort: true,
-      canChatInCohort: true,
-      canMakeAnnouncements: true,
-      canEditUserList: true,
-      canAccessAllCohorts: true,
-      requiresCohortPassword: false, // Admins bypass password requirement
 
       // Content Management
       canEditLessons: true,
@@ -174,14 +134,6 @@ export const ROLE_DEFINITIONS: Record<UserRole, RoleDefinition> = {
     permissions: {
       // Learning Material Access
       canAccessLearningMaterial: true,
-
-      // Cohort Permissions
-      canAccessCohort: true,
-      canChatInCohort: true,
-      canMakeAnnouncements: true,
-      canEditUserList: true,
-      canAccessAllCohorts: true,
-      requiresCohortPassword: false, // Superadmins bypass password requirement
 
       // Content Management
       canEditLessons: true,
@@ -252,7 +204,7 @@ export function getRoleFromEmail(email: string): UserRole {
     return 'student';
   }
 
-  // Default to student role (no cohort access)
+  // Default to student role
   return 'student';
 }
 
@@ -264,5 +216,4 @@ export interface EmailRoleMapping {
   role: UserRole;
   assignedBy?: string;
   assignedAt?: string;
-  cohortIds?: string[]; // For educators, which cohorts they manage
 }

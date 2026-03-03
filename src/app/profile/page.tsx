@@ -61,8 +61,7 @@ export default function ProfilePage() {
           setDisplayName(user.name);
         }
       } catch (error) {
-        console.error('Error loading profile settings:', error);
-        // Fallback to user.name if API fails
+        // Error loading profile settings - using fallback
         if (user.name) {
           setDisplayName(user.name);
         }
@@ -199,7 +198,7 @@ export default function ProfilePage() {
 
         setModuleProgress(progressMap);
       } catch (error) {
-        console.error('Error fetching user stats:', error);
+        // Error fetching user stats - using localStorage fallback
 
         // Fallback to localStorage if DynamoDB fails
         let totalCompleted = 0;
@@ -265,13 +264,11 @@ export default function ProfilePage() {
         // Use window.location for a clean redirect
         window.location.href = '/';
       } else {
-        console.error('Logout failed:', result.error);
-        // Force redirect anyway
+        // Logout failed - force redirect anyway
         window.location.href = '/';
       }
     } catch (error) {
-      console.error('Logout failed:', error);
-      // Force redirect anyway
+      // Logout failed - force redirect anyway
       window.location.href = '/';
     }
   };
@@ -319,7 +316,7 @@ export default function ProfilePage() {
       // Reload after a short delay to show updated name everywhere
       setTimeout(() => window.location.reload(), 1500);
     } catch (error) {
-      console.error('Error saving profile:', error);
+      // Error saving profile
       setSaveMessage('Failed to save profile. Please try again.');
     } finally {
       setSavingProfile(false);
@@ -358,7 +355,7 @@ export default function ProfilePage() {
       alert('All progress has been reset.');
       window.location.reload();
     } catch (error) {
-      console.error('Error resetting progress:', error);
+      // Error resetting progress
       alert('Failed to reset progress. Please try again.');
     }
   };
@@ -393,7 +390,7 @@ export default function ProfilePage() {
       await logout();
       window.location.href = '/';
     } catch (error) {
-      console.error('Error deleting account:', error);
+      // Error deleting account
       alert('Failed to delete account. Please contact support.');
     }
   };
@@ -595,14 +592,14 @@ export default function ProfilePage() {
               </div>
             ) : (
               <div className="space-y-4">
-                {modules.filter(m => !m.comingSoon).map((module) => {
-                  const progress = moduleProgress[module.id] || { completed: 0, total: module.lessons.length, percentage: 0 };
+                {modules.filter(m => !m.comingSoon).map((currentModule) => {
+                  const progress = moduleProgress[currentModule.id] || { completed: 0, total: currentModule.lessons.length, percentage: 0 };
                   return (
-                    <div key={module.id} className="bg-gray-900 rounded-2xl p-6 border border-gray-700">
+                    <div key={currentModule.id} className="bg-gray-900 rounded-2xl p-6 border border-gray-700">
                     <div className="flex items-center justify-between mb-4">
                       <div>
-                        <h3 className="text-lg font-bold text-white">{module.title}</h3>
-                        <p className="text-gray-400 text-sm">{module.description}</p>
+                        <h3 className="text-lg font-bold text-white">{currentModule.title}</h3>
+                        <p className="text-gray-400 text-sm">{currentModule.description}</p>
                       </div>
                       <div className="text-right">
                         <span className="text-2xl font-bold text-green-400">{progress.percentage}%</span>

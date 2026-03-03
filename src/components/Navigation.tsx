@@ -4,14 +4,12 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import Image from 'next/image'
 import { useAuth } from '@/hooks/useAuth'
-import { useRole } from '@/hooks/useRole'
 import { useState, useEffect } from 'react'
 import logo from '@/assets/Genius-Lab-Logo-Main-Green-600.png'
 
 export default function Navigation() {
   const pathname = usePathname()
   const { isAuthenticated, user } = useAuth()
-  const { permissions, loading: roleLoading } = useRole()
   const [mounted, setMounted] = useState(false)
 
   // Fix hydration mismatch
@@ -19,32 +17,20 @@ export default function Navigation() {
     setMounted(true)
   }, [])
 
-  // Base nav items for authenticated users
-  const baseAuthenticatedItems = [
+  // Authenticated nav items
+  const authenticatedNavItems = [
     { href: '/', label: 'Home' },
     { href: '/modules', label: 'Modules' },
+    { href: '/profile', label: 'Profile' },
   ]
 
-  // Unauthenticated nav items (no cohort)
+  // Unauthenticated nav items
   const unauthenticatedNavItems = [
     { href: '/', label: 'Home' },
     { href: '/modules', label: 'Modules' },
     { href: '/login', label: 'Login' },
     { href: '/signup', label: 'Sign Up' },
   ]
-
-  // Build authenticated nav items based on permissions
-  const authenticatedNavItems = mounted && isAuthenticated && !roleLoading
-    ? [
-        ...baseAuthenticatedItems,
-        // Only show cohort if user has cohort access permission
-        ...(permissions?.canAccessCohort ? [{ href: '/cohort', label: 'Cohort' }] : []),
-        { href: '/profile', label: 'Profile' },
-      ]
-    : [
-        ...baseAuthenticatedItems,
-        { href: '/profile', label: 'Profile' },
-      ]
 
   // Use default items during SSR to prevent hydration mismatch
   const navItems = mounted && isAuthenticated ? authenticatedNavItems : unauthenticatedNavItems

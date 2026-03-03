@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { lessons, modules } from '@/data/lessons';
-import { getProgressData, getOverallProgress } from '@/utils/progress';
+import { getProgressData } from '@/utils/progress';
 import { UserProgress } from '@/types/lesson';
 import { useAuth } from '@/hooks/useAuth';
 import Link from 'next/link';
@@ -42,7 +42,7 @@ export default function ActivityPage() {
             setCompletedLessons(completedLessonIds.length);
           }
         } catch (error) {
-          console.error('Error loading progress from DB:', error);
+          // Error loading progress from DB - using fallback
         }
       }
 

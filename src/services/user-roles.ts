@@ -50,16 +50,14 @@ export async function getUserRole(email: string): Promise<UserRole> {
 export async function assignUserRole(
   email: string,
   role: UserRole,
-  assignedBy?: string,
-  cohortIds?: string[]
+  assignedBy?: string
 ): Promise<EmailRoleMapping> {
   try {
     const mapping: EmailRoleMapping = {
       email,
       role,
       assignedBy,
-      assignedAt: new Date().toISOString(),
-      cohortIds
+      assignedAt: new Date().toISOString()
     };
 
     const command = new PutCommand({
@@ -137,27 +135,4 @@ export async function isAdmin(email: string): Promise<boolean> {
  */
 export async function isEducator(email: string): Promise<boolean> {
   return await hasRole(email, 'educator');
-}
-
-/**
- * Get cohorts managed by an educator
- */
-export async function getEducatorCohorts(email: string): Promise<string[]> {
-  try {
-    const command = new GetCommand({
-      TableName: TABLE_NAME,
-      Key: { email }
-    });
-
-    const response = await docClient.send(command);
-
-    if (response.Item && response.Item.cohortIds) {
-      return response.Item.cohortIds as string[];
-    }
-
-    return [];
-  } catch (error) {
-    console.error("Error getting educator cohorts:", error);
-    return [];
-  }
 }

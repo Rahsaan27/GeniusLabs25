@@ -149,8 +149,8 @@ export default function InteractiveIDE({
 
   return (
     <div className="flex flex-col lg:flex-row flex-1 min-h-0 bg-[#1e1e1e]">
-      {/* Code Editor */}
-      <div className="flex-1 flex flex-col border-r border-gray-800 min-h-0 min-w-0">
+      {/* Code Editor - 3/5 of shared space */}
+      <div className="lg:w-[60%] flex flex-col border-r border-gray-800 min-h-0 min-w-0">
         {/* Editor Header */}
         <div className="flex items-center justify-between px-4 py-2.5 bg-[#252526] border-b border-gray-800 h-[50px] flex-shrink-0">
           <div className="flex items-center gap-2">
@@ -158,7 +158,7 @@ export default function InteractiveIDE({
               <svg className="w-3.5 h-3.5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
               </svg>
-              <span className="text-xs text-gray-300 font-medium">{language === 'python' ? 'main.py' : language === 'javascript' ? 'main.js' : 'index.html'}</span>
+              {/* <span className="text-xs text-gray-300 font-medium">{language === 'python' ? 'main.py' : language === 'javascript' ? 'main.js' : 'index.html'}</span> */}
             </div>
           </div>
           <div className="flex items-center gap-2">
@@ -190,8 +190,8 @@ export default function InteractiveIDE({
         />
       </div>
 
-      {/* Output Console */}
-      <div className="flex-1 flex flex-col min-h-0 min-w-0">
+      {/* Output Console - 2/5 of shared space */}
+      <div className="lg:w-[40%] flex flex-col min-h-0 min-w-0">
         <div className="flex items-center justify-between px-4 py-2.5 bg-[#252526] border-b border-gray-800 h-[50px] flex-shrink-0">
           <div className="flex items-center gap-2">
             {language === 'html' ? (

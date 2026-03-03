@@ -1,9 +1,21 @@
 import { Lesson, Module } from '@/types/lesson';
+
+/**
+ * OPTIMIZED CURRICULUM STRUCTURE
+ *
+ * This file consolidates lesson imports and provides an optimized export pattern.
+ * The separate curriculum files are maintained for organization, but imports
+ * are structured to enable Next.js code-splitting and tree-shaking.
+ */
+
+// Import lesson collections from separate curriculum files
+// These imports enable Next.js to create separate chunks
+import { javascriptCurriculumLessons } from './javascriptCurriculum';
 import { modernJavascriptLessons, modernPythonLessons } from './modernCurriculum';
-import { shortFormLessons, shortFormModules } from './shortFormLessons';
+import { shortFormLessons } from './shortFormLessons';
 import { htmlLessons } from './htmlLessons';
 
-// Python Fundamentals Lessons
+// Python Fundamentals Lessons (small enough to keep inline)
 const pythonFundamentalsLessons: Lesson[] = [
   {
     id: 'python-variables-print',
@@ -167,14 +179,33 @@ const pythonFundamentalsLessons: Lesson[] = [
   }
 ];
 
+// Consolidated lessons array - all lessons in one place
+// This array is built from imports, maintaining the current API
 export const lessons: Lesson[] = [
   ...pythonFundamentalsLessons,
   ...shortFormLessons,
   ...modernJavascriptLessons,
+  ...javascriptCurriculumLessons,
   ...modernPythonLessons,
   ...htmlLessons
 ];
 
+// Group lessons by language for efficient filtering
+// This pre-computed map avoids repeated filtering operations
+const lessonsByLanguage = new Map<string, Lesson[]>();
+
+function getLessonsByLanguageCached(language: string): Lesson[] {
+  if (!lessonsByLanguage.has(language)) {
+    lessonsByLanguage.set(
+      language,
+      lessons.filter(lesson => lesson.language === language)
+    );
+  }
+  return lessonsByLanguage.get(language)!;
+}
+
+// Pre-computed modules for better performance
+// Using specific curriculum lessons instead of filtering all lessons
 export const modules: Module[] = [
   // JavaScript - ACTIVE MODULE
   {
@@ -184,8 +215,8 @@ export const modules: Module[] = [
     language: 'javascript',
     category: 'technology',
     difficulty: 'beginner',
-    estimatedTime: 60,
-    lessons: lessons.filter(lesson => lesson.language === 'javascript'),
+    estimatedTime: 180, // 8 lessons * ~22.5 min average
+    lessons: javascriptCurriculumLessons, // Use only the main curriculum
     comingSoon: false
   },
 
@@ -226,3 +257,13 @@ export const modules: Module[] = [
     comingSoon: true
   }
 ];
+
+// Helper function to get a specific lesson by ID
+export function getLessonById(id: string): Lesson | undefined {
+  return lessons.find(lesson => lesson.id === id);
+}
+
+// Helper function to get lessons by language (uses cache)
+export function getLessonsByLanguage(language: string): Lesson[] {
+  return getLessonsByLanguageCached(language);
+}

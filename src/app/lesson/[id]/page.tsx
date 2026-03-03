@@ -10,12 +10,11 @@ export default function LessonPage() {
   const params = useParams();
   const router = useRouter();
   const lessonId = params.id as string;
-  const [userCode, setUserCode] = useState('');
 
   const lesson = lessons.find(l => l.id === lessonId);
 
   // Find the module this lesson belongs to
-  const module = lesson ? modules.find(m => m.lessons.some(l => l.id === lesson.id)) : null;
+  const currentModule = lesson ? modules.find(m => m.lessons.some(l => l.id === lesson.id)) : null;
 
   // Redirect to IDE test lesson if it's the special IDE lesson
   useEffect(() => {
@@ -54,10 +53,10 @@ export default function LessonPage() {
           <div className="flex items-start justify-between gap-4">
             <div className="flex-1">
               <Link
-                href={module ? `/modules/${module.id}` : '/modules'}
+                href={currentModule ? `/modules/${currentModule.id}` : '/modules'}
                 className="text-green-400 hover:text-green-300 text-xs mb-1 inline-block"
               >
-                ← Back to {module ? module.title : 'Modules'}
+                ← Back to {currentModule ? currentModule.title : 'Modules'}
               </Link>
               <h1 className="text-xl font-bold text-white">{lesson.title}</h1>
               <p className="text-gray-400 text-sm">{lesson.description}</p>
@@ -119,7 +118,7 @@ export default function LessonPage() {
             <InteractiveIDE
               language="html"
               initialCode={lesson.content.starterCode || '<!DOCTYPE html>\n<html>\n<head>\n    <title>My Page</title>\n</head>\n<body>\n    <h1>Hello, World!</h1>\n    <p>Start coding here!</p>\n</body>\n</html>'}
-              onCodeChange={setUserCode}
+              onCodeChange={() => {}}
               className="h-full"
             />
           </div>
@@ -133,7 +132,7 @@ export default function LessonPage() {
             </div>
             <div className="flex items-center gap-3">
               <Link
-                href={module ? `/modules/${module.id}` : '/modules'}
+                href={currentModule ? `/modules/${currentModule.id}` : '/modules'}
                 className="px-6 py-2 bg-gray-700 hover:bg-gray-600 text-white font-bold rounded-lg transition-colors"
               >
                 Back to Module
@@ -158,10 +157,10 @@ export default function LessonPage() {
         <div className="flex items-center justify-between gap-4">
           <div className="flex-1 min-w-0">
             <Link
-              href={module ? `/modules/${module.id}` : '/modules'}
+              href={currentModule ? `/modules/${currentModule.id}` : '/modules'}
               className="text-green-400 hover:text-green-300 text-xs mb-1 inline-block"
             >
-              ← Back to {module ? module.title : 'Modules'}
+              ← Back to {currentModule ? currentModule.title : 'Modules'}
             </Link>
             <h1 className="text-2xl font-bold text-white truncate">{lesson.title}</h1>
             <p className="text-gray-400 text-sm mt-0.5">{lesson.description}</p>
@@ -187,7 +186,7 @@ export default function LessonPage() {
               exercises, videos, documentation, quizzes, and hands-on coding challenges.
             </p>
             <Link
-              href={module ? `/modules/${module.id}` : '/modules'}
+              href={currentModule ? `/modules/${currentModule.id}` : '/modules'}
               className="inline-block px-8 py-4 bg-green-400 hover:bg-green-300 text-black font-bold rounded-xl transition-all transform hover:scale-105"
             >
               Back to Module

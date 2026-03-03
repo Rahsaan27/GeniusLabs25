@@ -6,7 +6,6 @@ import { UserRole, ROLE_DEFINITIONS, EmailRoleMapping } from '@/types/roles';
 export default function RoleManagement() {
   const [email, setEmail] = useState('');
   const [selectedRole, setSelectedRole] = useState<UserRole>('genius');
-  const [cohortIds, setCohortIds] = useState('');
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
   const [allMappings, setAllMappings] = useState<EmailRoleMapping[]>([]);
@@ -37,8 +36,6 @@ export default function RoleManagement() {
     setMessage('');
 
     try {
-      const cohortArray = cohortIds.trim() ? cohortIds.split(',').map(id => id.trim()) : [];
-
       const response = await fetch('/api/roles', {
         method: 'POST',
         headers: {
@@ -47,14 +44,12 @@ export default function RoleManagement() {
         body: JSON.stringify({
           email: email.trim(),
           role: selectedRole,
-          cohortIds: selectedRole === 'educator' ? cohortArray : undefined
         }),
       });
 
       if (response.ok) {
         setMessage(`✅ Successfully assigned ${selectedRole} role to ${email}`);
         setEmail('');
-        setCohortIds('');
         fetchAllMappings(); // Refresh the list
       } else {
         const error = await response.json();
@@ -114,24 +109,6 @@ export default function RoleManagement() {
             </select>
           </div>
 
-          {selectedRole === 'educator' && (
-            <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">
-                Cohort IDs (comma-separated)
-              </label>
-              <input
-                type="text"
-                value={cohortIds}
-                onChange={(e) => setCohortIds(e.target.value)}
-                className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                placeholder="cohort-1, cohort-2"
-              />
-              <p className="text-xs text-gray-400 mt-1">
-                Enter cohort IDs that this educator will manage
-              </p>
-            </div>
-          )}
-
           <button
             type="submit"
             disabled={loading}
@@ -163,11 +140,6 @@ export default function RoleManagement() {
               >
                 <div className="flex-1">
                   <p className="text-white font-medium">{mapping.email}</p>
-                  {mapping.cohortIds && mapping.cohortIds.length > 0 && (
-                    <p className="text-sm text-gray-400">
-                      Cohorts: {mapping.cohortIds.join(', ')}
-                    </p>
-                  )}
                   {mapping.assignedAt && (
                     <p className="text-xs text-gray-500">
                       Assigned: {new Date(mapping.assignedAt).toLocaleString()}
@@ -206,23 +178,20 @@ export default function RoleManagement() {
                 {def.permissions.canAccessLearningMaterial && (
                   <p className="text-xs text-gray-400">✓ Learning materials</p>
                 )}
-                {def.permissions.canChatInCohort && (
-                  <p className="text-xs text-gray-400">✓ Cohort chat</p>
-                )}
-                {def.permissions.canMakeAnnouncements && (
-                  <p className="text-xs text-gray-400">✓ Make announcements</p>
-                )}
-                {def.permissions.canEditUserList && (
-                  <p className="text-xs text-gray-400">✓ Edit user lists</p>
-                )}
-                {def.permissions.canAccessAllCohorts && (
-                  <p className="text-xs text-gray-400">✓ All cohorts</p>
-                )}
                 {def.permissions.canManageContent && (
                   <p className="text-xs text-gray-400">✓ Manage content</p>
                 )}
+                {def.permissions.canManageUsers && (
+                  <p className="text-xs text-gray-400">✓ Manage users</p>
+                )}
+                {def.permissions.canAssignRoles && (
+                  <p className="text-xs text-gray-400">✓ Assign roles</p>
+                )}
                 {def.permissions.canAccessAdminPanel && (
                   <p className="text-xs text-gray-400">✓ Admin panel</p>
+                )}
+                {def.permissions.canViewAnalytics && (
+                  <p className="text-xs text-gray-400">✓ View analytics</p>
                 )}
               </div>
             </div>

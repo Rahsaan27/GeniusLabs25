@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { X } from 'lucide-react';
 import { Lesson } from '@/types/lesson';
+import { useAuth } from '@/hooks/useAuth';
 
 interface ShortFormLessonProps {
   lesson: Lesson;
@@ -21,6 +22,7 @@ interface SlideState {
 }
 
 export default function ShortFormLesson({ lesson, moduleId, onComplete }: ShortFormLessonProps) {
+  const { user, isAuthenticated } = useAuth();
   const [currentSlide, setCurrentSlide] = useState(0);
   const [streak, setStreak] = useState(0);
   const [startTime] = useState(Date.now());
@@ -180,6 +182,7 @@ export default function ShortFormLesson({ lesson, moduleId, onComplete }: ShortF
               lesson={lesson}
               moduleId={moduleId}
               completedSections={completedSections}
+              userId={user?.email}
             />
           )}
         </div>
@@ -441,12 +444,14 @@ function CompletionSlide({
   startTime,
   lesson,
   moduleId,
-  completedSections
+  completedSections,
+  userId
 }: {
   startTime: number;
   lesson: Lesson;
   moduleId?: string;
   completedSections: string[];
+  userId?: string;
 }) {
   const [showLightbulb, setShowLightbulb] = useState(false);
   const [lightOn, setLightOn] = useState(false);
@@ -467,13 +472,22 @@ function CompletionSlide({
       setLightOn(true);
     }, 500);
 
-    // TODO: Save progress to DynamoDB
-    // const userId = 'user@example.com'; // Get from auth
-    // await fetch(`/api/user-progress/${moduleId}/lesson`, {
-    //   method: 'POST',
-    //   headers: { 'Content-Type': 'application/json' },
-    //   body: JSON.stringify({ userId, lessonId: lesson.id })
-    // });
+    // Save progress to DynamoDB
+    if (userId && moduleId) {
+      try {
+        await fetch(`/api/user-progress/${moduleId}/lesson`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            userId,
+            lessonId: lesson.id,
+            completedAt: new Date().toISOString()
+          })
+        });
+      } catch (error) {
+        // Silent fail - progress will save on next module interaction
+      }
+    }
 
     // Show buttons after animation
     setTimeout(() => {

@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useEffect } from 'react';
+import React, { useRef, useEffect } from 'react';
 
 interface CodeEditorProps {
   language: 'python' | 'javascript' | 'html';
@@ -13,7 +13,7 @@ interface Token {
   value: string;
 }
 
-export default function CodeEditor({ language, code, onChange }: CodeEditorProps) {
+function CodeEditor({ language, code, onChange }: CodeEditorProps) {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const highlightRef = useRef<HTMLDivElement>(null);
 
@@ -390,3 +390,4 @@ function tokenizeHTML(line: string): Token[] {
   return tokens;
 }
 
+export default React.memo(CodeEditor);

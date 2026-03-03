@@ -26,12 +26,12 @@ export default function ModulesPage() {
             const data = await response.json();
 
             // Convert DB progress to module progress format
-            data.progress.forEach((dbProgress: any) => {
-              const module = modules.find(m => m.id === dbProgress.moduleId);
-              if (module) {
+            data.progress.forEach((dbProgress: { moduleId: string; lessonsCompleted?: string[] }) => {
+              const currentModule = modules.find(m => m.id === dbProgress.moduleId);
+              if (currentModule) {
                 const completed = dbProgress.lessonsCompleted?.length || 0;
-                const total = module.lessons.length;
-                progress[module.id] = {
+                const total = currentModule.lessons.length;
+                progress[currentModule.id] = {
                   completed,
                   total,
                   percentage: Math.round((completed / total) * 100)
@@ -40,16 +40,16 @@ export default function ModulesPage() {
             });
           }
         } catch (error) {
-          console.error('Error loading progress from DB:', error);
+          // Error loading progress from DB - using fallback
         }
       }
 
       // Fill in any modules not in DB with localStorage progress
       // Skip disabled modules (comingSoon)
-      modules.forEach(module => {
-        if (!progress[module.id] && !module.comingSoon) {
-          const lessonIds = module.lessons.map(lesson => lesson.id);
-          progress[module.id] = getModuleProgress(module.id, lessonIds);
+      modules.forEach(currentModule => {
+        if (!progress[currentModule.id] && !currentModule.comingSoon) {
+          const lessonIds = currentModule.lessons.map(lesson => lesson.id);
+          progress[currentModule.id] = getModuleProgress(currentModule.id, lessonIds);
         }
       });
 
@@ -77,7 +77,7 @@ export default function ModulesPage() {
     }
   };
 
-  const getBadges = (progress: any, difficulty: string) => {
+  const getBadges = (progress: { percentage: number }, difficulty: string) => {
     const badges = [];
     if (progress.percentage === 100) badges.push({ icon: '🏆', label: 'Completed', color: 'text-yellow-400' });
     if (progress.percentage >= 50 && progress.percentage < 100) badges.push({ icon: '🔥', label: 'In Progress', color: 'text-orange-400' });
@@ -100,19 +100,19 @@ export default function ModulesPage() {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {modules.map((module) => {
-            const progress = moduleProgress[module.id] || { completed: 0, total: module.lessons.length, percentage: 0 };
-            const badges = getBadges(progress, module.difficulty);
-            const logo = getLanguageLogo(module.language);
+          {modules.map((currentModule) => {
+            const progress = moduleProgress[currentModule.id] || { completed: 0, total: currentModule.lessons.length, percentage: 0 };
+            const badges = getBadges(progress, currentModule.difficulty);
+            const logo = getLanguageLogo(currentModule.language);
 
             const cardContent = (
-                <div className={`relative bg-gradient-to-br ${getModuleColor(module.category)} border rounded-2xl p-6 transition-all duration-300 ${module.comingSoon ? 'opacity-60' : 'hover:scale-105 hover:shadow-2xl hover:shadow-green-500/20'} min-h-[280px] flex flex-col`}>
+                <div className={`relative bg-gradient-to-br ${getModuleColor(currentModule.category)} border rounded-2xl p-6 transition-all duration-300 ${currentModule.comingSoon ? 'opacity-60' : 'hover:scale-105 hover:shadow-2xl hover:shadow-green-500/20'} min-h-[280px] flex flex-col`}>
                   {/* Logo */}
                   <div className="absolute top-6 right-6">
                     {logo && (
                       <Image
                         src={logo}
-                        alt={module.language}
+                        alt={currentModule.language}
                         width={48}
                         height={48}
                         className="w-12 h-12 opacity-50 group-hover:opacity-100 transition-opacity"
@@ -122,11 +122,11 @@ export default function ModulesPage() {
 
                   {/* Module Title */}
                   <h2 className="text-2xl font-bold text-white mb-3 pr-16 group-hover:text-green-400 transition-colors">
-                    {module.title}
+                    {currentModule.title}
                   </h2>
 
                   {/* Coming Soon Badge */}
-                  {module.comingSoon && (
+                  {currentModule.comingSoon && (
                     <div className="bg-yellow-500/20 border border-yellow-400/40 text-yellow-400 px-3 py-1 rounded-full text-xs font-bold w-fit mb-3">
                       🚧 COMING SOON
                     </div>
@@ -144,12 +144,12 @@ export default function ModulesPage() {
                   )}
 
                   {/* Progress Circle - Only show for active modules */}
-                  {!module.comingSoon && (
+                  {!currentModule.comingSoon && (
                     <div className="mt-auto pt-6">
                       <div className="flex items-end justify-between">
                         <div>
-                          <div className="text-sm text-gray-400 mb-1">{module.lessons.length} lessons</div>
-                          <div className="text-sm text-gray-500">{module.estimatedTime} min</div>
+                          <div className="text-sm text-gray-400 mb-1">{currentModule.lessons.length} lessons</div>
+                          <div className="text-sm text-gray-500">{currentModule.estimatedTime} min</div>
                         </div>
                         <div className="relative">
                           <svg className="w-20 h-20 transform -rotate-90">
@@ -184,7 +184,7 @@ export default function ModulesPage() {
                   )}
 
                   {/* Info for disabled modules */}
-                  {module.comingSoon && (
+                  {currentModule.comingSoon && (
                     <div className="mt-auto pt-6">
                       <div className="text-sm text-gray-500">
                         This module will be available soon
@@ -194,12 +194,12 @@ export default function ModulesPage() {
                 </div>
             );
 
-            return module.comingSoon ? (
-              <div key={module.id} className="group cursor-not-allowed">
+            return currentModule.comingSoon ? (
+              <div key={currentModule.id} className="group cursor-not-allowed">
                 {cardContent}
               </div>
             ) : (
-              <Link key={module.id} href={`/modules/${module.id}`} className="group cursor-pointer">
+              <Link key={currentModule.id} href={`/modules/${currentModule.id}`} className="group cursor-pointer">
                 {cardContent}
               </Link>
             );
