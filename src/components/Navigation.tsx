@@ -19,37 +19,92 @@ export default function Navigation() {
 
   // Authenticated nav items
   const authenticatedNavItems = [
-    { href: '/', label: 'Home' },
-    { href: '/modules', label: 'Modules' },
-    { href: '/profile', label: 'Profile' },
+    {
+      href: '/',
+      label: 'Home',
+      icon: (
+        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+        </svg>
+      )
+    },
+    {
+      href: '/modules',
+      label: 'Modules',
+      icon: (
+        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+        </svg>
+      )
+    },
+    {
+      href: '/profile',
+      label: 'Profile',
+      icon: (
+        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+        </svg>
+      )
+    },
   ]
 
   // Unauthenticated nav items
   const unauthenticatedNavItems = [
-    { href: '/', label: 'Home' },
-    { href: '/modules', label: 'Modules' },
-    { href: '/login', label: 'Login' },
-    { href: '/signup', label: 'Sign Up' },
+    {
+      href: '/',
+      label: 'Home',
+      icon: (
+        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+        </svg>
+      )
+    },
+    {
+      href: '/modules',
+      label: 'Modules',
+      icon: (
+        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+        </svg>
+      )
+    },
+    {
+      href: '/login',
+      label: 'Login',
+      icon: (
+        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
+        </svg>
+      )
+    },
+    {
+      href: '/signup',
+      label: 'Sign Up',
+      icon: (
+        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
+        </svg>
+      )
+    },
   ]
 
   // Use default items during SSR to prevent hydration mismatch
   const navItems = mounted && isAuthenticated ? authenticatedNavItems : unauthenticatedNavItems
 
   return (
-    <nav className="bg-black/95 backdrop-blur-md shadow-2xl border-b border-green-500/20 sticky top-0 z-50">
+    <nav className="bg-[#0A0A0B]/95 backdrop-blur-md border-b-2 border-white/8 sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between h-20">
+        <div className="flex justify-between h-16">
           <div className="flex items-center">
-            <Link href="/" className="flex items-center hover:opacity-80 transition-all duration-300 group">
+            <Link href="/" className="flex items-center hover:opacity-80 transition-opacity duration-200 group">
               <div className="relative">
                 <Image
                   src={logo}
                   alt="GeniusLabs Logo"
-                  width={56}
-                  height={56}
-                  className="w-14 h-14 object-contain group-hover:scale-110 transition-transform duration-300"
+                  width={48}
+                  height={48}
+                  className="w-12 h-12 object-contain"
                 />
-                <div className="absolute inset-0 bg-green-400/20 rounded-full blur-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
               </div>
             </Link>
           </div>
@@ -58,28 +113,21 @@ export default function Navigation() {
               <Link
                 key={item.href}
                 href={item.href}
-                className={`px-6 py-3 rounded-xl text-sm font-bold transition-all duration-300 relative overflow-hidden group ${
+                className={`px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 border-2 flex items-center gap-2 ${
                   mounted && pathname === item.href
-                    ? 'text-black bg-green-400 shadow-lg shadow-green-400/25'
-                    : 'text-white hover:text-green-400 hover:bg-green-400/10'
+                    ? 'text-black bg-[#FFC857] border-[#FFC857] shadow-sm'
+                    : 'text-[#E8E8E8] bg-transparent border-white/10 hover:border-white/20 hover:bg-white/5'
                 }`}
               >
-                <span className="relative z-10">
-                  {item.label}
-                </span>
-                {/* Always render the hover effect div to prevent hydration mismatch */}
-                <div className={`absolute inset-0 bg-green-400/5 transition-transform duration-300 ${
-                  mounted && pathname === item.href 
-                    ? 'translate-y-full' 
-                    : 'translate-y-full group-hover:translate-y-0'
-                }`}></div>
+                {item.icon}
+                {item.label}
               </Link>
             ))}
-            
+
             {/* User Avatar for Authenticated Users */}
             {mounted && isAuthenticated && user && (
               <div className="ml-4">
-                <div className="w-10 h-10 bg-gradient-to-r from-green-400 to-green-500 rounded-full flex items-center justify-center text-black font-bold text-sm">
+                <div className="w-10 h-10 bg-[#FFC857] rounded-full flex items-center justify-center text-black font-semibold text-sm border-2 border-[#FFC857]/30 shadow-sm">
                   {user.name ? user.name.charAt(0).toUpperCase() : user.email.charAt(0).toUpperCase()}
                 </div>
               </div>

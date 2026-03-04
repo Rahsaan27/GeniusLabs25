@@ -44,6 +44,7 @@ interface InteractiveIDEProps {
   language: 'python' | 'javascript' | 'html';
   initialCode?: string;
   onCodeChange?: (code: string) => void;
+  onRunComplete?: (code: string, output: string) => void;
   className?: string;
 }
 
@@ -51,6 +52,7 @@ export default function InteractiveIDE({
   language,
   initialCode = '',
   onCodeChange,
+  onRunComplete,
   className = ''
 }: InteractiveIDEProps) {
   const [code, setCode] = useState(initialCode);
@@ -73,6 +75,7 @@ export default function InteractiveIDE({
     setOutput('');
     setHasError(false);
 
+    let finalOutput = '';
     try {
       if (language === 'python') {
         await executePython(code);
@@ -83,7 +86,8 @@ export default function InteractiveIDE({
       }
     } catch (error) {
       setHasError(true);
-      setOutput(`Error: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      finalOutput = `Error: ${error instanceof Error ? error.message : 'Unknown error'}`;
+      setOutput(finalOutput);
     } finally {
       setIsRunning(false);
     }
@@ -105,11 +109,9 @@ export default function InteractiveIDE({
       // Run the Python code
       await pyodide.runPythonAsync(pythonCode);
 
-      if (outputLines.length > 0) {
-        setOutput(outputLines.join('').trim());
-      } else {
-        setOutput('Code executed successfully (no output)');
-      }
+      const finalOutput = outputLines.length > 0 ? outputLines.join('').trim() : 'Code executed successfully (no output)';
+      setOutput(finalOutput);
+      onRunComplete?.(pythonCode, finalOutput);
     } catch (error: any) {
       // Extract Python error message
       const errorMessage = error.message || String(error);
@@ -129,7 +131,9 @@ export default function InteractiveIDE({
     try {
       const func = new Function('console', jsCode);
       func(mockConsole);
-      setOutput(outputLines.join('\n') || 'Code executed successfully (no output)');
+      const finalOutput = outputLines.join('\n') || 'Code executed successfully (no output)';
+      setOutput(finalOutput);
+      onRunComplete?.(jsCode, finalOutput);
     } catch (error) {
       throw error;
     }
@@ -138,7 +142,9 @@ export default function InteractiveIDE({
   const executeHTML = (htmlCode: string) => {
     // For HTML, we'll render it in an iframe
     setHtmlContent(htmlCode);
-    setOutput('HTML rendered successfully');
+    const finalOutput = 'HTML rendered successfully';
+    setOutput(finalOutput);
+    onRunComplete?.(htmlCode, finalOutput);
   };
 
   const clearOutput = () => {
@@ -148,13 +154,13 @@ export default function InteractiveIDE({
   };
 
   return (
-    <div className="flex flex-col lg:flex-row flex-1 min-h-0 bg-[#1e1e1e]">
+    <div className="flex flex-col lg:flex-row flex-1 min-h-0 bg-black">
       {/* Code Editor - 3/5 of shared space */}
-      <div className="lg:w-[60%] flex flex-col border-r border-gray-800 min-h-0 min-w-0">
+      <div className="lg:w-[60%] flex flex-col border-r border-[#2a2a2a] min-h-0 min-w-0">
         {/* Editor Header */}
-        <div className="flex items-center justify-between px-4 py-2.5 bg-[#252526] border-b border-gray-800 h-[50px] flex-shrink-0">
+        <div className="flex items-center justify-between px-4 py-2.5 bg-[#0a0a0a] border-b border-[#2a2a2a] h-[50px] flex-shrink-0">
           <div className="flex items-center gap-2">
-            <div className="flex items-center gap-1.5 px-3 py-1.5 bg-[#1e1e1e] rounded-sm">
+            <div className="flex items-center gap-1.5 px-3 py-1.5 bg-black rounded-sm">
               <svg className="w-3.5 h-3.5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
               </svg>
@@ -165,7 +171,7 @@ export default function InteractiveIDE({
             <button
               onClick={executeCode}
               disabled={isRunning}
-              className="px-3 py-1.5 bg-green-600 hover:bg-green-700 text-white text-xs rounded font-medium transition-colors disabled:opacity-50 flex items-center gap-1.5 shadow-sm"
+              className="px-3 py-1.5 bg-yellow-400 hover:opacity-80 text-black text-xs rounded-lg font-bold transition-all duration-200 disabled:opacity-50 flex items-center gap-1.5 border-2 border-yellow-400"
             >
               {isRunning ? (
                 <>
@@ -192,7 +198,7 @@ export default function InteractiveIDE({
 
       {/* Output Console - 2/5 of shared space */}
       <div className="lg:w-[40%] flex flex-col min-h-0 min-w-0">
-        <div className="flex items-center justify-between px-4 py-2.5 bg-[#252526] border-b border-gray-800 h-[50px] flex-shrink-0">
+        <div className="flex items-center justify-between px-4 py-2.5 bg-[#0a0a0a] border-b border-[#2a2a2a] h-[50px] flex-shrink-0">
           <div className="flex items-center gap-2">
             {language === 'html' ? (
               <>

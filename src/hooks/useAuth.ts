@@ -12,7 +12,7 @@ export interface User {
 export function useAuth() {
   const auth = useOidcAuth();
 
-  const user: User | null = auth.user ? {
+  const user: User | null = auth.user?.profile ? {
     username: auth.user.profile.preferred_username || auth.user.profile.email || '',
     email: auth.user.profile.email || '',
     name: auth.user.profile.name,

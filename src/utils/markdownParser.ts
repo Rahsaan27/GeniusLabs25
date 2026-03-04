@@ -54,7 +54,7 @@ export function parseMarkdown(markdown: string): string {
         result.push('</ul>');
         inList = false;
       }
-      result.push('<div class="h-4"></div>'); // Spacer
+      result.push('<div class="h-2"></div>'); // Spacer
       continue;
     }
 
@@ -75,7 +75,7 @@ export function parseMarkdown(markdown: string): string {
         inList = false;
       }
       const text = trimmed.substring(2);
-      result.push(`<h1 class="text-3xl font-bold text-white mb-4 mt-8">${processInlineMarkdown(text)}</h1>`);
+      result.push(`<h1 class="text-3xl font-bold text-yellow-400 mb-3 mt-6">${processInlineMarkdown(text)}</h1>`);
       continue;
     }
 
@@ -85,7 +85,7 @@ export function parseMarkdown(markdown: string): string {
         inList = false;
       }
       const text = trimmed.substring(3);
-      result.push(`<h2 class="text-2xl font-bold text-green-400 mb-3 mt-6">${processInlineMarkdown(text)}</h2>`);
+      result.push(`<h2 class="text-2xl font-bold text-yellow-400 mb-2 mt-4">${processInlineMarkdown(text)}</h2>`);
       continue;
     }
 
@@ -95,7 +95,7 @@ export function parseMarkdown(markdown: string): string {
         inList = false;
       }
       const text = trimmed.substring(4);
-      result.push(`<h3 class="text-xl font-semibold text-white mb-2 mt-4">${processInlineMarkdown(text)}</h3>`);
+      result.push(`<h3 class="text-xl font-semibold text-yellow-400 mb-2 mt-3">${processInlineMarkdown(text)}</h3>`);
       continue;
     }
 
@@ -115,7 +115,7 @@ export function parseMarkdown(markdown: string): string {
       result.push('</ul>');
       inList = false;
     }
-    result.push(`<p class="text-gray-300 leading-relaxed mb-4">${processInlineMarkdown(trimmed)}</p>`);
+    result.push(`<p class="text-gray-300 leading-relaxed mb-3">${processInlineMarkdown(trimmed)}</p>`);
   }
 
   // Close any open list

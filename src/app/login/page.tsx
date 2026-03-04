@@ -92,7 +92,7 @@ export default function LoginPage() {
           )}
 
           <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-            <div className="bg-gray-900/50 backdrop-blur-sm border border-gray-700/50 rounded-2xl p-8">
+            <div className="bg-[#0a0a0a] backdrop-blur-sm border border-yellow-400/30 rounded-lg p-8">
               <p className="text-gray-300 text-center mb-6">
                 Click the button below to sign in using our secure authentication system.
               </p>
@@ -100,7 +100,7 @@ export default function LoginPage() {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full bg-gradient-to-r from-green-400 to-green-500 hover:from-green-500 hover:to-green-600 disabled:from-gray-600 disabled:to-gray-700 disabled:cursor-not-allowed text-black font-bold py-4 px-6 rounded-xl transition-all duration-200 shadow-lg hover:shadow-green-400/25 transform hover:scale-105 disabled:transform-none"
+                className="w-full bg-yellow-400 hover:opacity-80 disabled:opacity-50 disabled:cursor-not-allowed text-black font-bold py-4 px-6 rounded-lg border-2 border-yellow-400 transition-all duration-200"
               >
                 {loading ? (
                   <div className="flex items-center justify-center">

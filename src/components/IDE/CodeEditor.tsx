@@ -101,11 +101,16 @@ function CodeEditor({ language, code, onChange }: CodeEditorProps) {
   };
 
   return (
-    <div className="relative flex-1 overflow-hidden bg-[#1e1e1e] flex h-full">
+    <div className="relative flex-1 overflow-hidden bg-black flex h-full">
       {/* Line Numbers */}
-      <div className="w-14 py-4 px-2 font-mono text-xs text-gray-500 leading-relaxed overflow-auto select-none flex-shrink-0 border-r border-gray-800 bg-[#1e1e1e]">
+      <div className="w-14 px-2 font-mono text-xs text-gray-500 select-none flex-shrink-0 border-r border-[#2a2a2a] bg-black overflow-hidden"
+        style={{
+          padding: '16px 8px',
+          lineHeight: '21px'
+        }}
+      >
         {code.split('\n').map((_, i) => (
-          <div key={i} className="text-right pr-3 min-h-[21px] font-medium">{i + 1}</div>
+          <div key={i} className="text-right pr-2 font-medium" style={{ height: '21px', lineHeight: '21px' }}>{i + 1}</div>
         ))}
       </div>
 
@@ -134,7 +139,7 @@ function CodeEditor({ language, code, onChange }: CodeEditorProps) {
           value={code}
           onChange={handleChange}
           onKeyDown={handleKeyDown}
-          className="absolute inset-0 bg-transparent outline-none resize-none overflow-auto whitespace-pre-wrap break-words selection:bg-green-400/30"
+          className="absolute inset-0 bg-transparent outline-none resize-none overflow-auto whitespace-pre-wrap break-words selection:bg-yellow-400/30"
           style={{
             padding: '16px',
             fontFamily: 'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace',
@@ -144,7 +149,7 @@ function CodeEditor({ language, code, onChange }: CodeEditorProps) {
             wordSpacing: 'normal',
             color: '#E8E8E8',
             WebkitTextFillColor: 'transparent',
-            caretColor: '#4ade80'
+            caretColor: '#FFD700'
           }}
           spellCheck={false}
           autoComplete="off"

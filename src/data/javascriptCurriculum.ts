@@ -25,14 +25,14 @@ Think of **\`console.log()\`** as the "Swiss Army Knife" of programming. It's th
 ### Key Insights
 
 - \`console.log()\` is used to print statements directly to the console
-- \`log()\` is a built-in method of the \`console\` object
-
-## Coding Lesson
+- \`log()\` is a built-in method of the \`console\` object`,
+      instructions: `## Coding Lesson
 
 In the editor, use \`console.log()\` to log the year you were born. Run your code to see your output.
 
-Next, create a new line and use the \`console.log()\` method to log your favorite number.`,
-      instructions: `Use console.log() to print the year you were born and your favorite number.`,
+Next, create a new line and use the \`console.log()\` method to log your favorite number.
+
+Use console.log() to print the year you were born and your favorite number.`,
       starterCode: `// Use console.log() to print the year you were born
 
 
@@ -106,16 +106,16 @@ You might also encounter \`var\`, an older way to declare variables. It still wo
 - \`let\` declares a variable that can be reassigned later
 - \`const\` declares a variable that cannot be reassigned after its initial value
 - Variable names are case-sensitive (\`score\` and \`Score\` are two different variables)
-- Use \`=\` (the assignment operator) to give a variable its value
-
-## Coding Lesson
+- Use \`=\` (the assignment operator) to give a variable its value`,
+      instructions: `## Coding Lesson
 
 In the editor, use \`const\` to create a variable called \`myName\` and assign it your first name as a **string** (text wrapped in quotes). Log it to the console.
 
 Next, use \`let\` to create a variable called \`myAge\` and assign it your current age as a **number**. Log it to the console.
 
-Remember, strings need to be wrapped in quotation marks (\`"..."\`) — numbers do not.`,
-      instructions: `Create a const variable for your name and a let variable for your age. Log both to the console.`,
+Remember, strings need to be wrapped in quotation marks (\`"..."\`) — numbers do not.
+
+Create a const variable for your name and a let variable for your age. Log both to the console.`,
       starterCode: `// Create a const variable called myName with your name
 
 
@@ -216,9 +216,8 @@ typeof true;     // "boolean"
 - **Strings** represent text and must be wrapped in quotes (\`"..."\` or \`'...'\`)
 - **Numbers** represent numeric values and are written without quotes
 - **Booleans** represent \`true\` or \`false\` — nothing else
-- \`typeof\` returns the data type of any value as a string
-
-## Coding Lesson
+- \`typeof\` returns the data type of any value as a string`,
+      instructions: `## Coding Lesson
 
 Create three variables using \`let\`:
 
@@ -228,8 +227,9 @@ Create three variables using \`let\`:
 
 Use \`console.log(typeof variableName)\` to log the **type** of each variable — not the value, but the type.
 
-\`typeof\` goes _before_ the variable name, not after. And you can place a \`typeof\` expression directly inside \`console.log()\`.`,
-      instructions: `Create three variables of different types and use typeof to check their types.`,
+\`typeof\` goes _before_ the variable name, not after. And you can place a \`typeof\` expression directly inside \`console.log()\`.
+
+Create three variables of different types and use typeof to check their types.`,
       starterCode: `// Create a variable called movie with your favorite movie (string)
 
 
@@ -328,16 +328,16 @@ let finalPrice = price + tax;
 - \`+\`, \`-\`, \`*\`, \`/\` perform basic arithmetic just like a calculator
 - \`%\` (modulus) returns the **remainder** after division
 - Operators work on raw numbers, variables, or any combination of both
-- Expressions are evaluated and the result can be stored in a variable
-
-## Coding Lesson
+- Expressions are evaluated and the result can be stored in a variable`,
+      instructions: `## Coding Lesson
 
 Create a variable called \`a\` and assign it the value \`12\`. Create another variable called \`b\` and assign it the value \`5\`.
 
 Log the result of \`a + b\` to the console. On a new line, log the result of \`a % b\` to the console.
 
-You can place an entire math expression inside the parentheses of \`console.log()\` — you don't need to store it in a new variable first (though you can if you want to).`,
-      instructions: `Create two variables and perform addition and modulus operations on them.`,
+You can place an entire math expression inside the parentheses of \`console.log()\` — you don't need to store it in a new variable first (though you can if you want to).
+
+Create two variables and perform addition and modulus operations on them.`,
       starterCode: `// Create variable a with value 12
 
 
@@ -447,9 +447,8 @@ Notice the triple equals (\`===\`). In JavaScript, \`==\` exists but behaves loo
 - \`if\` runs a block of code only when its condition is \`true\`
 - \`else if\` adds additional conditions to check in sequence
 - \`else\` acts as the fallback — it runs when none of the conditions above are met
-- Use \`===\` for strict comparison (preferred over \`==\`)
-
-## Coding Lesson
+- Use \`===\` for strict comparison (preferred over \`==\`)`,
+      instructions: `## Coding Lesson
 
 Create a variable called \`age\` and assign it any number. Write an \`if / else if / else\` statement that logs:
 
@@ -457,8 +456,9 @@ Create a variable called \`age\` and assign it any number. Write an \`if / else 
 - \`"teenager"\` if \`age\` is less than 18
 - \`"adult"\` if neither condition is met
 
-The order of your conditions matters. JavaScript evaluates them top to bottom and runs only the **first** block that matches. Think about what range each branch actually catches.`,
-      instructions: `Create a variable for age and use if/else if/else to categorize it.`,
+The order of your conditions matters. JavaScript evaluates them top to bottom and runs only the **first** block that matches. Think about what range each branch actually catches.
+
+Create a variable for age and use if/else if/else to categorize it.`,
       starterCode: `// Create a variable called age
 
 
@@ -571,16 +571,16 @@ let result = add(3, 7); // result is 10
 - Functions let you write reusable blocks of code
 - A function must be **called** to run — declaring it alone does nothing
 - **Parameters** are the placeholders in a function definition; **arguments** are the real values you pass in
-- \`return\` sends a value back from the function to wherever it was called
-
-## Coding Lesson
+- \`return\` sends a value back from the function to wherever it was called`,
+      instructions: `## Coding Lesson
 
 Declare a function called \`double\` that takes one parameter called \`num\` and **returns** that number multiplied by 2.
 
 Then, log the result of calling \`double()\` with the argument \`8\` to the console.
 
-You can place a function call directly inside \`console.log()\`. The function call runs first, produces its return value, and _that_ value is what gets logged.`,
-      instructions: `Create a function that doubles a number and returns the result.`,
+You can place a function call directly inside \`console.log()\`. The function call runs first, produces its return value, and _that_ value is what gets logged.
+
+Create a function that doubles a number and returns the result.`,
       starterCode: `// Declare a function called double with parameter num
 
 
@@ -676,16 +676,16 @@ Arrays can hold any data type — strings, numbers, booleans, even other arrays.
 - Arrays store multiple values in a single variable, wrapped in \`[]\`
 - Arrays are **zero-indexed** — the first element is at index \`0\`
 - \`.length\` tells you how many items the array contains
-- \`.push()\` adds to the end; \`.pop()\` removes from the end
-
-## Coding Lesson
+- \`.push()\` adds to the end; \`.pop()\` removes from the end`,
+      instructions: `## Coding Lesson
 
 Create an array called \`fruits\` that contains three strings: any three fruits you like.
 
 Log the **second** item in the array to the console. Then, use \`.push()\` to add a fourth fruit. Finally, log the array's \`.length\` to the console.
 
-If the first item is at index \`0\`, what index is the _second_ item at?`,
-      instructions: `Create an array of fruits and practice accessing items and using array methods.`,
+If the first item is at index \`0\`, what index is the _second_ item at?
+
+Create an array of fruits and practice accessing items and using array methods.`,
       starterCode: `// Create an array called fruits with 3 fruit strings
 
 
@@ -786,16 +786,16 @@ for (let i = 0; i < fruits.length; i++) {
 - A \`for\` loop repeats a block of code a controlled number of times
 - The three parts are: initialization, condition, and update — separated by \`;\`
 - The loop runs as long as the condition evaluates to \`true\`
-- \`i++\` is shorthand for incrementing the counter by 1
-
-## Coding Lesson
+- \`i++\` is shorthand for incrementing the counter by 1`,
+      instructions: `## Coding Lesson
 
 Create an array called \`numbers\` with the values \`[10, 20, 30, 40, 50]\`.
 
 Write a \`for\` loop that goes through the entire array and logs each number to the console.
 
-Your loop counter should start at \`0\` (the first index) and keep running while it's less than the array's \`.length\`. Inside the loop, use the counter as the index: \`numbers[i]\`.`,
-      instructions: `Create an array of numbers and use a for loop to log each one.`,
+Your loop counter should start at \`0\` (the first index) and keep running while it's less than the array's \`.length\`. Inside the loop, use the counter as the index: \`numbers[i]\`.
+
+Create an array of numbers and use a for loop to log each one.`,
       starterCode: `// Create an array called numbers with [10, 20, 30, 40, 50]
 
 

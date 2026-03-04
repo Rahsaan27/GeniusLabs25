@@ -424,17 +424,17 @@ export default function ProfilePage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between">
             <div className="flex items-center space-x-4">
-              <div className="w-20 h-20 bg-gradient-to-r from-green-400 to-green-500 rounded-full flex items-center justify-center text-black text-2xl font-bold">
+              <div className="w-20 h-20 bg-yellow-400 rounded-full flex items-center justify-center text-black text-2xl font-bold">
                 {user.name ? user.name.charAt(0).toUpperCase() : user.email.charAt(0).toUpperCase()}
               </div>
               <div>
                 <h1 className="text-3xl font-bold">{user.name || 'Anonymous User'}</h1>
                 <p className="text-gray-300">{user.email}</p>
                 <div className="flex items-center space-x-4 mt-2">
-                  <span className="text-sm bg-green-400/20 text-green-400 px-3 py-1 rounded-full">
+                  <span className="text-sm bg-yellow-400/20 text-yellow-400 px-3 py-1 rounded-full">
                     🔥 {userStats.currentStreak} day streak
                   </span>
-                  <span className="text-sm bg-blue-400/20 text-blue-400 px-3 py-1 rounded-full">
+                  <span className="text-sm bg-yellow-400/20 text-yellow-400 px-3 py-1 rounded-full">
                     Level {Math.floor(userStats.totalLessonsCompleted / 10) + 1}
                   </span>
                 </div>
@@ -443,14 +443,14 @@ export default function ProfilePage() {
             <div className="mt-4 md:mt-0 space-x-2">
               <button
                 onClick={() => setIsEditing(!isEditing)}
-                className="bg-gray-700 hover:bg-gray-600 text-white px-4 mb-3 py-2 rounded-lg transition-colors flex items-center space-x-2"
+                className="bg-black text-yellow-400 px-4 mb-3 py-2 rounded-lg border-2 border-yellow-400 hover:opacity-80 transition-all duration-200 flex items-center space-x-2"
               >
                 <Edit2 size={16} />
                 <span>Edit Profile</span>
               </button>
               <button
                 onClick={handleLogout}
-                className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg transition-colors flex items-center space-x-2"
+                className="bg-red-600 hover:opacity-80 text-white px-4 py-2 rounded-lg border-2 border-red-600 transition-all duration-200 flex items-center space-x-2"
               >
                 <LogOut size={16} />
                 <span>Logout</span>
@@ -476,7 +476,7 @@ export default function ProfilePage() {
                 onClick={() => setActiveTab(tab.id)}
                 className={`flex-1 flex items-center justify-center space-x-2 py-3 px-4 rounded-lg transition-all duration-200 ${
                   activeTab === tab.id
-                    ? 'bg-green-400 text-black font-bold'
+                    ? 'bg-yellow-400 text-black font-bold'
                     : 'text-gray-400 hover:text-white hover:bg-gray-800'
                 }`}
               >
@@ -497,10 +497,10 @@ export default function ProfilePage() {
               </div>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-            <div className="bg-gray-900 rounded-2xl p-6 border border-gray-700">
+            <div className="bg-[#0a0a0a] rounded-lg p-6 border border-[#2a2a2a]">
               <div className="flex items-center space-x-3 mb-4">
-                <div className="w-10 h-10 bg-green-400/20 rounded-lg flex items-center justify-center">
-                  <BookOpen className="text-green-400" size={20} />
+                <div className="w-10 h-10 bg-yellow-400/20 rounded-lg flex items-center justify-center">
+                  <BookOpen className="text-yellow-400" size={20} />
                 </div>
                 <div>
                   <p className="text-gray-400 text-sm">Lessons Completed</p>
@@ -509,10 +509,10 @@ export default function ProfilePage() {
               </div>
             </div>
 
-            <div className="bg-gray-900 rounded-2xl p-6 border border-gray-700">
+            <div className="bg-[#0a0a0a] rounded-lg p-6 border border-[#2a2a2a]">
               <div className="flex items-center space-x-3 mb-4">
-                <div className="w-10 h-10 bg-blue-400/20 rounded-lg flex items-center justify-center">
-                  <Trophy className="text-blue-400" size={20} />
+                <div className="w-10 h-10 bg-yellow-400/20 rounded-lg flex items-center justify-center">
+                  <Trophy className="text-yellow-400" size={20} />
                 </div>
                 <div>
                   <p className="text-gray-400 text-sm">Modules Completed</p>
@@ -521,10 +521,10 @@ export default function ProfilePage() {
               </div>
             </div>
 
-            <div className="bg-gray-900 rounded-2xl p-6 border border-gray-700">
+            <div className="bg-[#0a0a0a] rounded-lg p-6 border border-[#2a2a2a]">
               <div className="flex items-center space-x-3 mb-4">
-                <div className="w-10 h-10 bg-purple-400/20 rounded-lg flex items-center justify-center">
-                  <Clock className="text-purple-400" size={20} />
+                <div className="w-10 h-10 bg-yellow-400/20 rounded-lg flex items-center justify-center">
+                  <Clock className="text-yellow-400" size={20} />
                 </div>
                 <div>
                   <p className="text-gray-400 text-sm">Time Spent</p>
@@ -556,10 +556,10 @@ export default function ProfilePage() {
               {achievements.map((achievement) => (
                 <div
                   key={achievement.id}
-                  className={`bg-gray-900 rounded-2xl p-6 border transition-all duration-200 ${
+                  className={`bg-[#0a0a0a] rounded-lg p-6 border transition-all duration-200 ${
                     achievement.unlocked
-                      ? 'border-green-400/40 bg-green-400/5'
-                      : 'border-gray-700 opacity-60'
+                      ? 'border-yellow-400/40 bg-yellow-400/5'
+                      : 'border-[#2a2a2a] opacity-60'
                   }`}
                 >
                   <div className="text-center">
@@ -567,7 +567,7 @@ export default function ProfilePage() {
                     <h3 className="text-lg font-bold text-white mb-2">{achievement.name}</h3>
                     <p className="text-gray-400 text-sm mb-3">{achievement.description}</p>
                     {achievement.unlocked ? (
-                      <span className="bg-green-400 text-black px-3 py-1 rounded-full text-xs font-bold">
+                      <span className="bg-yellow-400 text-black px-3 py-1 rounded-full text-xs font-bold">
                         Unlocked!
                       </span>
                     ) : (
@@ -595,20 +595,20 @@ export default function ProfilePage() {
                 {modules.filter(m => !m.comingSoon).map((currentModule) => {
                   const progress = moduleProgress[currentModule.id] || { completed: 0, total: currentModule.lessons.length, percentage: 0 };
                   return (
-                    <div key={currentModule.id} className="bg-gray-900 rounded-2xl p-6 border border-gray-700">
+                    <div key={currentModule.id} className="bg-[#0a0a0a] rounded-lg p-6 border border-[#2a2a2a]">
                     <div className="flex items-center justify-between mb-4">
                       <div>
                         <h3 className="text-lg font-bold text-white">{currentModule.title}</h3>
                         <p className="text-gray-400 text-sm">{currentModule.description}</p>
                       </div>
                       <div className="text-right">
-                        <span className="text-2xl font-bold text-green-400">{progress.percentage}%</span>
+                        <span className="text-2xl font-bold text-yellow-400">{progress.percentage}%</span>
                         <p className="text-gray-400 text-sm">{progress.completed}/{progress.total} lessons</p>
                       </div>
                     </div>
                     <div className="w-full bg-gray-700 rounded-full h-2">
                       <div
-                        className="h-2 rounded-full bg-green-400 transition-all duration-500"
+                        className="h-2 rounded-full bg-yellow-400 transition-all duration-500"
                         style={{ width: `${progress.percentage}%` }}
                       ></div>
                     </div>
@@ -625,7 +625,7 @@ export default function ProfilePage() {
             <h2 className="text-2xl font-bold text-white mb-6">Settings</h2>
 
             {/* Profile Settings */}
-            <div className="bg-gray-900 rounded-2xl p-6 border border-gray-700">
+            <div className="bg-[#0a0a0a] rounded-lg p-6 border border-[#2a2a2a]">
               <h3 className="text-lg font-bold text-white mb-4">Profile Information</h3>
               <div className="space-y-4">
                 <div>
@@ -635,7 +635,7 @@ export default function ProfilePage() {
                     value={displayName}
                     onChange={(e) => setDisplayName(e.target.value)}
                     disabled={!isEditing}
-                    className="w-full p-3 bg-gray-800 border border-gray-600 rounded-lg text-white disabled:opacity-50 focus:border-green-400 focus:outline-none transition-colors"
+                    className="w-full p-3 bg-gray-800 border border-gray-600 rounded-lg text-white disabled:opacity-50 focus:border-yellow-400 focus:outline-none transition-colors"
                     placeholder="Enter your display name"
                   />
                 </div>
@@ -660,7 +660,7 @@ export default function ProfilePage() {
                   {!isEditing ? (
                     <button
                       onClick={() => setIsEditing(true)}
-                      className='border border-green-400 rounded-lg px-4 py-2 text-green-400 hover:bg-green-400 hover:text-black transition-colors font-medium'
+                      className='border-2 border-yellow-400 rounded-lg px-4 py-2 text-yellow-400 hover:opacity-80 transition-all duration-200 font-bold'
                     >
                       Edit Profile
                     </button>
@@ -669,7 +669,7 @@ export default function ProfilePage() {
                       <button
                         onClick={handleSaveProfile}
                         disabled={savingProfile}
-                        className='bg-green-400 rounded-lg px-4 py-2 text-black hover:bg-green-500 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed'
+                        className='bg-yellow-400 rounded-lg px-4 py-2 text-black hover:opacity-80 transition-all duration-200 font-bold border-2 border-yellow-400 disabled:opacity-50 disabled:cursor-not-allowed'
                       >
                         {savingProfile ? 'Saving...' : 'Save Changes'}
                       </button>
@@ -678,7 +678,7 @@ export default function ProfilePage() {
                           setIsEditing(false);
                           setDisplayName(user.name || '');
                         }}
-                        className='border border-gray-600 rounded-lg px-4 py-2 text-gray-400 hover:bg-gray-800 transition-colors font-medium'
+                        className='border-2 border-gray-600 rounded-lg px-4 py-2 text-gray-400 hover:bg-gray-800 transition-all duration-200 font-medium'
                       >
                         Cancel
                       </button>
@@ -689,7 +689,7 @@ export default function ProfilePage() {
             </div>
 
             {/* Preferences */}
-            <div className="bg-gray-900 rounded-2xl p-6 border border-gray-700">
+            <div className="bg-[#0a0a0a] rounded-lg p-6 border border-[#2a2a2a]">
               <h3 className="text-lg font-bold text-white mb-4">Learning Preferences</h3>
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
@@ -699,7 +699,7 @@ export default function ProfilePage() {
                   </div>
                   <button
                     onClick={() => setEmailNotifications(!emailNotifications)}
-                    className={`w-12 h-6 rounded-full relative transition-colors ${emailNotifications ? 'bg-green-400' : 'bg-gray-600'}`}
+                    className={`w-12 h-6 rounded-full relative transition-colors ${emailNotifications ? 'bg-yellow-400' : 'bg-gray-600'}`}
                   >
                     <div className={`w-4 h-4 bg-white rounded-full absolute top-1 transition-all duration-200 ${emailNotifications ? 'right-1' : 'left-1'}`}></div>
                   </button>
@@ -711,7 +711,7 @@ export default function ProfilePage() {
                   </div>
                   <button
                     onClick={() => setDailyReminders(!dailyReminders)}
-                    className={`w-12 h-6 rounded-full relative transition-colors ${dailyReminders ? 'bg-green-400' : 'bg-gray-600'}`}
+                    className={`w-12 h-6 rounded-full relative transition-colors ${dailyReminders ? 'bg-yellow-400' : 'bg-gray-600'}`}
                   >
                     <div className={`w-4 h-4 bg-white rounded-full absolute top-1 transition-all duration-200 ${dailyReminders ? 'right-1' : 'left-1'}`}></div>
                   </button>
@@ -720,7 +720,7 @@ export default function ProfilePage() {
                   <button
                     onClick={handleSaveProfile}
                     disabled={savingProfile}
-                    className='bg-green-400 rounded-lg px-4 py-2 text-black hover:bg-green-500 transition-colors font-medium text-sm disabled:opacity-50'
+                    className='bg-yellow-400 rounded-lg px-4 py-2 text-black hover:opacity-80 transition-all duration-200 font-bold text-sm border-2 border-yellow-400 disabled:opacity-50'
                   >
                     Save Preferences
                   </button>
@@ -729,13 +729,13 @@ export default function ProfilePage() {
             </div>
 
             {/* Danger Zone */}
-            <div className="bg-gray-900 rounded-2xl p-6 border border-red-600/40">
+            <div className="bg-[#0a0a0a] rounded-lg p-6 border border-red-600/40">
               <h3 className="text-lg font-bold text-red-400 mb-4">Danger Zone</h3>
               <p className="text-gray-400 text-sm mb-4">These actions cannot be undone. Please be certain.</p>
               <div className="flex flex-col sm:flex-row gap-4">
                 <button
                   onClick={handleResetProgress}
-                  className="bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-lg transition-colors font-medium flex items-center justify-center gap-2"
+                  className="bg-red-600 hover:opacity-80 text-white px-6 py-3 rounded-lg transition-all duration-200 font-bold border-2 border-red-600 flex items-center justify-center gap-2"
                 >
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
@@ -744,7 +744,7 @@ export default function ProfilePage() {
                 </button>
                 <button
                   onClick={handleDeleteAccount}
-                  className="bg-red-800 hover:bg-red-900 text-white px-6 py-3 rounded-lg transition-colors font-medium flex items-center justify-center gap-2"
+                  className="bg-red-800 hover:opacity-80 text-white px-6 py-3 rounded-lg transition-all duration-200 font-bold border-2 border-red-800 flex items-center justify-center gap-2"
                 >
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />

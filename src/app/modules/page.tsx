@@ -61,10 +61,10 @@ export default function ModulesPage() {
 
   const getModuleColor = (category: string) => {
     switch (category) {
-      case 'technology': return 'from-blue-500/20 to-blue-600/10 border-blue-400/30';
-      case 'entrepreneurship': return 'from-purple-500/20 to-purple-600/10 border-purple-400/30';
-      case 'leadership': return 'from-yellow-500/20 to-yellow-600/10 border-yellow-400/30';
-      default: return 'from-gray-500/20 to-gray-600/10 border-gray-400/30';
+      case 'technology': return 'from-[#0a0a0a] to-[#141414] border-[#2a2a2a]';
+      case 'entrepreneurship': return 'from-[#0a0a0a] to-[#141414] border-[#2a2a2a]';
+      case 'leadership': return 'from-[#0a0a0a] to-[#141414] border-[#2a2a2a]';
+      default: return 'from-[#0a0a0a] to-[#141414] border-[#2a2a2a]';
     }
   };
 
@@ -89,7 +89,7 @@ export default function ModulesPage() {
     <div className="bg-black min-h-screen">
       <div className="bg-gradient-to-r from-black to-gray-900 text-white py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h1 className="text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-green-400 via-green-300 to-green-500">
+          <h1 className="text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 via-yellow-300 to-yellow-500">
             Learning Modules
           </h1>
           <p className="text-xl text-gray-400 mt-4">
@@ -106,7 +106,7 @@ export default function ModulesPage() {
             const logo = getLanguageLogo(currentModule.language);
 
             const cardContent = (
-                <div className={`relative bg-gradient-to-br ${getModuleColor(currentModule.category)} border rounded-2xl p-6 transition-all duration-300 ${currentModule.comingSoon ? 'opacity-60' : 'hover:scale-105 hover:shadow-2xl hover:shadow-green-500/20'} min-h-[280px] flex flex-col`}>
+                <div className={`relative bg-gradient-to-br ${getModuleColor(currentModule.category)} border rounded-lg p-6 transition-all duration-200 ${currentModule.comingSoon ? 'opacity-60' : 'hover:border-yellow-500/40'} min-h-[280px] flex flex-col`}>
                   {/* Logo */}
                   <div className="absolute top-6 right-6">
                     {logo && (
@@ -121,7 +121,7 @@ export default function ModulesPage() {
                   </div>
 
                   {/* Module Title */}
-                  <h2 className="text-2xl font-bold text-white mb-3 pr-16 group-hover:text-green-400 transition-colors">
+                  <h2 className="text-2xl font-bold text-white mb-3 pr-16 group-hover:text-yellow-400 transition-colors">
                     {currentModule.title}
                   </h2>
 
@@ -171,7 +171,7 @@ export default function ModulesPage() {
                               fill="none"
                               strokeDasharray={`${2 * Math.PI * 32}`}
                               strokeDashoffset={`${2 * Math.PI * 32 * (1 - progress.percentage / 100)}`}
-                              className="text-green-400 transition-all duration-500"
+                              className="text-yellow-400 transition-all duration-500"
                               strokeLinecap="round"
                             />
                           </svg>
