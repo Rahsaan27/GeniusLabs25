@@ -12,6 +12,19 @@ export interface User {
 export function useAuth() {
   const auth = useOidcAuth();
 
+  // Handle case when auth context is undefined (during SSR/build)
+  if (!auth) {
+    return {
+      user: null,
+      loading: false,
+      login: async () => ({ success: false, error: 'Auth not initialized' }),
+      logout: async () => ({ success: false, error: 'Auth not initialized' }),
+      register: async () => ({ success: false, error: 'Auth not initialized' }),
+      isAuthenticated: false,
+      error: undefined,
+    };
+  }
+
   const user: User | null = auth.user?.profile ? {
     username: auth.user.profile.preferred_username || auth.user.profile.email || '',
     email: auth.user.profile.email || '',
