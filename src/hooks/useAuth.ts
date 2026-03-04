@@ -70,22 +70,39 @@ export function useAuth() {
 
   const register = async () => {
     try {
-      // First, logout any existing session
-      await auth.removeUser();
+      // First, completely logout any existing session
+      if (auth.isAuthenticated) {
+        await auth.signoutRedirect({ post_logout_redirect_uri: window.location.origin + '/signup' });
+        return { success: true };
+      }
 
-      // Clear storage
+      // Clear all storage
       if (typeof window !== 'undefined') {
         localStorage.clear();
         sessionStorage.clear();
+
+        // Clear all cookies
+        document.cookie.split(";").forEach((c) => {
+          document.cookie = c
+            .replace(/^ +/, "")
+            .replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
+        });
       }
 
-      // Redirect to Cognito hosted UI with signup hint
-      // This tells Cognito to show the signup form instead of login
-      await auth.signinRedirect({
-        extraQueryParams: {
-          signup: 'true' // This parameter can be used to customize the UI
-        }
-      });
+      // Remove user from OIDC storage
+      await auth.removeUser();
+
+      // Redirect to Cognito hosted UI for signup
+      // Use direct URL to ensure clean state
+      if (typeof window !== 'undefined') {
+        const cognitoDomain = 'https://us-west-2-6lxsajtrx.auth.us-west-2.amazoncognito.com';
+        const clientId = '4botmnmnknikbipc801vbsgvta';
+        const redirectUri = encodeURIComponent(window.location.origin + '/callback');
+        const signupUrl = `${cognitoDomain}/oauth2/authorize?client_id=${clientId}&response_type=code&scope=phone+openid+email&redirect_uri=${redirectUri}`;
+
+        window.location.href = signupUrl;
+      }
+
       return { success: true };
     } catch (error: unknown) {
       const message = error instanceof Error ? error.message : 'Registration failed';
