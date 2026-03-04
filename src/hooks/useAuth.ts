@@ -70,13 +70,29 @@ export function useAuth() {
 
   const register = async () => {
     try {
-      // First, completely logout any existing session
+      // If user is authenticated, we need to logout from Cognito first
+      // This clears the Cognito session cookies on the Cognito domain
       if (auth.isAuthenticated) {
-        await auth.signoutRedirect({ post_logout_redirect_uri: window.location.origin + '/signup' });
+        // Store a flag that we're trying to signup
+        if (typeof window !== 'undefined') {
+          sessionStorage.setItem('pendingSignup', 'true');
+        }
+
+        // Logout from Cognito - this will clear Cognito's session
+        // After logout, it will redirect back to our app
+        await auth.signoutRedirect();
         return { success: true };
       }
 
-      // Clear all storage
+      // If we get here, user is not authenticated
+      // Check if we just came back from a logout for signup
+      const pendingSignup = typeof window !== 'undefined' ? sessionStorage.getItem('pendingSignup') : null;
+
+      if (pendingSignup) {
+        sessionStorage.removeItem('pendingSignup');
+      }
+
+      // Clear all local data
       if (typeof window !== 'undefined') {
         localStorage.clear();
         sessionStorage.clear();
@@ -92,16 +108,8 @@ export function useAuth() {
       // Remove user from OIDC storage
       await auth.removeUser();
 
-      // Redirect to Cognito hosted UI for signup
-      // Use direct URL to ensure clean state
-      if (typeof window !== 'undefined') {
-        const cognitoDomain = 'https://us-west-2-6lxsajtrx.auth.us-west-2.amazoncognito.com';
-        const clientId = '4botmnmnknikbipc801vbsgvta';
-        const redirectUri = encodeURIComponent(window.location.origin + '/callback');
-        const signupUrl = `${cognitoDomain}/oauth2/authorize?client_id=${clientId}&response_type=code&scope=phone+openid+email&redirect_uri=${redirectUri}`;
-
-        window.location.href = signupUrl;
-      }
+      // Now redirect to Cognito hosted UI
+      await auth.signinRedirect();
 
       return { success: true };
     } catch (error: unknown) {
