@@ -70,15 +70,15 @@ export function useAuth() {
 
   const register = async () => {
     try {
-      // Build Cognito signup URL directly
+      // Direct users to Cognito's signup page
       if (typeof window !== 'undefined') {
         const baseUrl = window.location.origin;
-        const cognitoDomain = 'https://geniuslabs.auth.us-west-2.amazoncognito.com';
+        const cognitoDomain = 'https://us-west-26lxsajtrx.auth.us-west-2.amazoncognito.com';
         const clientId = '4botmnmnknikbipc801vbsgvta';
         const redirectUri = encodeURIComponent(`${baseUrl}/callback`);
         const scope = encodeURIComponent('phone openid email');
 
-        // Direct signup URL - uses /signup endpoint instead of /oauth2/authorize
+        // Use /signup endpoint to take users directly to account creation
         const signupUrl = `${cognitoDomain}/signup?client_id=${clientId}&response_type=code&scope=${scope}&redirect_uri=${redirectUri}`;
 
         window.location.href = signupUrl;
