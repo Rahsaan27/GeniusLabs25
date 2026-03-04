@@ -68,10 +68,27 @@ export function useAuth() {
     }
   };
 
-  const register = () => {
-    // For Cognito hosted UI, registration is handled through the login flow
-    // Users will be redirected to Cognito's hosted UI which includes registration
-    return login();
+  const register = async () => {
+    try {
+      // Build Cognito signup URL directly
+      if (typeof window !== 'undefined') {
+        const baseUrl = window.location.origin;
+        const cognitoDomain = 'https://geniuslabs.auth.us-west-2.amazoncognito.com';
+        const clientId = '4botmnmnknikbipc801vbsgvta';
+        const redirectUri = encodeURIComponent(`${baseUrl}/callback`);
+        const scope = encodeURIComponent('phone openid email');
+
+        // Direct signup URL - uses /signup endpoint instead of /oauth2/authorize
+        const signupUrl = `${cognitoDomain}/signup?client_id=${clientId}&response_type=code&scope=${scope}&redirect_uri=${redirectUri}`;
+
+        window.location.href = signupUrl;
+      }
+
+      return { success: true };
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : 'Registration failed';
+      return { success: false, error: message };
+    }
   };
 
   return {
