@@ -68,10 +68,29 @@ export function useAuth() {
     }
   };
 
-  const register = () => {
-    // For Cognito hosted UI, registration is handled through the login flow
-    // Users will be redirected to Cognito's hosted UI which includes registration
-    return login();
+  const register = async () => {
+    try {
+      // First, logout any existing session
+      await auth.removeUser();
+
+      // Clear storage
+      if (typeof window !== 'undefined') {
+        localStorage.clear();
+        sessionStorage.clear();
+      }
+
+      // Redirect to Cognito hosted UI with signup hint
+      // This tells Cognito to show the signup form instead of login
+      await auth.signinRedirect({
+        extraQueryParams: {
+          signup: 'true' // This parameter can be used to customize the UI
+        }
+      });
+      return { success: true };
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : 'Registration failed';
+      return { success: false, error: message };
+    }
   };
 
   return {
