@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useAuth } from '@/hooks/useAuth';
@@ -10,16 +10,7 @@ import LoadingScreen from '@/components/LoadingScreen';
 export default function SignupPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const { register, isAuthenticated } = useAuth();
-
-  // Check if we just came back from logout and need to continue signup
-  useEffect(() => {
-    const pendingSignup = sessionStorage.getItem('pendingSignup');
-    if (pendingSignup && !isAuthenticated) {
-      // Continue with signup flow
-      handleSubmit(new Event('submit') as any);
-    }
-  }, [isAuthenticated]);
+  const { register } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

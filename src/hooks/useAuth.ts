@@ -68,54 +68,10 @@ export function useAuth() {
     }
   };
 
-  const register = async () => {
-    try {
-      // If user is authenticated, we need to logout from Cognito first
-      // This clears the Cognito session cookies on the Cognito domain
-      if (auth.isAuthenticated) {
-        // Store a flag that we're trying to signup
-        if (typeof window !== 'undefined') {
-          sessionStorage.setItem('pendingSignup', 'true');
-        }
-
-        // Logout from Cognito - this will clear Cognito's session
-        // After logout, it will redirect back to our app
-        await auth.signoutRedirect();
-        return { success: true };
-      }
-
-      // If we get here, user is not authenticated
-      // Check if we just came back from a logout for signup
-      const pendingSignup = typeof window !== 'undefined' ? sessionStorage.getItem('pendingSignup') : null;
-
-      if (pendingSignup) {
-        sessionStorage.removeItem('pendingSignup');
-      }
-
-      // Clear all local data
-      if (typeof window !== 'undefined') {
-        localStorage.clear();
-        sessionStorage.clear();
-
-        // Clear all cookies
-        document.cookie.split(";").forEach((c) => {
-          document.cookie = c
-            .replace(/^ +/, "")
-            .replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
-        });
-      }
-
-      // Remove user from OIDC storage
-      await auth.removeUser();
-
-      // Now redirect to Cognito hosted UI
-      await auth.signinRedirect();
-
-      return { success: true };
-    } catch (error: unknown) {
-      const message = error instanceof Error ? error.message : 'Registration failed';
-      return { success: false, error: message };
-    }
+  const register = () => {
+    // For Cognito hosted UI, registration is handled through the login flow
+    // Users will be redirected to Cognito's hosted UI which includes registration
+    return login();
   };
 
   return {
