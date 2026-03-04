@@ -115,7 +115,7 @@ export default function Navigation() {
                 href={item.href}
                 className={`px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 border-2 flex items-center gap-2 ${
                   mounted && pathname === item.href
-                    ? 'text-black bg-[#FFC857] border-[#FFC857] shadow-sm'
+                    ? 'text-black bg-[#FFDE21] border-[#E5C71D] shadow-sm'
                     : 'text-[#E8E8E8] bg-transparent border-white/10 hover:border-white/20 hover:bg-white/5'
                 }`}
               >
@@ -127,7 +127,7 @@ export default function Navigation() {
             {/* User Avatar for Authenticated Users */}
             {mounted && isAuthenticated && user && (
               <div className="ml-4">
-                <div className="w-10 h-10 bg-[#FFC857] rounded-full flex items-center justify-center text-black font-semibold text-sm border-2 border-[#FFC857]/30 shadow-sm">
+                <div className="w-10 h-10 bg-[#FFDE21] rounded-full flex items-center justify-center text-black font-semibold text-sm border-2 border-[#E5C71D]/30 shadow-sm">
                   {user.name ? user.name.charAt(0).toUpperCase() : user.email.charAt(0).toUpperCase()}
                 </div>
               </div>

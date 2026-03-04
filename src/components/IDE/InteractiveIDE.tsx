@@ -171,7 +171,8 @@ export default function InteractiveIDE({
             <button
               onClick={executeCode}
               disabled={isRunning}
-              className="px-3 py-1.5 bg-yellow-400 hover:opacity-80 text-black text-xs rounded-lg font-bold transition-all duration-200 disabled:opacity-50 flex items-center gap-1.5 border-2 border-yellow-400"
+              className="px-3 py-1.5 hover:opacity-80 text-black text-xs rounded-lg font-bold transition-all duration-200 disabled:opacity-50 flex items-center gap-1.5 border-2"
+              style={{ backgroundColor: '#FFDE21', borderColor: '#E5C71D' }}
             >
               {isRunning ? (
                 <>

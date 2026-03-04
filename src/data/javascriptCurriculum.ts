@@ -22,6 +22,8 @@ Think of **\`console.log()\`** as the "Swiss Army Knife" of programming. It's th
 
 \`console\` is a keyword that refers to an object. In JavaScript (like most programming languages), keywords are built-in commands that have predetermined values or functionality. The \`log()\` method is built into the \`console\` object, so combining them allows us to print to the **console**.
 
+For example, to print out **'Hello World!'** to the terminal, you would write **\`console.log('Hello World!')\`** 
+
 ### Key Insights
 
 - \`console.log()\` is used to print statements directly to the console

@@ -1,3 +1,5 @@
+'use client'
+
 import Link from "next/link";
 import Image from "next/image";
 import logo from "@/assets/Genius-Lab-Logo-Main-Green-600.png";
@@ -14,9 +16,9 @@ export default function Home() {
 
         {/* Floating gradient orbs */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute top-1/4 left-1/4 w-72 h-72 bg-yellow-500/10 rounded-full blur-3xl animate-pulse"></div>
-          <div className="absolute top-1/3 right-1/4 w-96 h-96 bg-yellow-400/5 rounded-full blur-3xl animate-pulse" style={{animationDelay: '2s'}}></div>
-          <div className="absolute bottom-1/4 left-1/3 w-80 h-80 bg-yellow-600/8 rounded-full blur-3xl animate-pulse" style={{animationDelay: '4s'}}></div>
+          <div className="absolute top-1/4 left-1/4 w-72 h-72 rounded-full blur-3xl animate-pulse" style={{ backgroundColor: 'rgba(255, 222, 33, 0.1)' }}></div>
+          <div className="absolute top-1/3 right-1/4 w-96 h-96 rounded-full blur-3xl animate-pulse" style={{ backgroundColor: 'rgba(255, 222, 33, 0.05)', animationDelay: '2s' }}></div>
+          <div className="absolute bottom-1/4 left-1/3 w-80 h-80 rounded-full blur-3xl animate-pulse" style={{ backgroundColor: 'rgba(255, 222, 33, 0.08)', animationDelay: '4s' }}></div>
         </div>
 
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-32">
@@ -24,7 +26,7 @@ export default function Home() {
             {/* Logo with enhanced animations */}
             <div className="mb-8 group">
               <div className="relative inline-block">
-                <div className="-mt-2 absolute inset-0 bg-yellow-500/20 rounded-full blur-xl scale-110 group-hover:scale-125 transition-transform duration-200"></div>
+                <div className="-mt-2 absolute inset-0 rounded-full blur-xl scale-110 group-hover:scale-125 transition-transform duration-200" style={{ backgroundColor: 'rgba(255, 222, 33, 0.2)' }}></div>
                 <Image
                   src={logo}
                   alt="GeniusLabs Logo"
@@ -42,7 +44,7 @@ export default function Home() {
                   Start your
                 </span>
                 <span className="block mt-3">
-                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 via-yellow-300 to-yellow-500 animate-pulse" style={{animationDelay: '0.5s'}}>
+                  <span className="text-transparent bg-clip-text animate-pulse" style={{ backgroundImage: 'linear-gradient(to right, #FFDE21, #FFDE21, #FFDE21)', WebkitBackgroundClip: 'text', animationDelay: '0.5s' }}>
                     coding journey
                   </span>
                 </span>
@@ -52,9 +54,9 @@ export default function Home() {
             {/* Enhanced description */}
             <p className="text-lg md:text-lg mb-8 max-w-4xl mx-auto text-gray-300 leading-relaxed font-light">
               The Hidden Genius Project trains and mentors black male youth in
-              <span className="text-yellow-400 font-medium"> technology creation</span>,
-              <span className="text-yellow-400 font-medium"> entrepreneurship</span>, and
-              <span className="text-yellow-400 font-medium"> Leadership</span> skills
+              <span className="font-medium" style={{ color: '#FFDE21' }}> technology creation</span>,
+              <span className="font-medium" style={{ color: '#FFDE21' }}> entrepreneurship</span>, and
+              <span className="font-medium" style={{ color: '#FFDE21' }}> Leadership</span> skills
               to transform their lives and communities
             </p>
 
@@ -62,7 +64,8 @@ export default function Home() {
             <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
               <Link
                 href="/modules"
-                className="bg-yellow-400 text-black px-10 py-5 rounded-lg font-bold text-lg border-2 border-yellow-400 hover:opacity-80 transition-all duration-200"
+                className="text-black px-10 py-5 rounded-lg font-bold text-lg border-2 hover:opacity-80 transition-all duration-200"
+                style={{ backgroundColor: '#FFDE21', borderColor: '#E5C71D' }}
               >
                 <span className="flex items-center gap-3">
                   Start Learning
@@ -74,7 +77,8 @@ export default function Home() {
 
               <Link
                 href="/signup"
-                className="bg-black text-yellow-400 px-10 py-5 rounded-lg font-bold text-lg border-2 border-yellow-400 hover:opacity-80 transition-all duration-200"
+                className="bg-black px-10 py-5 rounded-lg font-bold text-lg border-2 hover:opacity-80 transition-all duration-200"
+                style={{ color: '#FFDE21', borderColor: '#E5C71D' }}
               >
                 <span className="flex items-center gap-3">
                   Sign Up Free
@@ -90,7 +94,7 @@ export default function Home() {
 
         {/* Scroll indicator */}
         <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
-          <svg className="w-6 h-6 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" style={{ color: '#FFDE21' }}>
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
           </svg>
         </div>
@@ -99,9 +103,9 @@ export default function Home() {
       <section className="py-32 bg-gradient-to-b from-black to-[#0a0a0a] relative overflow-hidden">
         {/* Background decoration */}
         <div className="absolute inset-0 opacity-30">
-          <div className="absolute top-20 left-10 w-32 h-32 border border-yellow-500/20 rounded-full"></div>
-          <div className="absolute top-40 right-20 w-24 h-24 border border-yellow-500/10 rounded-full"></div>
-          <div className="absolute bottom-20 left-1/4 w-40 h-40 border border-yellow-500/15 rounded-full"></div>
+          <div className="absolute top-20 left-10 w-32 h-32 border rounded-full" style={{ borderColor: 'rgba(255, 222, 33, 0.2)' }}></div>
+          <div className="absolute top-40 right-20 w-24 h-24 border rounded-full" style={{ borderColor: 'rgba(255, 222, 33, 0.1)' }}></div>
+          <div className="absolute bottom-20 left-1/4 w-40 h-40 border rounded-full" style={{ borderColor: 'rgba(255, 222, 33, 0.15)' }}></div>
         </div>
 
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -109,7 +113,7 @@ export default function Home() {
             <h2 className="text-5xl md:text-6xl font-black mb-6 bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
               Why Choose
             </h2>
-            <h2 className="text-5xl md:text-6xl font-black mb-8 bg-gradient-to-r from-yellow-400 to-yellow-500 bg-clip-text text-transparent">
+            <h2 className="text-5xl md:text-6xl font-black mb-8 bg-clip-text text-transparent" style={{ backgroundImage: 'linear-gradient(to right, #FFDE21, #FFDE21)' }}>
               GeniusLabs?
             </h2>
             <p className="text-xl text-gray-400 max-w-2xl mx-auto">
@@ -120,17 +124,17 @@ export default function Home() {
           <div className="grid md:grid-cols-3 gap-8 lg:gap-12">
             {/* Interactive Learning Card */}
             <div className="group relative">
-              <div className="absolute inset-0 bg-gradient-to-br from-yellow-500/20 to-yellow-600/5 rounded-lg blur-xl group-hover:blur-2xl transition-all duration-200"></div>
-              <div className="relative bg-gradient-to-br from-[#1a1a1a] to-[#0d0d0d] border border-[#2a2a2a] p-10 rounded-lg transition-all duration-200 group-hover:border-yellow-500/40 backdrop-blur-sm">
+              <div className="absolute inset-0 rounded-lg blur-xl group-hover:blur-2xl transition-all duration-200" style={{ backgroundImage: 'linear-gradient(to bottom right, rgba(255, 222, 33, 0.2), rgba(255, 222, 33, 0.05))' }}></div>
+              <div className="relative bg-gradient-to-br from-[#1a1a1a] to-[#0d0d0d] border border-[#2a2a2a] p-10 rounded-lg transition-all duration-200 backdrop-blur-sm" style={{ borderColor: 'rgba(255, 222, 33, 0.4)' }} onMouseEnter={(e) => e.currentTarget.style.borderColor = 'rgba(255, 222, 33, 0.4)'} onMouseLeave={(e) => e.currentTarget.style.borderColor = 'rgba(42, 42, 42, 1)'}>
                 <div className="relative">
                   <div className=""></div>
-                  <div className="relative bg-yellow-400 w-24 h-24 rounded-lg flex items-center justify-center mx-auto mb-8 group-hover:scale-110 transition-transform duration-200">
+                  <div className="relative w-24 h-24 rounded-lg flex items-center justify-center mx-auto mb-8 group-hover:scale-110 transition-transform duration-200" style={{ backgroundColor: '#FFDE21' }}>
                     <svg className="w-12 h-12 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                     </svg>
                   </div>
                 </div>
-                <h3 className="text-2xl font-bold mb-6 text-white text-center group-hover:text-yellow-400 transition-colors duration-200">
+                <h3 className="text-2xl font-bold mb-6 text-white text-center transition-colors duration-200" style={{ color: 'white' }} onMouseEnter={(e) => e.currentTarget.style.color = '#FFDE21'} onMouseLeave={(e) => e.currentTarget.style.color = 'white'}>
                   Interactive Learning
                 </h3>
                 <p className="text-gray-400 leading-relaxed text-center group-hover:text-gray-300 transition-colors duration-200">
@@ -141,17 +145,17 @@ export default function Home() {
 
             {/* Structured Curriculum Card */}
             <div className="group relative">
-              <div className="absolute inset-0 bg-gradient-to-br from-yellow-500/20 to-yellow-600/5 rounded-lg blur-xl group-hover:blur-2xl transition-all duration-200"></div>
-              <div className="relative bg-gradient-to-br from-[#1a1a1a] to-[#0d0d0d] border border-[#2a2a2a] p-10 rounded-lg transition-all duration-200 group-hover:border-yellow-500/40 backdrop-blur-sm">
+              <div className="absolute inset-0 rounded-lg blur-xl group-hover:blur-2xl transition-all duration-200" style={{ backgroundImage: 'linear-gradient(to bottom right, rgba(255, 222, 33, 0.2), rgba(255, 222, 33, 0.05))' }}></div>
+              <div className="relative bg-gradient-to-br from-[#1a1a1a] to-[#0d0d0d] border border-[#2a2a2a] p-10 rounded-lg transition-all duration-200 backdrop-blur-sm">
                 <div className="relative">
                   <div className=""></div>
-                  <div className="relative bg-yellow-400 w-24 h-24 rounded-lg flex items-center justify-center mx-auto mb-8 group-hover:scale-110 transition-transform duration-200">
+                  <div className="relative w-24 h-24 rounded-lg flex items-center justify-center mx-auto mb-8 group-hover:scale-110 transition-transform duration-200" style={{ backgroundColor: '#FFDE21' }}>
                     <svg className="w-12 h-12 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
                   </div>
                 </div>
-                <h3 className="text-2xl font-bold mb-6 text-white text-center group-hover:text-yellow-400 transition-colors duration-200">
+                <h3 className="text-2xl font-bold mb-6 text-white text-center transition-colors duration-200">
                   Structured Curriculum
                 </h3>
                 <p className="text-gray-400 leading-relaxed text-center group-hover:text-gray-300 transition-colors duration-200">
@@ -162,17 +166,17 @@ export default function Home() {
 
             {/* Track Progress Card */}
             <div className="group relative">
-              <div className="absolute inset-0 bg-gradient-to-br from-yellow-500/20 to-yellow-600/5 rounded-lg blur-xl group-hover:blur-2xl transition-all duration-200"></div>
-              <div className="relative bg-gradient-to-br from-[#1a1a1a] to-[#0d0d0d] border border-[#2a2a2a] p-10 rounded-lg transition-all duration-200 group-hover:border-yellow-500/40 backdrop-blur-sm">
+              <div className="absolute inset-0 rounded-lg blur-xl group-hover:blur-2xl transition-all duration-200" style={{ backgroundImage: 'linear-gradient(to bottom right, rgba(255, 222, 33, 0.2), rgba(255, 222, 33, 0.05))' }}></div>
+              <div className="relative bg-gradient-to-br from-[#1a1a1a] to-[#0d0d0d] border border-[#2a2a2a] p-10 rounded-lg transition-all duration-200 backdrop-blur-sm">
                 <div className="relative">
                   <div className=""></div>
-                  <div className="relative bg-yellow-400 w-24 h-24 rounded-lg flex items-center justify-center mx-auto mb-8 group-hover:scale-110 transition-transform duration-200">
+                  <div className="relative w-24 h-24 rounded-lg flex items-center justify-center mx-auto mb-8 group-hover:scale-110 transition-transform duration-200" style={{ backgroundColor: '#FFDE21' }}>
                     <svg className="w-12 h-12 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
                     </svg>
                   </div>
                 </div>
-                <h3 className="text-2xl font-bold mb-6 text-white text-center group-hover:text-yellow-400 transition-colors duration-200">
+                <h3 className="text-2xl font-bold mb-6 text-white text-center transition-colors duration-200">
                   Track Progress
                 </h3>
                 <p className="text-gray-400 leading-relaxed text-center group-hover:text-gray-300 transition-colors duration-200">
@@ -188,9 +192,9 @@ export default function Home() {
         {/* Animated background elements */}
         <div className="absolute inset-0 opacity-20">
           <div className="absolute top-0 left-0 w-full h-full">
-            <div className="absolute top-1/4 left-1/4 w-2 h-2 bg-yellow-400 rounded-full animate-ping"></div>
-            <div className="absolute top-1/2 right-1/3 w-1 h-1 bg-yellow-500 rounded-full animate-ping" style={{animationDelay: '1s'}}></div>
-            <div className="absolute bottom-1/3 left-1/2 w-1.5 h-1.5 bg-yellow-300 rounded-full animate-ping" style={{animationDelay: '2s'}}></div>
+            <div className="absolute top-1/4 left-1/4 w-2 h-2 rounded-full animate-ping" style={{ backgroundColor: '#FFDE21' }}></div>
+            <div className="absolute top-1/2 right-1/3 w-1 h-1 rounded-full animate-ping" style={{ backgroundColor: '#FFDE21', animationDelay: '1s' }}></div>
+            <div className="absolute bottom-1/3 left-1/2 w-1.5 h-1.5 rounded-full animate-ping" style={{ backgroundColor: '#FFDE21', animationDelay: '2s' }}></div>
           </div>
         </div>
 
@@ -199,7 +203,7 @@ export default function Home() {
             <h2 className="text-5xl md:text-6xl font-black mb-6 bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
               Master Popular
             </h2>
-            <h2 className="text-5xl md:text-6xl font-black mb-8 bg-gradient-to-r from-yellow-400 to-yellow-500 bg-clip-text text-transparent">
+            <h2 className="text-5xl md:text-6xl font-black mb-8 bg-clip-text text-transparent" style={{ backgroundImage: 'linear-gradient(to right, #FFDE21, #FFDE21)' }}>
               Programming Languages
             </h2>
             <p className="text-xl text-gray-400 max-w-3xl mx-auto">
@@ -209,7 +213,7 @@ export default function Home() {
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
             {[
-              { name: 'JavaScript', logo: jsLogo, available: true, description: 'Build dynamic web applications', color: 'from-yellow-500 to-yellow-600' },
+              { name: 'JavaScript', logo: jsLogo, available: true, description: 'Build dynamic web applications', color: 'from-green-500 to-green-600' },
               { name: 'Python', logo: pythonLogo, available: true, description: 'AI, data science & web development', color: 'from-blue-500 to-blue-600' },
               { name: 'C++', logo: cppLogo, available: false, description: 'Learn system programming & dev', color: 'from-purple-500 to-purple-600' },
             ].map((language, index) => (
@@ -217,7 +221,7 @@ export default function Home() {
                 {/* Glowing background */}
                 <div className={`absolute inset-0 bg-gradient-to-br ${language.color} opacity-0 group-hover:opacity-20 rounded-3xl blur-xl transition-all duration-500`}></div>
 
-                <div className="relative bg-gradient-to-br from-[#1a1a1a] to-[#0d0d0d] border border-[#2a2a2a] group-hover:border-yellow-500/50 p-8 rounded-lg transition-all duration-200 backdrop-blur-sm">
+                <div className="relative bg-gradient-to-br from-[#1a1a1a] to-[#0d0d0d] border border-[#2a2a2a] p-8 rounded-lg transition-all duration-200 backdrop-blur-sm" style={{ borderColor: 'rgba(42, 42, 42, 1)' }} onMouseEnter={(e) => e.currentTarget.style.borderColor = 'rgba(255, 222, 33, 0.5)'} onMouseLeave={(e) => e.currentTarget.style.borderColor = 'rgba(42, 42, 42, 1)'}>
                   {/* Logo container */}
                   <div className="relative mb-8">
                     <div className="flex items-center justify-center">
@@ -247,7 +251,7 @@ export default function Home() {
                     </div>
                   </div>
 
-                  <h3 className="text-2xl font-bold mb-4 text-white text-center group-hover:text-yellow-400 transition-colors duration-200">
+                  <h3 className="text-2xl font-bold mb-4 text-white text-center transition-colors duration-200">
                     {language.name}
                   </h3>
 
@@ -259,7 +263,8 @@ export default function Home() {
                     {language.available ? (
                       <Link
                         href="/modules"
-                        className="inline-flex items-center gap-2 bg-yellow-400 text-black px-6 py-3 rounded-lg font-semibold text-sm border-2 border-yellow-400 hover:opacity-80 transition-all duration-200"
+                        className="inline-flex items-center gap-2 text-black px-6 py-3 rounded-lg font-semibold text-sm border-2 hover:opacity-80 transition-all duration-200"
+                        style={{ backgroundColor: '#FFDE21', borderColor: '#E5C71D' }}
                       >
                         <span>Start Learning</span>
                         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -281,7 +286,7 @@ export default function Home() {
                   {/* Status indicator */}
                   <div className="absolute top-4 right-4">
                     {language.available ? (
-                      <div className="w-3 h-3 bg-yellow-400 rounded-full animate-pulse"></div>
+                      <div className="w-3 h-3 rounded-full animate-pulse" style={{ backgroundColor: '#FFDE21' }}></div>
                     ) : (
                       <div className="w-3 h-3 bg-gray-500 rounded-full"></div>
                     )}
@@ -298,7 +303,8 @@ export default function Home() {
             </p>
             <Link
               href="/modules"
-              className="inline-flex items-center gap-3 bg-yellow-400 text-black px-10 py-4 rounded-lg font-bold text-lg border-2 border-yellow-400 hover:opacity-80 transition-all duration-200"
+              className="inline-flex items-center gap-3 text-black px-10 py-4 rounded-lg font-bold text-lg border-2 hover:opacity-80 transition-all duration-200"
+              style={{ backgroundColor: '#FFDE21', borderColor: '#E5C71D' }}
             >
               <span>Explore All Courses</span>
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

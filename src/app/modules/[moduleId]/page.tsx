@@ -244,7 +244,7 @@ export default function ModuleDetailPage({ params }: { params: Promise<{ moduleI
               <div className="flex items-start justify-between gap-4">
                 <div className="flex-1">
                   <h2 className="text-xl font-bold text-white">
-                    <span onClick={() => setSelectedLesson(null)} className="text-yellow-400 hover:text-yellow-300 transition-colors cursor-pointer">
+                    <span onClick={() => setSelectedLesson(null)} className="hover:opacity-80 transition-opacity cursor-pointer" style={{ color: '#FFDE21' }}>
                       {module.title}
                     </span>
                     <span className="text-gray-600 mx-2">/</span>
@@ -265,22 +265,23 @@ export default function ModuleDetailPage({ params }: { params: Promise<{ moduleI
                         key={activityType}
                         onClick={() => isUnlocked && setActiveTab(activityType as any)}
                         disabled={!isUnlocked}
+                        style={isActive ? { backgroundColor: '#FFDE211A' } : undefined}
                         className={`flex items-center gap-2 px-3 py-1.5 rounded transition-colors ${
                           isActive
-                            ? 'bg-yellow-500/10 border border-yellow-500/30'
+                            ? 'border border-[#E5C71D]/30'
                             : isUnlocked
                             ? 'hover:bg-gray-800 border border-gray-700/20'
                             : 'opacity-50 cursor-not-allowed border border-gray-700/20'
                         }`}
                       >
-                        <svg className={`w-4 h-4 ${isActive ? 'text-yellow-400' : isUnlocked ? 'text-gray-400' : 'text-gray-600'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg className={`w-4 h-4 ${isActive ? '' : isUnlocked ? 'text-gray-400' : 'text-gray-600'}`} style={isActive ? { color: '#FFDE21' } : undefined} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           {getActivityIcon(activityType)}
                         </svg>
-                        <span className={`text-xs capitalize ${isActive ? 'text-yellow-400 font-medium' : isUnlocked ? 'text-gray-400' : 'text-gray-600'}`}>
+                        <span className={`text-xs capitalize ${isActive ? 'font-medium' : isUnlocked ? 'text-gray-400' : 'text-gray-600'}`} style={isActive ? { color: '#FFDE21' } : undefined}>
                           {activityType}
                         </span>
                         {isCompleted && (
-                          <svg className="w-3 h-3 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                          <svg className="w-3 h-3" style={{ color: '#FFDE21' }} fill="currentColor" viewBox="0 0 20 20">
                             <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                           </svg>
                         )}
@@ -308,7 +309,8 @@ export default function ModuleDetailPage({ params }: { params: Promise<{ moduleI
                       <p className="text-gray-400 mb-6">Video content for this lesson will appear here</p>
                       <button
                         onClick={() => markActivityComplete('videos')}
-                        className="px-6 py-3 bg-yellow-400 hover:opacity-80 text-black font-bold rounded-lg border-2 border-yellow-400 transition-all duration-200"
+                        className="px-6 py-3 hover:opacity-80 text-black font-bold rounded-lg border-2 transition-all duration-200"
+                        style={{ backgroundColor: '#FFDE21', borderColor: '#E5C71D' }}
                       >
                         Continue to Next Section →
                       </button>
@@ -340,7 +342,8 @@ export default function ModuleDetailPage({ params }: { params: Promise<{ moduleI
                         <div className="mt-8 pt-6 border-t border-gray-700">
                           <button
                             onClick={() => markActivityComplete('docs')}
-                            className="w-full px-6 py-3 bg-yellow-400 hover:opacity-80 text-black font-bold rounded-lg border-2 border-yellow-400 transition-all duration-200"
+                            className="w-full px-6 py-3 hover:opacity-80 text-black font-bold rounded-lg border-2 transition-all duration-200"
+                            style={{ backgroundColor: '#FFDE21', borderColor: '#E5C71D' }}
                           >
                             Continue to Coding Section →
                           </button>
@@ -395,10 +398,11 @@ export default function ModuleDetailPage({ params }: { params: Promise<{ moduleI
                       <button
                         onClick={() => markActivityComplete('code')}
                         disabled={!validationResult?.isValid}
-                        className={`w-full px-4 py-3 font-bold rounded-lg transition-all duration-200 ${
+                        style={validationResult?.isValid ? { backgroundColor: '#FFDE21', borderColor: '#E5C71D' } : undefined}
+                        className={`w-full px-4 py-3 font-bold rounded-lg transition-all duration-200 border-2 ${
                           validationResult?.isValid
-                            ? 'bg-yellow-400 hover:opacity-80 text-black border-2 border-yellow-400'
-                            : 'bg-gray-700 text-gray-500 cursor-not-allowed border-2 border-gray-700'
+                            ? 'hover:opacity-80 text-black'
+                            : 'bg-gray-700 text-gray-500 cursor-not-allowed border-gray-700'
                         }`}
                       >
                         {validationResult?.isValid ? 'Complete Section →' : 'Complete the task to continue'}
@@ -450,7 +454,8 @@ export default function ModuleDetailPage({ params }: { params: Promise<{ moduleI
                           <p className="text-gray-400 mb-6">Quiz questions for this lesson will appear here</p>
                           <button
                             onClick={() => markActivityComplete('quiz')}
-                            className="px-6 py-3 bg-yellow-400 hover:opacity-80 text-black font-bold rounded-lg border-2 border-yellow-400 transition-all duration-200"
+                            className="px-6 py-3 hover:opacity-80 text-black font-bold rounded-lg border-2 transition-all duration-200"
+                            style={{ backgroundColor: '#FFDE21', borderColor: '#E5C71D' }}
                           >
                             Complete Lesson →
                           </button>
@@ -494,12 +499,12 @@ export default function ModuleDetailPage({ params }: { params: Promise<{ moduleI
                     <div>
                       <h3 className="text-lg font-semibold text-white">Your Progress</h3>
                       {isAuthenticated && user?.email ? (
-                        <p className="text-xs text-yellow-400 mt-1">✓ Logged in as {user.email}</p>
+                        <p className="text-xs mt-1" style={{ color: '#FFDE21' }}>✓ Logged in as {user.email}</p>
                       ) : (
-                        <p className="text-xs text-yellow-400 mt-1">⚠ Not logged in - progress won't be saved</p>
+                        <p className="text-xs mt-1" style={{ color: '#FFDE21' }}>⚠ Not logged in - progress won't be saved</p>
                       )}
                     </div>
-                    <span className="text-yellow-400 font-bold">
+                    <span className="font-bold" style={{ color: '#FFDE21' }}>
                       {dbProgress && dbProgress.lessonsCompleted
                         ? Math.round((dbProgress.lessonsCompleted.length / module.lessons.length) * 100)
                         : moduleProgress?.percentage || 0}%
@@ -507,8 +512,9 @@ export default function ModuleDetailPage({ params }: { params: Promise<{ moduleI
                   </div>
                   <div className="w-full bg-gray-800 rounded-full h-3 mb-2">
                     <div
-                      className="h-3 bg-yellow-400 rounded-full transition-all duration-500"
+                      className="h-3 rounded-full transition-all duration-500"
                       style={{
+                        backgroundColor: '#FFDE21',
                         width: `${dbProgress && dbProgress.lessonsCompleted
                           ? Math.round((dbProgress.lessonsCompleted.length / module.lessons.length) * 100)
                           : moduleProgress?.percentage || 0}%`
@@ -540,13 +546,13 @@ export default function ModuleDetailPage({ params }: { params: Promise<{ moduleI
                           {/* Status indicator */}
                           <div className="mt-1 flex-shrink-0">
                             {isCompleted ? (
-                              <div className="w-8 h-8 rounded-full bg-yellow-400 flex items-center justify-center">
+                              <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ backgroundColor: '#FFDE21' }}>
                                 <svg className="w-5 h-5 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
                                 </svg>
                               </div>
                             ) : isInProgress ? (
-                              <div className="w-8 h-8 rounded-full border-4 border-yellow-400 border-t-transparent animate-spin" />
+                              <div className="w-8 h-8 rounded-full border-4 border-t-transparent animate-spin" style={{ borderColor: '#FFDE21', borderTopColor: 'transparent' }} />
                             ) : (
                               <div className="w-8 h-8 rounded-full border-2 border-gray-600 flex items-center justify-center">
                                 <span className="text-sm text-gray-500 font-medium">{index + 1}</span>
@@ -556,7 +562,7 @@ export default function ModuleDetailPage({ params }: { params: Promise<{ moduleI
 
                           {/* Lesson info */}
                           <div className="flex-1 min-w-0">
-                            <h4 className={`text-lg font-semibold mb-1 ${module.language === 'python' ? 'text-yellow-400' : 'text-white'}`}>{lesson.title}</h4>
+                            <h4 className="text-lg font-semibold mb-1" style={module.language === 'python' ? { color: '#FFDE21' } : { color: 'white' }}>{lesson.title}</h4>
                             <p className="text-sm text-gray-400 mb-2">{lesson.description}</p>
                             <div className="flex items-center gap-3 text-xs text-gray-500">
                               <span className="flex items-center gap-1">

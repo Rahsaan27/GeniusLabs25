@@ -79,7 +79,7 @@ export default function ModulesPage() {
 
   const getBadges = (progress: { percentage: number }, difficulty: string) => {
     const badges = [];
-    if (progress.percentage === 100) badges.push({ icon: '🏆', label: 'Completed', color: 'text-yellow-400' });
+    if (progress.percentage === 100) badges.push({ icon: '🏆', label: 'Completed', color: '#FFDE21' });
     if (progress.percentage >= 50 && progress.percentage < 100) badges.push({ icon: '🔥', label: 'In Progress', color: 'text-orange-400' });
     if (difficulty === 'advanced') badges.push({ icon: '⭐', label: 'Advanced', color: 'text-purple-400' });
     return badges;
@@ -89,7 +89,7 @@ export default function ModulesPage() {
     <div className="bg-black min-h-screen">
       <div className="bg-gradient-to-r from-black to-gray-900 text-white py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h1 className="text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 via-yellow-300 to-yellow-500">
+          <h1 className="text-5xl font-bold text-transparent bg-clip-text" style={{ backgroundImage: 'linear-gradient(to right, #FFDE21, #FFDE21, #FFDE21)' }}>
             Learning Modules
           </h1>
           <p className="text-xl text-gray-400 mt-4">
@@ -106,7 +106,7 @@ export default function ModulesPage() {
             const logo = getLanguageLogo(currentModule.language);
 
             const cardContent = (
-                <div className={`relative bg-gradient-to-br ${getModuleColor(currentModule.category)} border rounded-lg p-6 transition-all duration-200 ${currentModule.comingSoon ? 'opacity-60' : 'hover:border-yellow-500/40'} min-h-[280px] flex flex-col`}>
+                <div className={`relative bg-gradient-to-br ${getModuleColor(currentModule.category)} border rounded-lg p-6 transition-all duration-200 ${currentModule.comingSoon ? 'opacity-60' : ''} min-h-[280px] flex flex-col`}>
                   {/* Logo */}
                   <div className="absolute top-6 right-6">
                     {logo && (
@@ -121,13 +121,13 @@ export default function ModulesPage() {
                   </div>
 
                   {/* Module Title */}
-                  <h2 className="text-2xl font-bold text-white mb-3 pr-16 group-hover:text-yellow-400 transition-colors">
+                  <h2 className="text-2xl font-bold text-white mb-3 pr-16 transition-colors">
                     {currentModule.title}
                   </h2>
 
                   {/* Coming Soon Badge */}
                   {currentModule.comingSoon && (
-                    <div className="bg-yellow-500/20 border border-yellow-400/40 text-yellow-400 px-3 py-1 rounded-full text-xs font-bold w-fit mb-3">
+                    <div className="border px-3 py-1 rounded-full text-xs font-bold w-fit mb-3" style={{ backgroundColor: 'rgba(255, 222, 33, 0.2)', borderColor: 'rgba(255, 222, 33, 0.4)', color: '#FFDE21' }}>
                       🚧 COMING SOON
                     </div>
                   )}
@@ -136,7 +136,7 @@ export default function ModulesPage() {
                   {badges.length > 0 && (
                     <div className="flex gap-2 mb-4">
                       {badges.map((badge, idx) => (
-                        <span key={idx} className={`text-xl ${badge.color}`} title={badge.label}>
+                        <span key={idx} className={`text-xl ${typeof badge.color === 'string' && badge.color.startsWith('text-') ? badge.color : ''}`} style={typeof badge.color === 'string' && badge.color.startsWith('#') ? { color: badge.color } : {}} title={badge.label}>
                           {badge.icon}
                         </span>
                       ))}
@@ -166,12 +166,12 @@ export default function ModulesPage() {
                               cx="40"
                               cy="40"
                               r="32"
-                              stroke="currentColor"
+                              stroke="#FFDE21"
                               strokeWidth="6"
                               fill="none"
                               strokeDasharray={`${2 * Math.PI * 32}`}
                               strokeDashoffset={`${2 * Math.PI * 32 * (1 - progress.percentage / 100)}`}
-                              className="text-yellow-400 transition-all duration-500"
+                              className="transition-all duration-500"
                               strokeLinecap="round"
                             />
                           </svg>

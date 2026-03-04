@@ -111,7 +111,10 @@ export default function QuizComponent({ quiz, onComplete }: QuizComponentProps) 
               {!passed && (
                 <button
                   onClick={handleRetry}
-                  className="flex-1 px-4 py-2.5 bg-yellow-600 hover:bg-yellow-700 text-white text-sm font-bold rounded-lg transition-colors"
+                  className="flex-1 px-4 py-2.5 text-black text-sm font-bold rounded-lg transition-all"
+                  style={{ backgroundColor: '#FFDE21' }}
+                  onMouseEnter={(e) => e.currentTarget.style.opacity = '0.8'}
+                  onMouseLeave={(e) => e.currentTarget.style.opacity = '1'}
                 >
                   Try Again
                 </button>

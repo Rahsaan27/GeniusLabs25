@@ -108,7 +108,7 @@ export default function ActivityPage() {
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'completed': return 'text-green-600 bg-green-50';
-      case 'in_progress': return 'text-yellow-600 bg-yellow-50';
+      case 'in_progress': return '';  // Will use inline styles
       default: return 'text-gray-600 bg-gray-50';
     }
   };
@@ -142,7 +142,7 @@ export default function ActivityPage() {
             </div>
             <div className="bg-white/10 backdrop-blur-sm rounded-full h-24 w-24 flex justify-center items-center p-15">
               <div className="text-center">
-                <div className="text-3xl font-bold text-yellow-400">{totalScore}</div>
+                <div className="text-3xl font-bold" style={{ color: '#FFDE21' }}>{totalScore}</div>
                 <div className="text-sm opacity-80">Score</div>
               </div>
             </div>

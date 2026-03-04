@@ -424,17 +424,17 @@ export default function ProfilePage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between">
             <div className="flex items-center space-x-4">
-              <div className="w-20 h-20 bg-yellow-400 rounded-full flex items-center justify-center text-black text-2xl font-bold">
+              <div className="w-20 h-20 rounded-full flex items-center justify-center text-black text-2xl font-bold" style={{ backgroundColor: '#FFDE21' }}>
                 {user.name ? user.name.charAt(0).toUpperCase() : user.email.charAt(0).toUpperCase()}
               </div>
               <div>
                 <h1 className="text-3xl font-bold">{user.name || 'Anonymous User'}</h1>
                 <p className="text-gray-300">{user.email}</p>
                 <div className="flex items-center space-x-4 mt-2">
-                  <span className="text-sm bg-yellow-400/20 text-yellow-400 px-3 py-1 rounded-full">
+                  <span className="text-sm px-3 py-1 rounded-full" style={{ backgroundColor: 'rgba(255, 222, 33, 0.2)', color: '#FFDE21' }}>
                     🔥 {userStats.currentStreak} day streak
                   </span>
-                  <span className="text-sm bg-yellow-400/20 text-yellow-400 px-3 py-1 rounded-full">
+                  <span className="text-sm px-3 py-1 rounded-full" style={{ backgroundColor: 'rgba(255, 222, 33, 0.2)', color: '#FFDE21' }}>
                     Level {Math.floor(userStats.totalLessonsCompleted / 10) + 1}
                   </span>
                 </div>
@@ -443,7 +443,8 @@ export default function ProfilePage() {
             <div className="mt-4 md:mt-0 space-x-2">
               <button
                 onClick={() => setIsEditing(!isEditing)}
-                className="bg-black text-yellow-400 px-4 mb-3 py-2 rounded-lg border-2 border-yellow-400 hover:opacity-80 transition-all duration-200 flex items-center space-x-2"
+                className="bg-black px-4 mb-3 py-2 rounded-lg border-2 hover:opacity-80 transition-all duration-200 flex items-center space-x-2"
+                style={{ color: '#FFDE21', borderColor: '#E5C71D' }}
               >
                 <Edit2 size={16} />
                 <span>Edit Profile</span>
@@ -476,9 +477,10 @@ export default function ProfilePage() {
                 onClick={() => setActiveTab(tab.id)}
                 className={`flex-1 flex items-center justify-center space-x-2 py-3 px-4 rounded-lg transition-all duration-200 ${
                   activeTab === tab.id
-                    ? 'bg-yellow-400 text-black font-bold'
+                    ? 'text-black font-bold'
                     : 'text-gray-400 hover:text-white hover:bg-gray-800'
                 }`}
+                style={activeTab === tab.id ? { backgroundColor: '#FFDE21' } : {}}
               >
                 <Icon size={18} />
                 <span>{tab.label}</span>
@@ -499,8 +501,8 @@ export default function ProfilePage() {
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
             <div className="bg-[#0a0a0a] rounded-lg p-6 border border-[#2a2a2a]">
               <div className="flex items-center space-x-3 mb-4">
-                <div className="w-10 h-10 bg-yellow-400/20 rounded-lg flex items-center justify-center">
-                  <BookOpen className="text-yellow-400" size={20} />
+                <div className="w-10 h-10 rounded-lg flex items-center justify-center" style={{ backgroundColor: 'rgba(255, 222, 33, 0.2)' }}>
+                  <BookOpen style={{ color: '#FFDE21' }} size={20} />
                 </div>
                 <div>
                   <p className="text-gray-400 text-sm">Lessons Completed</p>
@@ -511,8 +513,8 @@ export default function ProfilePage() {
 
             <div className="bg-[#0a0a0a] rounded-lg p-6 border border-[#2a2a2a]">
               <div className="flex items-center space-x-3 mb-4">
-                <div className="w-10 h-10 bg-yellow-400/20 rounded-lg flex items-center justify-center">
-                  <Trophy className="text-yellow-400" size={20} />
+                <div className="w-10 h-10 rounded-lg flex items-center justify-center" style={{ backgroundColor: 'rgba(255, 222, 33, 0.2)' }}>
+                  <Trophy style={{ color: '#FFDE21' }} size={20} />
                 </div>
                 <div>
                   <p className="text-gray-400 text-sm">Modules Completed</p>
@@ -523,8 +525,8 @@ export default function ProfilePage() {
 
             <div className="bg-[#0a0a0a] rounded-lg p-6 border border-[#2a2a2a]">
               <div className="flex items-center space-x-3 mb-4">
-                <div className="w-10 h-10 bg-yellow-400/20 rounded-lg flex items-center justify-center">
-                  <Clock className="text-yellow-400" size={20} />
+                <div className="w-10 h-10 rounded-lg flex items-center justify-center" style={{ backgroundColor: 'rgba(255, 222, 33, 0.2)' }}>
+                  <Clock style={{ color: '#FFDE21' }} size={20} />
                 </div>
                 <div>
                   <p className="text-gray-400 text-sm">Time Spent</p>
@@ -535,8 +537,8 @@ export default function ProfilePage() {
 
             <div className="bg-gray-900 rounded-2xl p-6 border border-gray-700">
               <div className="flex items-center space-x-3 mb-4">
-                <div className="w-10 h-10 bg-yellow-400/20 rounded-lg flex items-center justify-center">
-                  <Award className="text-yellow-400" size={20} />
+                <div className="w-10 h-10 rounded-lg flex items-center justify-center" style={{ backgroundColor: 'rgba(255, 222, 33, 0.2)' }}>
+                  <Award style={{ color: '#FFDE21' }} size={20} />
                 </div>
                 <div>
                   <p className="text-gray-400 text-sm">Total Score</p>
@@ -558,16 +560,17 @@ export default function ProfilePage() {
                   key={achievement.id}
                   className={`bg-[#0a0a0a] rounded-lg p-6 border transition-all duration-200 ${
                     achievement.unlocked
-                      ? 'border-yellow-400/40 bg-yellow-400/5'
+                      ? 'opacity-100'
                       : 'border-[#2a2a2a] opacity-60'
                   }`}
+                  style={achievement.unlocked ? { borderColor: 'rgba(255, 222, 33, 0.4)', backgroundColor: 'rgba(255, 222, 33, 0.05)' } : {}}
                 >
                   <div className="text-center">
                     <div className="text-4xl mb-3">{achievement.icon}</div>
                     <h3 className="text-lg font-bold text-white mb-2">{achievement.name}</h3>
                     <p className="text-gray-400 text-sm mb-3">{achievement.description}</p>
                     {achievement.unlocked ? (
-                      <span className="bg-yellow-400 text-black px-3 py-1 rounded-full text-xs font-bold">
+                      <span className="text-black px-3 py-1 rounded-full text-xs font-bold" style={{ backgroundColor: '#FFDE21' }}>
                         Unlocked!
                       </span>
                     ) : (
@@ -602,14 +605,14 @@ export default function ProfilePage() {
                         <p className="text-gray-400 text-sm">{currentModule.description}</p>
                       </div>
                       <div className="text-right">
-                        <span className="text-2xl font-bold text-yellow-400">{progress.percentage}%</span>
+                        <span className="text-2xl font-bold" style={{ color: '#FFDE21' }}>{progress.percentage}%</span>
                         <p className="text-gray-400 text-sm">{progress.completed}/{progress.total} lessons</p>
                       </div>
                     </div>
                     <div className="w-full bg-gray-700 rounded-full h-2">
                       <div
-                        className="h-2 rounded-full bg-yellow-400 transition-all duration-500"
-                        style={{ width: `${progress.percentage}%` }}
+                        className="h-2 rounded-full transition-all duration-500"
+                        style={{ width: `${progress.percentage}%`, backgroundColor: '#FFDE21' }}
                       ></div>
                     </div>
                   </div>
@@ -635,7 +638,10 @@ export default function ProfilePage() {
                     value={displayName}
                     onChange={(e) => setDisplayName(e.target.value)}
                     disabled={!isEditing}
-                    className="w-full p-3 bg-gray-800 border border-gray-600 rounded-lg text-white disabled:opacity-50 focus:border-yellow-400 focus:outline-none transition-colors"
+                    className="w-full p-3 bg-gray-800 border border-gray-600 rounded-lg text-white disabled:opacity-50 focus:outline-none transition-colors"
+                    style={{ borderColor: '#666' }}
+                    onFocus={(e) => e.currentTarget.style.borderColor = '#E5C71D'}
+                    onBlur={(e) => e.currentTarget.style.borderColor = '#666'}
                     placeholder="Enter your display name"
                   />
                 </div>
@@ -660,7 +666,8 @@ export default function ProfilePage() {
                   {!isEditing ? (
                     <button
                       onClick={() => setIsEditing(true)}
-                      className='border-2 border-yellow-400 rounded-lg px-4 py-2 text-yellow-400 hover:opacity-80 transition-all duration-200 font-bold'
+                      className='border-2 rounded-lg px-4 py-2 hover:opacity-80 transition-all duration-200 font-bold'
+                      style={{ borderColor: '#E5C71D', color: '#FFDE21' }}
                     >
                       Edit Profile
                     </button>
@@ -669,7 +676,8 @@ export default function ProfilePage() {
                       <button
                         onClick={handleSaveProfile}
                         disabled={savingProfile}
-                        className='bg-yellow-400 rounded-lg px-4 py-2 text-black hover:opacity-80 transition-all duration-200 font-bold border-2 border-yellow-400 disabled:opacity-50 disabled:cursor-not-allowed'
+                        className='rounded-lg px-4 py-2 text-black hover:opacity-80 transition-all duration-200 font-bold border-2 disabled:opacity-50 disabled:cursor-not-allowed'
+                        style={{ backgroundColor: '#FFDE21', borderColor: '#E5C71D' }}
                       >
                         {savingProfile ? 'Saving...' : 'Save Changes'}
                       </button>
@@ -699,7 +707,8 @@ export default function ProfilePage() {
                   </div>
                   <button
                     onClick={() => setEmailNotifications(!emailNotifications)}
-                    className={`w-12 h-6 rounded-full relative transition-colors ${emailNotifications ? 'bg-yellow-400' : 'bg-gray-600'}`}
+                    className="w-12 h-6 rounded-full relative transition-colors"
+                    style={{ backgroundColor: emailNotifications ? '#FFDE21' : '#4b5563' }}
                   >
                     <div className={`w-4 h-4 bg-white rounded-full absolute top-1 transition-all duration-200 ${emailNotifications ? 'right-1' : 'left-1'}`}></div>
                   </button>
@@ -711,7 +720,8 @@ export default function ProfilePage() {
                   </div>
                   <button
                     onClick={() => setDailyReminders(!dailyReminders)}
-                    className={`w-12 h-6 rounded-full relative transition-colors ${dailyReminders ? 'bg-yellow-400' : 'bg-gray-600'}`}
+                    className="w-12 h-6 rounded-full relative transition-colors"
+                    style={{ backgroundColor: dailyReminders ? '#FFDE21' : '#4b5563' }}
                   >
                     <div className={`w-4 h-4 bg-white rounded-full absolute top-1 transition-all duration-200 ${dailyReminders ? 'right-1' : 'left-1'}`}></div>
                   </button>
@@ -720,7 +730,8 @@ export default function ProfilePage() {
                   <button
                     onClick={handleSaveProfile}
                     disabled={savingProfile}
-                    className='bg-yellow-400 rounded-lg px-4 py-2 text-black hover:opacity-80 transition-all duration-200 font-bold text-sm border-2 border-yellow-400 disabled:opacity-50'
+                    className='rounded-lg px-4 py-2 text-black hover:opacity-80 transition-all duration-200 font-bold text-sm border-2 disabled:opacity-50'
+                    style={{ backgroundColor: '#FFDE21', borderColor: '#E5C71D' }}
                   >
                     Save Preferences
                   </button>

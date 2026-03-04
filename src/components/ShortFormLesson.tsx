@@ -519,13 +519,13 @@ function CompletionSlide({
           </div>
           {lightOn && (
             <>
-              <div className="absolute inset-0 bg-yellow-400/20 rounded-full blur-3xl animate-pulse"></div>
-              <div className="absolute -inset-4 bg-yellow-300/10 rounded-full blur-2xl animate-pulse"></div>
+              <div className="absolute inset-0 rounded-full blur-3xl animate-pulse" style={{ backgroundColor: 'rgba(255, 222, 33, 0.2)' }}></div>
+              <div className="absolute -inset-4 rounded-full blur-2xl animate-pulse" style={{ backgroundColor: 'rgba(255, 222, 33, 0.1)' }}></div>
             </>
           )}
         </div>
 
-        <h1 className="text-4xl font-bold mb-4 bg-gradient-to-r from-green-400 via-yellow-300 to-green-500 bg-clip-text text-transparent animate-pulse">
+        <h1 className="text-4xl font-bold mb-4 bg-clip-text text-transparent animate-pulse" style={{ backgroundImage: 'linear-gradient(to right, #22c55e, #FFDE21, #22c55e)' }}>
           Lesson Complete!
         </h1>
 

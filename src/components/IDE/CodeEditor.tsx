@@ -139,7 +139,7 @@ function CodeEditor({ language, code, onChange }: CodeEditorProps) {
           value={code}
           onChange={handleChange}
           onKeyDown={handleKeyDown}
-          className="absolute inset-0 bg-transparent outline-none resize-none overflow-auto whitespace-pre-wrap break-words selection:bg-yellow-400/30"
+          className="absolute inset-0 bg-transparent outline-none resize-none overflow-auto whitespace-pre-wrap break-words"
           style={{
             padding: '16px',
             fontFamily: 'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace',
@@ -149,7 +149,7 @@ function CodeEditor({ language, code, onChange }: CodeEditorProps) {
             wordSpacing: 'normal',
             color: '#E8E8E8',
             WebkitTextFillColor: 'transparent',
-            caretColor: '#FFD700'
+            caretColor: '#FFDE21'
           }}
           spellCheck={false}
           autoComplete="off"

@@ -21,7 +21,7 @@ function OutputConsole({ output, isRunning, hasError, language, htmlContent }: O
           <div className="bg-[#0a0a0a] px-3 py-2 flex items-center gap-2 border-b border-[#2a2a2a]">
             <div className="flex gap-1.5">
               <div className="w-2.5 h-2.5 rounded-full bg-red-500" />
-              <div className="w-2.5 h-2.5 rounded-full bg-yellow-500" />
+              <div className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: '#FFDE21' }} />
               <div className="w-2.5 h-2.5 rounded-full bg-[#00ff41]" />
             </div>
             <div className="flex-1 mx-3 px-3 py-1 bg-black rounded text-xs text-gray-400 flex items-center gap-2">
@@ -51,8 +51,8 @@ function OutputConsole({ output, isRunning, hasError, language, htmlContent }: O
   return (
     <div className="flex-1 h-full bg-[#141414] overflow-auto p-4 font-mono text-sm">
       {isRunning ? (
-        <div className="flex items-center gap-2 text-yellow-400 text-sm font-medium">
-          <div className="w-3 h-3 border-2 border-yellow-400 border-t-transparent rounded-full animate-spin" />
+        <div className="flex items-center gap-2 text-sm font-medium" style={{ color: '#FFDE21' }}>
+          <div className="w-3 h-3 border-2 border-t-transparent rounded-full animate-spin" style={{ borderColor: '#FFDE21' }} />
           <span>Running...</span>
         </div>
       ) : output ? (
