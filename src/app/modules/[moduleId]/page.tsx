@@ -335,37 +335,15 @@ export default function ModuleDetailPage({ params }: { params: Promise<{ moduleI
                           </p>
                         </div>
                       )}
-                      <div className="mt-8 flex justify-center">
+                      <div className="mt-8">
                         <button
                           onClick={() => markActivityComplete('docs')}
-                          className="px-8 py-3 text-black font-bold rounded-lg transition-all duration-200"
-                          style={{
-                            backgroundColor: '#FFDE21',
-                            boxShadow: '0 6px 0 #E5C71D, 0 8px 12px rgba(0,0,0,0.3)',
-                            transform: 'perspective(300px) rotateX(5deg) translateY(0)'
-                          }}
-                          onMouseEnter={(e) => {
-                            e.currentTarget.style.backgroundColor = '#FFE84D';
-                          }}
-                          onMouseDown={(e) => {
-                            e.currentTarget.style.transform = 'perspective(300px) rotateX(5deg) translateY(4px)';
-                            e.currentTarget.style.boxShadow = '0 2px 0 #E5C71D, 0 4px 12px rgba(0,0,0,0.3)';
-                          }}
-                          onMouseUp={(e) => {
-                            e.currentTarget.style.transform = 'perspective(300px) rotateX(5deg) translateY(0)';
-                            e.currentTarget.style.boxShadow = '0 6px 0 #E5C71D, 0 8px 12px rgba(0,0,0,0.3)';
-                          }}
-                          onMouseLeave={(e) => {
-                            e.currentTarget.style.transform = 'perspective(300px) rotateX(5deg) translateY(0)';
-                            e.currentTarget.style.boxShadow = '0 6px 0 #E5C71D, 0 8px 12px rgba(0,0,0,0.3)';
-                            e.currentTarget.style.backgroundColor = '#FFDE21';
-                          }}
+                          className="w-full px-6 py-3 hover:opacity-80 text-black font-bold rounded-lg border-2 transition-all duration-200"
+                          style={{ backgroundColor: '#FFDE21', borderColor: '#E5C71D' }}
                         >
                           Continue to Coding Section →
                         </button>
-                        
                       </div>
-                      
                     </div>
                   </div>
                 )}
