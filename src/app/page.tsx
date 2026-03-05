@@ -41,8 +41,8 @@ export default function Home() {
                 <Image
                   src={logo}
                   alt="GeniusLabs Logo"
-                  width={500}
-                  height={500}
+                  width={400}
+                  height={400}
                   className="relative mx-auto drop-shadow-2xl transform group-hover:scale-105 transition-all duration-200 filter group-hover:brightness-110"
                 />
               </div>
