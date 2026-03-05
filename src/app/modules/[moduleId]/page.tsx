@@ -7,7 +7,7 @@ import { getModuleProgress, getUserProgress } from '@/utils/progress';
 import { InteractiveIDE } from '@/components/IDE';
 import { useAuth } from '@/hooks/useAuth';
 import { Module, Lesson } from '@/types/lesson';
-import { parseMarkdown } from '@/utils/markdownParser';
+import { parseEnhancedMarkdown, wrapInDocContainer } from '@/utils/enhancedMarkdownParser';
 import { validateCode } from '@/utils/codeValidator';
 import QuizComponent from '@/components/QuizComponent';
 
@@ -321,34 +321,51 @@ export default function ModuleDetailPage({ params }: { params: Promise<{ moduleI
                 {activeTab === 'docs' && (
                   <div className="flex-1 overflow-y-auto overscroll-none scrollbar-hide bg-black px-8 pt-30 pb-8 mb-15">
                     <div className="max-w-4xl mx-auto">
-                      <div className="bg-gray-900/50 border border-gray-800 rounded-lg p-6">
-                        {selectedLesson.content?.theory ? (
-                          <div className="prose prose-invert max-w-none">
-                            <div
-                              className="text-gray-200 leading-relaxed"
-                              dangerouslySetInnerHTML={{
-                                __html: parseMarkdown(selectedLesson.content.theory)
-                              }}
-                            />
-                          </div>
-                        ) : (
-                          <div>
-                            <h3 className="text-2xl font-bold text-white mb-4">📚 Documentation</h3>
-                            <p className="text-gray-300 leading-relaxed mb-6">
-                              Documentation for this lesson is being prepared.
-                            </p>
-                          </div>
-                        )}
-                        <div className="mt-8 pt-6 border-t border-gray-700">
-                          <button
-                            onClick={() => markActivityComplete('docs')}
-                            className="w-full px-6 py-3 hover:opacity-80 text-black font-bold rounded-lg border-2 transition-all duration-200"
-                            style={{ backgroundColor: '#FFDE21', borderColor: '#E5C71D' }}
-                          >
-                            Continue to Coding Section →
-                          </button>
+                      {selectedLesson.content?.theory ? (
+                        <div
+                          dangerouslySetInnerHTML={{
+                            __html: wrapInDocContainer(parseEnhancedMarkdown(selectedLesson.content.theory))
+                          }}
+                        />
+                      ) : (
+                        <div className="bg-gray-900/50 border border-gray-800 rounded-lg p-6">
+                          <h3 className="text-2xl font-bold text-white mb-4">📚 Documentation</h3>
+                          <p className="text-gray-300 leading-relaxed mb-6">
+                            Documentation for this lesson is being prepared.
+                          </p>
                         </div>
+                      )}
+                      <div className="mt-8 flex justify-center">
+                        <button
+                          onClick={() => markActivityComplete('docs')}
+                          className="px-8 py-3 text-black font-bold rounded-lg transition-all duration-200"
+                          style={{
+                            backgroundColor: '#FFDE21',
+                            boxShadow: '0 6px 0 #E5C71D, 0 8px 12px rgba(0,0,0,0.3)',
+                            transform: 'perspective(300px) rotateX(5deg) translateY(0)'
+                          }}
+                          onMouseEnter={(e) => {
+                            e.currentTarget.style.backgroundColor = '#FFE84D';
+                          }}
+                          onMouseDown={(e) => {
+                            e.currentTarget.style.transform = 'perspective(300px) rotateX(5deg) translateY(4px)';
+                            e.currentTarget.style.boxShadow = '0 2px 0 #E5C71D, 0 4px 12px rgba(0,0,0,0.3)';
+                          }}
+                          onMouseUp={(e) => {
+                            e.currentTarget.style.transform = 'perspective(300px) rotateX(5deg) translateY(0)';
+                            e.currentTarget.style.boxShadow = '0 6px 0 #E5C71D, 0 8px 12px rgba(0,0,0,0.3)';
+                          }}
+                          onMouseLeave={(e) => {
+                            e.currentTarget.style.transform = 'perspective(300px) rotateX(5deg) translateY(0)';
+                            e.currentTarget.style.boxShadow = '0 6px 0 #E5C71D, 0 8px 12px rgba(0,0,0,0.3)';
+                            e.currentTarget.style.backgroundColor = '#FFDE21';
+                          }}
+                        >
+                          Continue to Coding Section →
+                        </button>
+                        
                       </div>
+                      
                     </div>
                   </div>
                 )}
@@ -358,14 +375,11 @@ export default function ModuleDetailPage({ params }: { params: Promise<{ moduleI
                     {/* Instructions Sidebar */}
                     <div className="lg:w-80 border-r border-gray-800 overflow-y-auto prevent-overscroll bg-black p-4 space-y-4 flex-shrink-0 max-h-full">
                       {selectedLesson.content?.instructions && (
-                        <div className="prose prose-invert max-w-none">
-                          <div
-                            className="text-gray-200 leading-relaxed"
-                            dangerouslySetInnerHTML={{
-                              __html: parseMarkdown(selectedLesson.content.instructions)
-                            }}
-                          />
-                        </div>
+                        <div
+                          dangerouslySetInnerHTML={{
+                            __html: wrapInDocContainer(parseEnhancedMarkdown(selectedLesson.content.instructions))
+                          }}
+                        />
                       )}
 
                       {/* Validation Feedback */}
