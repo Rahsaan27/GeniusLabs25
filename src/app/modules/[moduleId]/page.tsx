@@ -28,6 +28,7 @@ export default function ModuleDetailPage({ params }: { params: Promise<{ moduleI
   const [completedActivities, setCompletedActivities] = useState<string[]>([]);
   const [moduleId, setModuleId] = useState<string>('');
   const [dbProgress, setDbProgress] = useState<ModuleProgress | null>(null);
+  const [showCompleteNotification, setShowCompleteNotification] = useState(false);
   const [progressLoaded, setProgressLoaded] = useState(false);
   const [userCode, setUserCode] = useState('');
   const [codeOutput, setCodeOutput] = useState('');
@@ -242,7 +243,7 @@ export default function ModuleDetailPage({ params }: { params: Promise<{ moduleI
   return (
     <div className="h-screen bg-black text-white flex flex-col overflow-hidden overscroll-none">
       {/* Main Lesson Content */}
-      <div className="flex-1 flex flex-col min-h-0 overflow-hidden overscroll-none">
+      <div className="flex-1 flex flex-col min-h-0 overflow-hidden overscroll-none -mt-9">
         {selectedLesson ? (
           <>
             {/* Lesson Header with Activity Tabs - FIXED */}
@@ -303,8 +304,8 @@ export default function ModuleDetailPage({ params }: { params: Promise<{ moduleI
                 </div>
               </div>
 
-              {/* Activity Content */}
-              <div className="flex-1 flex flex-col overflow-auto overscroll-none">
+              {/* Activity Content - with margin-top to account for fixed header */}
+              <div className="flex-1 flex flex-col overflow-auto overscroll-none" style={{ marginTop: '105px' }}>
                 {activeTab === 'videos' && (
                   <div className="flex-1 flex flex-col items-center justify-center bg-black p-8">
                     <div className="text-center max-w-2xl">
@@ -325,7 +326,7 @@ export default function ModuleDetailPage({ params }: { params: Promise<{ moduleI
                 )}
 
                 {activeTab === 'docs' && (
-                  <div className="flex-1 overflow-y-auto overscroll-none scrollbar-hide bg-black px-8 pt-30 pb-8 mb-15">
+                  <div className="flex-1 overflow-y-auto overscroll-none scrollbar-hide bg-black px-8 py-8 pb-24">
                     <div className="max-w-4xl mx-auto">
                       {selectedLesson.content?.theory ? (
                         <div
@@ -375,90 +376,50 @@ export default function ModuleDetailPage({ params }: { params: Promise<{ moduleI
                 )}
 
                 {activeTab === 'code' && (
-                  <div className="flex-1 flex flex-col lg:flex-row min-h-0 overflow-hidden prevent-overscroll pt-18">
+                  <div className="flex-1 flex flex-col lg:flex-row min-h-0 overflow-hidden prevent-overscroll">
                     {/* Instructions Sidebar */}
-                    <div className="lg:w-80 border-r border-gray-800 overflow-y-auto prevent-overscroll bg-black p-4 space-y-4 flex-shrink-0 max-h-full">
-                      {selectedLesson.content?.instructions && (
-                        <div
-                          dangerouslySetInnerHTML={{
-                            __html: wrapInDocContainer(parseEnhancedMarkdown(selectedLesson.content.instructions), 'Instructions')
-                          }}
-                        />
-                      )}
+                    <div className="lg:w-80 border-r border-gray-800 bg-black flex flex-col flex-shrink-0 min-h-0">
+                      {/* Scrollable Content */}
+                      <div className="flex-1 overflow-y-auto p-4 space-y-4">
+                        {selectedLesson.content?.instructions && (
+                          <div
+                            dangerouslySetInnerHTML={{
+                              __html: wrapInDocContainer(parseEnhancedMarkdown(selectedLesson.content.instructions), 'Instructions')
+                            }}
+                          />
+                        )}
 
-                      {/* Validation Feedback */}
-                      {validationResult && (
-                        <div className={`rounded-lg p-3 border ${
-                          validationResult.isValid
-                            ? 'bg-green-500/10 border-green-500/30'
-                            : 'bg-red-500/10 border-red-500/30'
-                        }`}>
-                          <h3 className={`text-lg font-bold mb-2 ${
-                            validationResult.isValid ? 'text-green-400' : 'text-red-400'
+                        {/* Validation Feedback */}
+                        {validationResult && (
+                          <div className={`rounded-lg p-3 border ${
+                            validationResult.isValid
+                              ? 'bg-green-500/10 border-green-500/30'
+                              : 'bg-red-500/10 border-red-500/30'
                           }`}>
-                            {validationResult.isValid ? '✅ Great job!' : '❌ Not quite right'}
-                          </h3>
-                          <p className="text-md text-gray-300 leading-relaxed font-semibold mb-2">
-                            {validationResult.message}
-                          </p>
-                          {validationResult.hints && validationResult.hints.length > 0 && (
-                            <div className="mt-2 space-y-1">
-                              <p className="text-sm text-gray-400 font-semibold">💡 Hints:</p>
-                              {validationResult.hints.map((hint, index) => (
-                                <p key={index} className="text-sm text-gray-400 ml-2">• {hint}</p>
-                              ))}
-                            </div>
-                          )}
-                        </div>
-                      )}
-
-                      {/* Complete Section Button */}
-                      <div className="flex justify-center">
-                        <button
-                          onClick={() => markActivityComplete('code')}
-                          disabled={!validationResult?.isValid}
-                          className={`px-12 py-5 font-bold text-lg rounded-2xl transition-all duration-150 outline-none border-0 ${
-                            validationResult?.isValid
-                              ? 'text-black'
-                              : 'bg-gray-700 text-gray-500 cursor-not-allowed'
-                          }`}
-                          style={validationResult?.isValid ? {
-                            backgroundColor: '#FFDE21',
-                            boxShadow: '0 6px 0 #E5C71D, 0 8px 12px rgba(0,0,0,0.3)',
-                            transform: 'perspective(300px) rotateX(5deg)'
-                          } : undefined}
-                          onMouseEnter={(e) => {
-                            if (validationResult?.isValid) {
-                              e.currentTarget.style.backgroundColor = '#FFE84D';
-                            }
-                          }}
-                          onMouseDown={(e) => {
-                            if (validationResult?.isValid) {
-                              e.currentTarget.style.transform = 'perspective(300px) rotateX(5deg) translateY(4px)';
-                              e.currentTarget.style.boxShadow = '0 2px 0 #E5C71D, 0 4px 12px rgba(0,0,0,0.3)';
-                            }
-                          }}
-                          onMouseUp={(e) => {
-                            if (validationResult?.isValid) {
-                              e.currentTarget.style.transform = 'perspective(300px) rotateX(5deg) translateY(0)';
-                              e.currentTarget.style.boxShadow = '0 6px 0 #E5C71D, 0 8px 12px rgba(0,0,0,0.3)';
-                            }
-                          }}
-                          onMouseLeave={(e) => {
-                            if (validationResult?.isValid) {
-                              e.currentTarget.style.transform = 'perspective(300px) rotateX(5deg) translateY(0)';
-                              e.currentTarget.style.boxShadow = '0 6px 0 #E5C71D, 0 8px 12px rgba(0,0,0,0.3)';
-                              e.currentTarget.style.backgroundColor = '#FFDE21';
-                            }
-                          }}
-                        >
-                          {validationResult?.isValid ? 'Complete Section →' : 'Complete the task to continue'}
-                        </button>
+                            <h3 className={`text-lg font-bold mb-2 ${
+                              validationResult.isValid ? 'text-green-400' : 'text-red-400'
+                            }`}>
+                              {validationResult.isValid ? '✅ Great job!' : '❌ Not quite right'}
+                            </h3>
+                            <p className="text-md text-gray-300 leading-relaxed font-semibold mb-2">
+                              {validationResult.message}
+                            </p>
+                            {validationResult.hints && validationResult.hints.length > 0 && (
+                              <div className="mt-2 space-y-1">
+                                <p className="text-sm text-gray-400 font-semibold">💡 Hints:</p>
+                                {validationResult.hints.map((hint, index) => (
+                                  <p key={index} className="text-sm text-gray-400 ml-2">• {hint}</p>
+                                ))}
+                              </div>
+                            )}
+                          </div>
+                        )}
                       </div>
+
                     </div>
 
                     {/* IDE */}
-                    <div className="flex-1 min-h-0 flex flex-col overflow-hidde">
+                    <div className="flex-1 min-h-0 flex flex-col overflow-hidden">
                       <InteractiveIDE
                         language={module.language as 'python' | 'javascript' | 'html'}
                         initialCode={selectedLesson.content?.starterCode ||
@@ -475,6 +436,9 @@ export default function ModuleDetailPage({ params }: { params: Promise<{ moduleI
                           setCodeOutput(output);
                           const result = validateCode(selectedLesson.id, code, output);
                           setValidationResult(result);
+                          if (result.isValid) {
+                            setShowCompleteNotification(true);
+                          }
                         }}
                       />
                     </div>
@@ -482,7 +446,7 @@ export default function ModuleDetailPage({ params }: { params: Promise<{ moduleI
                 )}
 
                 {activeTab === 'quiz' && (
-                  <div className="flex-1 overflow-y-auto bg-black pt-24 pb-8">
+                  <div className="flex-1 overflow-y-auto bg-black py-8">
                     {selectedLesson.quiz ? (
                       <QuizComponent
                         quiz={selectedLesson.quiz}
@@ -515,8 +479,8 @@ export default function ModuleDetailPage({ params }: { params: Promise<{ moduleI
               </div>
             </>
           ) : (
-            <div className="flex-1 overflow-y-auto bg-black p-8">
-              <div className="max-w-4xl mx-auto">
+            <div className="flex-1 overflow-y-auto bg-black px-8 pt-24 pb-16">
+              <div className="max-w-7xl mx-auto">
                 <div className="flex items-center gap-4 mb-2">
                   {module.language === 'python' && (
                     <svg className="w-12 h-12" viewBox="0 0 256 255" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMinYMin meet">
@@ -576,70 +540,171 @@ export default function ModuleDetailPage({ params }: { params: Promise<{ moduleI
                   </p>
                 </div>
 
-                {/* Lessons List */}
-                <h3 className="text-xl font-bold text-white mb-4">Lessons</h3>
-                <div className="space-y-3">
-                  {module.lessons.map((lesson: Lesson, index: number) => {
-                    const status = getLessonProgress(lesson.id);
-                    const isCompleted = status === 'completed';
-                    const isInProgress = status === 'in_progress';
+                {/* Two Column Layout: Lessons and Projects */}
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                  {/* Lessons Column - 2/3 width */}
+                  <div className="lg:col-span-2">
+                    <h3 className="text-xl font-bold text-white mb-4">Lessons</h3>
+                    <div className="space-y-3">
+                      {module.lessons.map((lesson: Lesson, index: number) => {
+                        const status = getLessonProgress(lesson.id);
+                        const isCompleted = status === 'completed';
+                        const isInProgress = status === 'in_progress';
 
-                    return (
-                      <button
-                        key={lesson.id}
-                        onClick={() => setSelectedLesson(lesson)}
-                        className="w-full text-left bg-gray-900/50 hover:bg-gray-800/50 border border-gray-800 hover:border-gray-700 rounded-lg p-5 transition-all"
-                      >
-                        <div className="flex items-start gap-4">
-                          {/* Status indicator */}
-                          <div className="mt-1 flex-shrink-0">
-                            {isCompleted ? (
-                              <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ backgroundColor: '#FFDE21' }}>
-                                <svg className="w-5 h-5 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                        return (
+                          <button
+                            key={lesson.id}
+                            onClick={() => setSelectedLesson(lesson)}
+                            className="w-full text-left bg-gray-900/50 hover:bg-gray-800/50 border border-gray-800 hover:border-gray-700 rounded-lg p-5 transition-all"
+                          >
+                            <div className="flex items-start gap-4">
+                              {/* Status indicator */}
+                              <div className="mt-1 flex-shrink-0">
+                                {isCompleted ? (
+                                  <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ backgroundColor: '#FFDE21' }}>
+                                    <svg className="w-5 h-5 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                                    </svg>
+                                  </div>
+                                ) : isInProgress ? (
+                                  <div className="w-8 h-8 rounded-full border-4 border-t-transparent animate-spin" style={{ borderColor: '#FFDE21', borderTopColor: 'transparent' }} />
+                                ) : (
+                                  <div className="w-8 h-8 rounded-full border-2 border-gray-600 flex items-center justify-center">
+                                    <span className="text-sm text-gray-500 font-medium">{index + 1}</span>
+                                  </div>
+                                )}
+                              </div>
+
+                              {/* Lesson info */}
+                              <div className="flex-1 min-w-0">
+                                <h4 className="text-lg font-semibold mb-1" style={module.language === 'python' ? { color: '#FFDE21' } : { color: 'white' }}>{lesson.title}</h4>
+                                <p className="text-sm text-gray-400 mb-2">{lesson.description}</p>
+                                <div className="flex items-center gap-3 text-xs text-gray-500">
+                                  <span className="flex items-center gap-1">
+                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    </svg>
+                                    {lesson.estimatedTime} min
+                                  </span>
+                                  <span className="px-2 py-1 bg-gray-800 rounded text-xs capitalize">
+                                    {lesson.difficulty}
+                                  </span>
+                                </div>
+                              </div>
+
+                              {/* Arrow */}
+                              <div className="flex-shrink-0 mt-2">
+                                <svg className="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                                 </svg>
                               </div>
-                            ) : isInProgress ? (
-                              <div className="w-8 h-8 rounded-full border-4 border-t-transparent animate-spin" style={{ borderColor: '#FFDE21', borderTopColor: 'transparent' }} />
-                            ) : (
-                              <div className="w-8 h-8 rounded-full border-2 border-gray-600 flex items-center justify-center">
-                                <span className="text-sm text-gray-500 font-medium">{index + 1}</span>
-                              </div>
-                            )}
-                          </div>
-
-                          {/* Lesson info */}
-                          <div className="flex-1 min-w-0">
-                            <h4 className="text-lg font-semibold mb-1" style={module.language === 'python' ? { color: '#FFDE21' } : { color: 'white' }}>{lesson.title}</h4>
-                            <p className="text-sm text-gray-400 mb-2">{lesson.description}</p>
-                            <div className="flex items-center gap-3 text-xs text-gray-500">
-                              <span className="flex items-center gap-1">
-                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                </svg>
-                                {lesson.estimatedTime} min
-                              </span>
-                              <span className="px-2 py-1 bg-gray-800 rounded text-xs capitalize">
-                                {lesson.difficulty}
-                              </span>
                             </div>
-                          </div>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
 
-                          {/* Arrow */}
-                          <div className="flex-shrink-0 mt-2">
-                            <svg className="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                            </svg>
-                          </div>
+                  {/* Projects Column - 1/3 width */}
+                  <div className="lg:col-span-1">
+                    <h3 className="text-xl font-bold text-white mb-4">Projects</h3>
+                    <div className="grid grid-cols-1 gap-4">
+                      {/* Project 1 - FizzBuzz */}
+                      <div className="bg-gray-900/50 border border-gray-800 rounded-lg p-4 relative">
+                        <div className="absolute top-3 right-3">
+                          <span className="px-2 py-1 text-xs font-bold rounded" style={{ backgroundColor: '#FFDE21', color: '#000' }}>SOON</span>
                         </div>
-                      </button>
-                    );
-                  })}
+                        <div className="mb-3">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-yellow-400">
+                            <path d="M10 6h8"/>
+                            <path d="M14 6v8"/>
+                            <path d="M9 18h8"/>
+                            <path d="M13 18v4"/>
+                            <path d="M5 6h.01"/>
+                            <path d="M5 10h.01"/>
+                            <path d="M5 14h.01"/>
+                            <path d="M5 18h.01"/>
+                            <path d="M17 6h.01"/>
+                            <path d="M17 10h.01"/>
+                            <path d="M17 14h.01"/>
+                            <path d="M17 18h.01"/>
+                          </svg>
+                        </div>
+                        <h4 className="text-base font-semibold text-white mb-2">FizzBuzz Challenge</h4>
+                        <p className="text-sm text-gray-400">Solve the classic FizzBuzz problem with conditional logic</p>
+                      </div>
+
+                      {/* Project 2 - Calculator */}
+                      <div className="bg-gray-900/50 border border-gray-800 rounded-lg p-4 relative">
+                        <div className="absolute top-3 right-3">
+                          <span className="px-2 py-1 text-xs font-bold rounded" style={{ backgroundColor: '#FFDE21', color: '#000' }}>SOON</span>
+                        </div>
+                        <div className="mb-3">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-blue-400">
+                            <rect width="16" height="20" x="4" y="2" rx="2"/>
+                            <line x1="8" x2="16" y1="6" y2="6"/>
+                            <line x1="16" x2="16" y1="14" y2="18"/>
+                            <path d="M16 10h.01"/>
+                            <path d="M12 10h.01"/>
+                            <path d="M8 10h.01"/>
+                            <path d="M12 14h.01"/>
+                            <path d="M8 14h.01"/>
+                            <path d="M12 18h.01"/>
+                            <path d="M8 18h.01"/>
+                          </svg>
+                        </div>
+                        <h4 className="text-base font-semibold text-white mb-2">Calculator App</h4>
+                        <p className="text-sm text-gray-400">Build a functional calculator with basic operations</p>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
           )}
         </div>
+
+        {/* Slide-in Notification */}
+        {showCompleteNotification && (
+          <div
+            className="fixed bottom-8 left-1/2 z-50"
+            style={{
+              transform: 'translateX(-50%)',
+              animation: 'slideUp 0.5s ease-out'
+            }}
+          >
+            <button
+              onClick={() => {
+                setShowCompleteNotification(false);
+                markActivityComplete('code');
+              }}
+              className="px-8 py-4 rounded-full font-semibold text-base shadow-2xl flex items-center gap-3 transition-all duration-200 hover:scale-105"
+              style={{
+                backgroundColor: '#FFDE21',
+                color: '#000'
+              }}
+            >
+              <span>🎉</span>
+              <span>Good work! Move onto the next section</span>
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+              </svg>
+            </button>
+          </div>
+        )}
+
+        <style jsx>{`
+          @keyframes slideUp {
+            from {
+              bottom: -100px;
+              opacity: 0;
+            }
+            to {
+              bottom: 2rem;
+              opacity: 1;
+            }
+          }
+        `}</style>
     </div>
   );
 }
