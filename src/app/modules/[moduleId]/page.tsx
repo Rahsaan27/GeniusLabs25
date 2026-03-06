@@ -98,6 +98,12 @@ export default function ModuleDetailPage({ params }: { params: Promise<{ moduleI
     }
   }, [selectedLesson]);
 
+  // Scroll to top when entering code tab
+  useEffect(() => {
+    if (activeTab === 'code' && typeof window !== 'undefined') {
+      window.scrollTo(0, 0);
+    }
+  }, [activeTab]);
 
   const isActivityUnlocked = (activityType: string) => {
     if (!selectedLesson?.activities) return false;
@@ -335,11 +341,31 @@ export default function ModuleDetailPage({ params }: { params: Promise<{ moduleI
                           </p>
                         </div>
                       )}
-                      <div className="mt-8">
+                      <div className="mt-8 flex justify-center">
                         <button
                           onClick={() => markActivityComplete('docs')}
-                          className="w-full px-6 py-3 hover:opacity-80 text-black font-bold rounded-lg border-2 transition-all duration-200"
-                          style={{ backgroundColor: '#FFDE21', borderColor: '#E5C71D' }}
+                          className="text-black px-12 py-5 font-bold text-lg rounded-2xl transition-all duration-150 outline-none border-0"
+                          style={{
+                            backgroundColor: '#FFDE21',
+                            boxShadow: '0 6px 0 #E5C71D, 0 8px 12px rgba(0,0,0,0.3)',
+                            transform: 'perspective(300px) rotateX(5deg)'
+                          }}
+                          onMouseEnter={(e) => {
+                            e.currentTarget.style.backgroundColor = '#FFE84D';
+                          }}
+                          onMouseDown={(e) => {
+                            e.currentTarget.style.transform = 'perspective(300px) rotateX(5deg) translateY(4px)';
+                            e.currentTarget.style.boxShadow = '0 2px 0 #E5C71D, 0 4px 12px rgba(0,0,0,0.3)';
+                          }}
+                          onMouseUp={(e) => {
+                            e.currentTarget.style.transform = 'perspective(300px) rotateX(5deg) translateY(0)';
+                            e.currentTarget.style.boxShadow = '0 6px 0 #E5C71D, 0 8px 12px rgba(0,0,0,0.3)';
+                          }}
+                          onMouseLeave={(e) => {
+                            e.currentTarget.style.transform = 'perspective(300px) rotateX(5deg) translateY(0)';
+                            e.currentTarget.style.boxShadow = '0 6px 0 #E5C71D, 0 8px 12px rgba(0,0,0,0.3)';
+                            e.currentTarget.style.backgroundColor = '#FFDE21';
+                          }}
                         >
                           Continue to Coding Section →
                         </button>
@@ -355,7 +381,7 @@ export default function ModuleDetailPage({ params }: { params: Promise<{ moduleI
                       {selectedLesson.content?.instructions && (
                         <div
                           dangerouslySetInnerHTML={{
-                            __html: wrapInDocContainer(parseEnhancedMarkdown(selectedLesson.content.instructions))
+                            __html: wrapInDocContainer(parseEnhancedMarkdown(selectedLesson.content.instructions), 'Instructions')
                           }}
                         />
                       )}
@@ -387,18 +413,48 @@ export default function ModuleDetailPage({ params }: { params: Promise<{ moduleI
                       )}
 
                       {/* Complete Section Button */}
-                      <button
-                        onClick={() => markActivityComplete('code')}
-                        disabled={!validationResult?.isValid}
-                        style={validationResult?.isValid ? { backgroundColor: '#FFDE21', borderColor: '#E5C71D' } : undefined}
-                        className={`w-full px-4 py-3 font-bold rounded-lg transition-all duration-200 border-2 ${
-                          validationResult?.isValid
-                            ? 'hover:opacity-80 text-black'
-                            : 'bg-gray-700 text-gray-500 cursor-not-allowed border-gray-700'
-                        }`}
-                      >
-                        {validationResult?.isValid ? 'Complete Section →' : 'Complete the task to continue'}
-                      </button>
+                      <div className="flex justify-center">
+                        <button
+                          onClick={() => markActivityComplete('code')}
+                          disabled={!validationResult?.isValid}
+                          className={`px-12 py-5 font-bold text-lg rounded-2xl transition-all duration-150 outline-none border-0 ${
+                            validationResult?.isValid
+                              ? 'text-black'
+                              : 'bg-gray-700 text-gray-500 cursor-not-allowed'
+                          }`}
+                          style={validationResult?.isValid ? {
+                            backgroundColor: '#FFDE21',
+                            boxShadow: '0 6px 0 #E5C71D, 0 8px 12px rgba(0,0,0,0.3)',
+                            transform: 'perspective(300px) rotateX(5deg)'
+                          } : undefined}
+                          onMouseEnter={(e) => {
+                            if (validationResult?.isValid) {
+                              e.currentTarget.style.backgroundColor = '#FFE84D';
+                            }
+                          }}
+                          onMouseDown={(e) => {
+                            if (validationResult?.isValid) {
+                              e.currentTarget.style.transform = 'perspective(300px) rotateX(5deg) translateY(4px)';
+                              e.currentTarget.style.boxShadow = '0 2px 0 #E5C71D, 0 4px 12px rgba(0,0,0,0.3)';
+                            }
+                          }}
+                          onMouseUp={(e) => {
+                            if (validationResult?.isValid) {
+                              e.currentTarget.style.transform = 'perspective(300px) rotateX(5deg) translateY(0)';
+                              e.currentTarget.style.boxShadow = '0 6px 0 #E5C71D, 0 8px 12px rgba(0,0,0,0.3)';
+                            }
+                          }}
+                          onMouseLeave={(e) => {
+                            if (validationResult?.isValid) {
+                              e.currentTarget.style.transform = 'perspective(300px) rotateX(5deg) translateY(0)';
+                              e.currentTarget.style.boxShadow = '0 6px 0 #E5C71D, 0 8px 12px rgba(0,0,0,0.3)';
+                              e.currentTarget.style.backgroundColor = '#FFDE21';
+                            }
+                          }}
+                        >
+                          {validationResult?.isValid ? 'Complete Section →' : 'Complete the task to continue'}
+                        </button>
+                      </div>
                     </div>
 
                     {/* IDE */}
@@ -426,7 +482,7 @@ export default function ModuleDetailPage({ params }: { params: Promise<{ moduleI
                 )}
 
                 {activeTab === 'quiz' && (
-                  <div className="flex-1 overflow-y-auto bg-black p-8">
+                  <div className="flex-1 overflow-y-auto bg-black pt-24 pb-8">
                     {selectedLesson.quiz ? (
                       <QuizComponent
                         quiz={selectedLesson.quiz}
